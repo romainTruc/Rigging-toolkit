@@ -1,0 +1,1417 @@
+//Rigging toolkit 1.0
+//created by Romain Truchard
+//artstation.com/artist/romaintruc
+
+if (`window -exists rigTK`) deleteUI rigTK;
+
+window  -title "Rigging toolkit 1.0 "  rigTK;
+
+rowColumnLayout -nc 1 -cw 1 285;
+
+// UI ------------------------------------------------------------------------------
+
+
+tabLayout tabList;
+
+
+// ---------------------------------------------------------------------------------
+//                                         Tab 1                                    
+// ---------------------------------------------------------------------------------
+
+
+
+string $tab1 = `columnLayout -w 275 -h 400 firstTab`;
+
+frameLayout -w 275 one;     
+
+separator -style "in" -w 275 -h 20;
+
+    //NubsTextCreator------------------------------------------------------------
+    
+    rowColumnLayout -nc 1 -cw 1 275;
+    
+        text -label "Nurbs Text Creator";
+        separator -style "none" -w 275 -h 10;
+        textField userTxt;
+        text -label "";
+        button -label "Create Nurbs text" -command "setTxt()";
+    
+     setParent..;
+    
+    //End------------------------------------------------------------------------
+    
+
+separator -style "in" -w 275 -h 20;
+
+
+    //NurbsShapes----------------------------------------------------------------
+    
+        text -label "Nurbs shapes";
+        text -l "";
+    
+    rowLayout -nc 6;
+    
+        button -label "Joystick" -w 50 -h 20 -command "joystick"  ;
+        button -label "Slider" -w 50 -h 20 -command "slider"  ;
+        button -label "Square" -w 50 -h 20 -command "square"  ;
+        button -label "Cube" -w 38 -h 20 -command "cube"  ;
+        button -label "Arrow" -w 45 -h 20 -command "arrow"  ;
+        button -label "Pin" -w 30 -h 20 -command "pin"  ;
+    
+    setParent ..;
+    
+    
+    rowLayout -nc 6;
+    
+        button -label "Orient" -c "orient" -w 44 -h 20  ;
+        button -label "Cone" -c "coneShape" -w 38 -h 20 ;
+        button -label "Cross" -c "crossShape" -w 40 -h 20  ;
+        button -label "Rotate" -c "rotShape" -w 50 -h 20  ;
+        button -label "Sphere" -c"sphereShape" -w 45 -h 20 ;
+        button -label "Move" -c"moveShape" -w 50 -h 20  ;
+     
+    setParent ..;
+    
+    //End------------------------------------------------------------------------
+    
+    
+    //ColorMaker------------------------------------------------------------------------
+    
+    separator -style "in" -w 275 -h 20;
+    
+    rowLayout -nc 10;
+        
+        button -label "" -w 26 -h 22 -command "red;" -bgc 1 0.224 0.224 buttonSetRed;
+        button -label "" -w 26 -h 22 -command "redPale;" -bgc 1 0.399 0.321 buttonSetLRed;
+        button -label "" -w 26 -h 22 -command "orange;" -bgc 1 0.479 0.173 buttonSetOrange;
+        button -label "" -w 26 -h 22 -command "yellow;" -bgc 1 1 0.390 buttonSetYellow;   
+        button -label "" -w 26 -h 22 -command "green;" -bgc 0.527 1 0.276 buttonSetGreen;    
+        button -label "" -w 26 -h 22 -command "cyan;" -bgc 0.321 1 0.869 buttonSetCyan; 
+        button -label "" -w 26 -h 22 -command "blue;" -bgc 0.256 0.628 1 buttonSetBlue; 
+        button -label "" -w 26 -h 22 -command "pink;" -bgc 1 0.442 0.706 buttonSetPink;     
+        button -label "" -w 26 -h 22 -command "purple;" -bgc 0.466 0.200 0.892 buttonSetViolet2; 
+        button -label "R" -w 26 -h 22 -command "nocolor;" buttonSetViolet;
+    
+    setParent ..;
+    
+    radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -labelArray3 "Viewport" "Outliner" "Both" -select 1 colorRadio;
+    
+     //End------------------------------------------------------------------------
+
+
+separator -style "in" -w 275 -h 20;
+    
+setParent..;
+
+setParent..;
+
+
+// ---------------------------------------------------------------------------------
+//                                         Tab 2
+// ---------------------------------------------------------------------------------
+
+
+string $tab2 = `columnLayout -w 275 -h 400 secondTab`;
+
+frameLayout -w 275 two;
+
+separator -style "in" -w 275 -h 20;
+
+    //JointUtilities-------------------------------------------------------------
+    
+    rowColumnLayout -nc 1 -cw 1 275;
+        
+        button -label "Joint to vertex" -c "jointOnAllVtx" jointToVetex;
+        separator -style "none" -w 275 -h 10;
+        button -label "Joint at center of selection" -c "jointCenter" mySlider;
+        
+    setParent..;
+    
+    //End------------------------------------------------------------------------
+    
+separator -style "in" -w 275 -h 20;
+   
+    //JointSize------------------------------------------------------------------
+    
+        text -label "Set joint size";
+        text -label "";
+        
+    rowColumnLayout -nc 2 -cw 1 60 -cw 2 100;
+    
+        text -l "Radius:  " -al "right";
+        floatSliderGrp -min 0 -max 100 -w 200 -field true userSize;
+    
+    setParent "..";
+    
+    rowLayout -nc 10;
+    
+        button -label ".25" -w 26 -h 20 -command "radPoint25;"  buttonRadPoint25;
+        button -label ".5" -w 26 -h 20 -command "radPoint5;"  buttonRadPoint5;
+        button -label ".75" -w 26 -h 20 -command "radPoint75;"  buttonRadPoint75;
+        button -label "1" -w 26 -h 20 -command "rad1;"  buttonRad1;
+        button -label "5" -w 26 -h 20 -command "rad5;"  buttonRad5;
+        button -label "10" -w 26 -h 20 -command "rad10;"  buttonRad10;
+        button -label "20" -w 26 -h 20 -command "rad20;"  buttonRad20;
+        button -label "30" -w 26 -h 20 -command "rad30;"  buttonRad30;
+        button -label "40" -w 26 -h 20 -command "rad40;"  buttonRad40;
+        button -label "50" -w 26 -h 20 -command "rad50;"  buttonRad50;
+        
+    setParent ..;
+    
+        button -l "Resize joints" -c "setJointSize()";
+    
+    //End------------------------------------------------------------------------
+
+
+setParent..;
+
+setParent..;
+
+
+// ---------------------------------------------------------------------------------
+//                                         Tab 3
+// ---------------------------------------------------------------------------------
+
+
+string $tab3 = `columnLayout -w 275 -h 400 thirdTab`;
+
+frameLayout -w 275 three;
+
+    //NameCreator--------------------------------------------------------------------
+       
+    rowColumnLayout -nc 2 -cw 1 50 -cw 2 225;
+        
+        text -l "Name: " -al "right";
+        textField -tx "" tfSuffix;
+    	
+    setParent "..";
+    	    
+    rowLayout -nc 7;
+    
+        button -label "_left" -w 35 -h 20 -command "leftAppend";
+        button -label "_right" -w 40 -h 20 -command "rightAppend" ;
+        button -label "_top" -w 30 -h 20 -command "upAppend" ;
+        button -label "_bottom" -w 50 -h 20 -command "bottomAppend";
+        button -label "_center" -w 55 -h 20 -command "middleAppend";
+        button -label "_IK" -w 25 -h 20 -command "ikAppend";
+        button -label "_FK" -w 25 -h 20 -command "fkAppend";  
+    
+    setParent ..;
+    
+    rowLayout -nc 7;
+    
+        button -label "_L" -w 25 -h 20 -command "lAppend";
+        button -label "_R" -w 25 -h 20 -command "rAppend" ;
+        button -label "_joint" -w 50 -h 20 -command "jointAppend" ;
+        button -label "_back" -w 45 -h 20 -command "backAppend";
+        button -label "_front" -w 45 -h 20 -command "frontAppend";
+        button -label "_blue" -w 35 -h 20 -command "blueAppend";
+        button -label "_red" -w 35 -h 20 -command "redAppend";
+        
+    setParent ..;
+       
+        radioButtonGrp -nrb 2 -cw 1 60 -cw 2 60 -label "                       " -labelArray2 "Create" "Append" -select 1 nameRadio;
+        
+    separator -style "in" -w 275 -h 20;
+    	
+    	button -l "Add Suffix" -al "center" -w 275 -c ("cR_doRename(2);") butSuffix;
+    	button -l "Add Prefix" -al "center" -w 275 -c ("cR_doRename(1);") butPrefix;
+    
+    separator -style "in" -w 275 -h 20;	
+    	
+    rowColumnLayout -nc 2 -cw 1 50 -cw 2 225;
+    
+        text -l "Replace: " -al "right";
+        textField -tx "" tfReplace;
+    
+    setParent "..";
+    	   
+        button -l "Search And Replace" -al "center" -w 275 -c ("cR_doRename(0);") butSearchReplace;
+        intField -v 1 -w 60 -min 0 -vis false ifNumber;
+        intField -v 0 -w 60 -min 0 -vis false ifPadding;
+        
+        button -l "Increment Name" -al "center" -w 275 -c "incrementName" butIncrmnt;
+        
+        
+     separator -style "in" -w 275 -h 20;
+        
+    //End------------------------------------------------------------------------
+    
+setParent..;
+
+
+// ---------------------------------------------------------------------------------
+//                         ----------Build Window----------
+// ---------------------------------------------------------------------------------
+
+
+tabLayout -edit
+-tabLabel $tab1 "Tools" 
+-tabLabel $tab2 "Joints" 
+-tabLabel $tab3 "Naming" 
+tabList;
+
+frameLayout -e -w 275 one;
+
+showWindow rigTK;
+
+
+// ---------------------------------------------------------------------------------
+//                         ----------Functions----------
+// ---------------------------------------------------------------------------------
+
+//JoystickCreator
+
+proc joystick(){
+
+string $joyName = `curve -d 1 -p -1.456834653e-016 -1 1 -p 1.456834653e-016 1 1 -p 1.456834653e-016 1 -1 -p -1.456834653e-016 -1 -1 -p -1.456834653e-016 -1 1  -n "joystick_frame_01"`; 
+setAttr ($joyName + ".rotateY") 90 ; 
+FreezeTransformations;
+
+circle -n"joystick_controler_01";
+setAttr "joystick_controler_01.scale"  .1 .1 .1 ;
+FreezeTransformations;
+
+transformLimits -tx -1 1 -etx 1 1 joystick_controler_01;
+transformLimits -ty -1 1 -ety 1 1 joystick_controler_01;
+transformLimits -tz 0 0 -etz 1 1 joystick_controler_01;
+
+setAttr  "joystick_frame_01.overrideEnabled" 1;
+setAttr  "joystick_frame_01.overrideColor" 18;
+
+setAttr  "joystick_controler_01.overrideEnabled" 1;
+setAttr  "joystick_controler_01.overrideColor" 17;
+
+
+select -r joystick_controler_01;
+select -add joystick_frame_01;
+
+
+
+Parent;
+
+rename "joystick_controler_01" "controler";
+rename "joystick_frame_01" "joystick";
+
+select -cl;
+
+
+}
+
+//SliderCreator
+
+proc slider(){
+
+curve -p .1 -1.1 0 -p .1 1.1 0 -p-.1 1.1 0 -p -.1 -1.1 0 -p .1 -1.1 0;
+rebuildCurve -ch 1 -rpo 1 -rt 0 -end 1 -kr 0 -kcp 1 -kep 1 -kt 0 -s 0 -d 1 -tol 0.00 "curve1";
+
+CreateNURBSCircle;
+
+setAttr "nurbsCircle1.scaleZ" .1;
+setAttr "nurbsCircle1.scaleX" .1;
+setAttr "nurbsCircle1.scaleY" .1;
+
+
+rotate -r -90 0 0 ;
+
+FreezeTransformations;
+
+transformLimits -tx 0 0 -etx 1 1 nurbsCircle1;
+transformLimits -ty -1 1 -ety 1 1 nurbsCircle1;
+transformLimits -tz 0 0 -etz 1 1 nurbsCircle1;
+
+setAttr  "curve1.overrideEnabled" 1;
+setAttr  "curve1.overrideColor" 18;
+
+setAttr  "nurbsCircle1.overrideEnabled" 1;
+setAttr  "nurbsCircle1.overrideColor" 17;
+
+
+select -r nurbsCircle1;
+select -add curve1;
+
+Parent;
+
+rename "curve1" "slider";
+rename "nurbsCircle1" "controler";
+
+select -cl;
+
+}
+
+//FrameCreator
+
+proc frame(){
+    
+$c = `curve -d 1 -p -1.456834653e-016 -0.6561 0.6561 -p 1.456834653e-016 0.6561 0.6561 -p 1.456834653e-016 0.6561 -0.6561 -p -1.456834653e-016 -0.6561 -0.6561 -p -1.456834653e-016 -0.6561 0.6561`;
+  
+}
+
+//textCreator------- 
+
+proc setTxt() {
+    
+   $value = `textField -query -tx userTxt`;//2
+    
+   textCurves -f "Helvetica" -t $value -n "text" ;
+    
+   string $shapes[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
+   
+   select -hi;
+   
+   FreezeTransformations;
+   
+   CreateEmptyGroup;
+    
+   select $shapes;
+   
+   renameSelectionList ("crv") ;
+   
+   select "crv*";
+   
+   select -add "null1";
+   
+   parent -r -s;
+   
+   select "textShape";
+   
+   doDelete;
+   
+   select "crv*";
+   
+   renameSelectionList ("curve") ;
+   
+   select "null1";
+   
+   rename $value;
+ 
+         
+}
+
+
+//-------------
+
+proc jointCenter(){
+    
+
+ConvertSelectionToVertices;
+ 
+string $vertices[] = `ls -selection -flatten`;
+ 
+int $totalVertices = size($vertices);
+ 
+float $xPosSum = 0;
+float $yPosSum = 0;
+float $zPosSum = 0;
+ 
+for ($vertex in $vertices)
+{
+        float $worldSpacePos[] = `xform -q -worldSpace -translation $vertex`;
+ 
+        $xPosSum += $worldSpacePos[0];
+        $yPosSum += $worldSpacePos[1];
+        $zPosSum += $worldSpacePos[2];
+}
+ 
+float $xAvgPos = $xPosSum / $totalVertices;
+float $yAvgPos = $yPosSum / $totalVertices;
+float $zAvgPos = $zPosSum / $totalVertices;
+
+joint -position $xAvgPos $yAvgPos $zAvgPos;
+CenterPivot;
+  
+}
+
+
+
+
+proc jointOnAllVtx(){
+
+
+ConvertSelectionToVertices;
+ 
+string $selVerts[] = `ls -selection -flatten`;
+
+for($vrts in $selVerts){
+    
+    //selectionner chaque vertex
+    select $vrts;
+    // creer cluster sur chaque vertex selectionnée
+    string $cl[] = `newCluster "-relative -envelope 1"`;
+    // clear selection so joint not parented to cluster
+    select -cl;
+    //create joint
+    string $jnt = `joint`;
+    //point constrain to the cluster
+    string $ptCnjnt[] = `pointConstraint -offset 0 0 0 -weight 1 $cl $jnt`;
+    //find point constraint
+    string $findPtCn[] = `listRelatives -typ pointConstraint $jnt`;
+    //delete point constraint
+    select $findPtCn[0]; doDelete;
+    //select cluster delete it
+    select -replace $cl; doDelete;
+    
+    }
+
+}
+
+
+
+proc left(){
+
+string $selJnts[] = `ls -selection -flatten`;
+
+for($jnts in $selJnts){
+    
+    //selectionner chaque vertex
+    select $jnts;
+    rename ($jnts + "_Left") ;
+    
+    
+    }
+}
+
+
+proc right(){
+
+string $selJnts[] = `ls -selection -flatten`;
+
+for($jnts in $selJnts){
+    
+    //selectionner chaque vertex
+    select $jnts;
+    rename ($jnts + "_Right") ;
+    
+    
+    }
+}
+
+
+
+proc arm(){
+
+rename "Arm";
+
+
+}
+
+
+
+proc radPoint25(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .25 ;} }
+proc radPoint5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .5 ;} }
+proc radPoint75(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .75 ;} }
+proc rad1(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 1 ;} }
+proc rad5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 5 ;} }
+proc rad10(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 10 ;} }
+proc rad20(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 20 ;} }
+proc rad30(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 30 ;} }
+proc rad40(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 40 ;} }
+proc rad50(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 50 ;} }
+
+proc setJointSize() {
+  
+  float $dist = `floatSliderGrp	 -q -value userSize`;
+  string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") $dist ;}
+}
+
+
+
+proc red(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 13 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 13 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
+    }
+    }
+              
+}
+
+proc redPale(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 4 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 4 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
+    }
+    }
+              
+}
+
+proc orange(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 21 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 21 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
+    }
+    }
+              
+}
+
+proc yellow(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 17 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 17 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
+    }
+    }
+              
+}
+
+
+proc green(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 14 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.527 1 0.276 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 14 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.527 1 0.276; 
+    }
+    }
+              
+}
+
+
+proc cyan(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 18 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.321 1 0.869 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 18 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.321 1 0.869; 
+    }
+    }
+              
+}
+
+proc blue(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 6 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 6 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
+    }
+    }
+              
+}
+
+proc pink(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 9 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 9 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
+    }
+    }
+              
+}
+
+proc purple(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 30 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 30 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
+    }
+    }
+              
+}
+
+
+
+proc nocolor(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 0 ;
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 0 ;
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled")0 ;
+    setAttr ($jnts + ".useOutlinerColor")0 ;
+    }
+    }
+              
+}
+
+
+proc incrementName(){
+    
+    string $value = `textField -q -tx tfSuffix`;
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    renameSelectionList $value;
+    
+    }          
+
+              
+}
+
+
+
+//SHAPES--------------------------------------------------------------------
+proc square(){
+   string $sqr = `curve -d 1 -p -1.456834653e-016 -1 1 -p 1.456834653e-016 1 1 -p 1.456834653e-016 1 -1 -p -1.456834653e-016 -1 -1 -p -1.456834653e-016 -1 1  -n "square"`; 
+setAttr ($sqr + ".rotateY") 90 ; 
+FreezeTransformations;
+    
+}
+
+
+proc cube(){
+    
+curve -d 1 -p -0.5 0.5 -0.5 -p -0.5 0.5 0.499886 -p 0.498585 0.5 0.5 
+-p 0.5 0.5 -0.5 -p -0.5 0.5 -0.5 -p -0.498802 -0.5 -0.5 
+-p -0.5 -0.499632 0.5 -p -0.5 0.5 0.499886 -p 0.5 0.5 0.5 
+-p 0.5 -0.492074 0.5 -p -0.5 -0.5 0.5 -p -0.5 -0.5 -0.5 
+-p 0.5 -0.5 -0.5 -p 0.5 -0.492602 0.5 -p 0.5 0.5 0.5 
+-p -0.499904 0.5 0.5 -p -0.5 -0.5 0.5 -p -0.5 -0.5 -0.5 
+-p 0.5 -0.5 -0.5 -p 0.499034 0.5 -0.5 -p -0.5 0.5 -0.5 
+-p -0.5 0.5 0.5 -p 0.498947 0.5 0.5 -p 0.5 -0.495186 0.5 
+-k 0 -k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -k 8 -k 9 -k 10 
+-k 11 -k 12 -k 13 -k 14 -k 15 -k 16 -k 17 -k 18 -k 19 
+-k 20 -k 21 -k 22 -k 23 -name cube;
+
+}
+
+proc arrow(){
+curve -d 1 -p -0.25 0 0 -p -0.25 0 -1 -p -0.5 0 -1 -p 0 0 -1.5 -p 0.5 0 -1 
+-p 0.25 0 -1 -p 0.25 0 0 -p -0.25 0 0 -k 0 
+-k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -name arrow;
+}
+
+
+
+
+proc pin(){
+    $c = `curve -d 1 -p 0 0.7074835877 0 -p -1.779797547e-017 0.7183189811 0.08015495567 -p -3.439014528e-017 0.7492709624 0.1548794455 -p -4.867644528e-017 0.7982872269 0.2192192208 -p -5.95602423e-017 0.862627002 0.268235485 -p -6.643296284e-017 0.9373514918 0.2991874667 -p -6.883890347e-017 1.017506448 0.31002286 -p -6.643296284e-017 1.097661403 0.2991874667 -p -5.95602423e-017 1.172385679 0.268235485 -p -4.867644528e-017 1.236725668 0.2192192208 -p -3.439014528e-017 1.285741718 0.1548794455 -p -1.779797547e-017 1.316694129 0.08015495567 -p 0 1.327526732 0 -p 1.779797547e-017 1.316694129 -0.08015495567 -p 3.439014528e-017 1.285741718 -0.1548794455 -p 4.867644528e-017 1.236725668 -0.2192192208 -p 5.95602423e-017 1.172385679 -0.268235485 -p 6.643296284e-017 1.097661403 -0.2991874667 -p 6.883890347e-017 1.017506448 -0.31002286 -p 6.643296284e-017 0.9373514918 -0.2991874667 -p 5.95602423e-017 0.862627002 -0.268235485 -p 4.867644528e-017 0.7982872269 -0.2192192208 -p 3.439014528e-017 0.7492709624 -0.1548794455 -p 1.779797547e-017 0.7183189811 -0.08015495567 -p 0 0.7074835877 0 -p 0 0.006634036807 0 -name pin`;
+		
+}
+
+proc orient(){
+    
+    $c = `curve -d 3 -p -0.604001 0.0959835 -0.0987656 -p -0.500458 0.500783 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.336638 -p -0.327886 0.751175 -0.336638 -p 2.223925488e-016 1.001567 0 -p 2.223925488e-016 1.001567 0 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.0987656 -p -0.327886 0.751175 0.0987656 -p -0.500458 0.500783 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.500458 0.0959835 0.500783 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.336638 0.751175 -p -0.327886 0.336638 0.751175 -p 0 0 1.001567 -p 0 0 1.001567 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.500458 -0.0959835 0.500783 -p -0.604001 -0.0959835 0.0987656 -p -0.604001 -0.0959835 0.0987656 -p -0.500458 -0.500783 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.336638 -p -0.327886 -0.751175 0.336638 -p -2.223925488e-016 -1.001567 0 -p -2.223925488e-016 -1.001567 0 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.0987656 -p -0.327886 -0.751175 -0.0987656 -p -0.500458 -0.500783 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.500458 -0.0959835 -0.500783 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.336638 -0.751175 -p -0.327886 -0.336638 -0.751175 -p 0 0 -1.001567 -p 0 0 -1.001567 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.500458 0.0959835 -0.500783 -p -0.604001 0.0959835 -0.0987656 -name orient`;
+		
+}
+
+proc coneShape(){
+    $c = `curve -d 1 -p 0.002873577054 -0.2497454755 0.4325716493 -p 0.002873577054 0.2497454755 0.4325716493 -p 1.001855479 -6.67369812e-016 -1.436788527e-009 -p 0.002873577054 -0.2497454755 0.4325716493 -p 0.002873577054 -0.4994909509 -1.436788527e-009 -p 1.001855479 -6.67369812e-016 -1.436788527e-009 -p 0.002873577054 -0.2497454755 -0.4325716522 -p 0.002873577054 -0.4994909509 -1.436788527e-009 -p 1.001855479 -6.67369812e-016 -1.436788527e-009 -p 0.002873577054 0.2497454755 -0.4325721517 -p 0.002873577054 -0.2497454755 -0.4325716522 -p 1.001855479 -6.67369812e-016 -1.436788527e-009 -p 0.002873577054 0.4994909509 -8.078092608e-008 -p 0.002873577054 0.2497454755 -0.4325721517 -p 1.001855479 -6.67369812e-016 -1.436788527e-009 -p 0.002873577054 0.2497454755 0.4325716493 -p 0.002873577054 0.4994909509 -8.078092608e-008 -n "cone"`;
+		
+}
+
+
+proc crossShape(){
+    
+   $c = `curve -d 1 -p 0 0 -0.9857426965 -p -0.2950522357 0 -0.543164343 -p -0.1475261178 0 -0.543164343 -p -0.1475261178 0 -0.1475261178 -p -0.543164343 0 -0.1475261178 -p -0.543164343 0 -0.2950522357 -p -0.9857426965 0 0 -p -0.543164343 0 0.2950522357 -p -0.543164343 0 0.1475261178 -p -0.1475261178 0 0.1475261178 -p -0.1475261178 0 0.543164343 -p -0.2950522357 0 0.543164343 -p 0 0 0.9857426965 -p 0.2950522357 0 0.543164343 -p 0.1475261178 0 0.543164343 -p 0.1475261178 0 0.1475261178 -p 0.543164343 0 0.1475261178 -p 0.543164343 0 0.2950522357 -p 0.9857426965 0 0 -p 0.543164343 0 -0.2950522357 -p 0.543164343 0 -0.1475261178 -p 0.1475261178 0 -0.1475261178 -p 0.1475261178 0 -0.543164343 -p 0.2950522357 0 -0.543164343 -p 0 0 -0.9857426965 -n "cross"`;
+			
+}
+
+
+proc rotShape(){
+    
+    $c = `curve -d 3 -p -0.35703261 0 0.63881379 -p -0.35703261 0 0.63881379 -p -0.35703261 0 0.63881379 -p -0.43555158 0 0.28326996 -p -0.43555158 0 0.28326996 -p -0.43555158 0 0.28326996 -p -0.43555158 0 0.28326996 -p -0.10092762 0 0.88816986 -p -0.10092762 0 0.88816986 -p -0.10092762 0 0.88816986 -p -0.10092762 0 0.88816986 -p -0.79049277 0 0.83941839 -p -0.79049277 0 0.83941839 -p -0.79049277 0 0.83941839 -p -0.79049277 0 0.83941839 -p -0.45433386 0 0.76645116 -p -0.45433386 0 0.76645116 -p -0.45433386 0 0.76645116 -p -0.45433386 0 0.76645116 -p -0.64641969 0 0.64640673 -p -0.84458862 0 0.34986654 -p -0.91422432 0 0 -p -0.84458862 0 -0.34986654 -p -0.64641969 0 -0.64640673 -p -0.45283779 0 -0.76484979 -p -0.45283779 0 -0.76484979 -p -0.45283779 0 -0.76484979 -p -0.45283779 0 -0.76484979 -p -0.79049277 0 -0.83941839 -p -0.79049277 0 -0.83941839 -p -0.79049277 0 -0.83941839 -p -0.79049277 0 -0.83941839 -p -0.10092762 0 -0.88816986 -p -0.10092762 0 -0.88816986 -p -0.10092762 0 -0.88816986 -p -0.10092762 0 -0.88816986 -p -0.43555158 0 -0.28326996 -p -0.43555158 0 -0.28326996 -p -0.43555158 0 -0.28326996 -p -0.43555158 0 -0.28326996 -p -0.35575119 0 -0.63632061 -p -0.35575119 0 -0.63632061 -p -0.35575119 0 -0.63632061 -p -0.35575119 0 -0.63632061 -p -0.52874856 0 -0.52892838 -p -0.69110901 0 -0.28621998 -p -0.74792646 0 0 -p -0.69110901 0 0.28621998 -p -0.52874856 0 0.52892838 -p -0.35703261 0 0.63881379 -n "rotation"`;
+		
+    
+}
+
+proc sphereShape(){
+    $c = `curve -d 1 -p 0 0.81 0 -p -0.30997323 0.7483428 0 -p -0.57275667 0.57275667 0 -p -0.7483428 0.30997323 0 -p -0.81 0 0 -p -0.7483428 -0.30997323 0 -p -0.57275667 -0.57275667 0 -p -0.30997323 -0.7483428 0 -p 0 -0.81 0 -p 0.30997323 -0.7483428 0 -p 0.57275667 -0.57275667 0 -p 0.7483428 -0.30997323 0 -p 0.81 0 0 -p 0.7483428 0.30997323 0 -p 0.57275667 0.57275667 0 -p 0.30997323 0.7483428 0 -p 0 0.81 0 -p 0 0.7483428 0.30997323 -p 0 0.57275667 0.57275667 -p 0 0.30997323 0.7483428 -p 0 0 0.81 -p 0 -0.30997323 0.7483428 -p 0 -0.57275667 0.57275667 -p 0 -0.7483428 0.30997323 -p 0 -0.81 0 -p 0 -0.7483428 -0.30997323 -p 0 -0.57275667 -0.57275667 -p 0 -0.30997323 -0.7483428 -p 0 0 -0.81 -p 0 0.30997323 -0.7483428 -p 0 0.57275667 -0.57275667 -p 0 0.7483428 -0.30997323 -p 0 0.81 0 -p -0.30997323 0.7483428 0 -p -0.57275667 0.57275667 0 -p -0.7483428 0.30997323 0 -p -0.81 0 0 -p -0.7483428 0 0.30997323 -p -0.57275667 0 0.57275667 -p -0.30997323 0 0.7483428 -p 0 0 0.81 -p 0.30997323 0 0.7483428 -p 0.57275667 0 0.57275667 -p 0.7483428 0 0.30997323 -p 0.81 0 0 -p 0.7483428 0 -0.30997323 -p 0.57275667 0 -0.57275667 -p 0.30997323 0 -0.7483428 -p 0 0 -0.81 -p -0.30997323 0 -0.7483428 -p -0.57275667 0 -0.57275667 -p -0.7483428 0 -0.30997323 -p -0.81 0 0 -p -0.81 0 0 -n "sphere"`;	
+    
+}
+
+proc moveShape(){
+    curve -d 3 -p -4 0 1 -p -4 0 1 -p -4.5 0 1 -p -4.5 0 1 -p -4.5 0 1 -p -4.5 0 1.5 -p -4.5 0 1.5 -p -4.5 0 1.5 -p -6 0 -1.998401444e-14 -p -6 0 -1.998401444e-14 -p -6 0 -1.998401444e-14 -p -4.5 0 -1.5 -p -4.5 0 -1.5 -p -4.5 0 -1.5 -p -4.5 0 -1 -p -4.5 0 -1 -p -4.5 0 -1 -p -4 0 -1 -p -4 0 -1 -p -4 0 -1 -p -3.5 0 -3.5 -p -1 0 -4 -p -1 0 -4 -p -1 0 -4.5 -p -1 0 -4.5 -p -1 0 -4.5 -p -1.5 0 -4.5 -p -1.5 0 -4.5 -p -1.5 0 -4.5 -p 0 0 -6 -p 0 0 -6 -p 0 0 -6 -p 1.5 0 -4.5 -p 1.5 0 -4.5 -p 1.5 0 -4.5 -p 1 0 -4.5 -p 1 0 -4.5 -p 1 0 -4.5 -p 1 0 -4 -p 1 0 -4 -p 1 0 -4 -p 3.5 0 -3.5 -p 4 0 -1 -p 4 0 -1 -p 4.5 0 -1 -p 4.5 0 -1 -p 4.5 0 -1 -p 4.5 0 -1.5 -p 4.5 0 -1.5 -p 4.5 0 -1.5 -p 6 0 -5.995204333e-15 -p 6 0 -5.995204333e-15 -p 6 0 -5.995204333e-15 -p 4.5 0 1.5 -p 4.5 0 1.5 -p 4.5 0 1.5 -p 4.5 0 1 -p 4.5 0 1 -p 4.5 0 1 -p 4 0 1 -p 4 0 1 -p 4 0 1 -p 3.5 0 3.5 -p 1 0 4 -p 1 0 4 -p 1 0 4.5 -p 1 0 4.5 -p 1 0 4.5 -p 1.5 0 4.5 -p 1.5 0 4.5 -p 1.5 0 4.5 -p 1.139292912e-14 0 6 -p 1.139292912e-14 0 6 -p 1.139292912e-14 0 6 -p -1.5 0 4.5 -p -1.5 0 4.5 -p -1.5 0 4.5 -p -1 0 4.5 -p -1 0 4.5 -p -1 0 4.5 -p -1 0 4 -p -1 0 4 -p -1 0 4 -p -3.5 0 3.5 -p -4 0 1 -p -4 0 1 -p -4 0 1 -p -4 0 1 -n "move";
+
+}
+
+//Append functions------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+proc leftAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_left"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_left");}
+        
+        }          
+}
+
+
+proc rightAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_right"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_right");}
+        
+        }          
+}
+
+
+proc upAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_top"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_top");}
+        
+        }          
+}
+
+
+proc bottomAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_bottom"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_bottom");}
+        
+        }          
+}
+
+proc middleAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_center"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_center");}
+        
+        }          
+}
+
+proc ikAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_IK"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_IK");}
+        
+        }          
+}
+
+proc fkAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_FK"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_FK");}
+        
+        }          
+}
+  
+proc lAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_L"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_L");}
+        
+        }          
+}
+
+proc rAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_R"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_R");}
+        
+        }          
+}
+ 
+proc jointAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_joint"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_joint");}
+        
+        }          
+}
+ 
+proc backAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_back"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_back");}
+        
+        }          
+}
+ 
+proc frontAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_front"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_front");}
+        
+        }          
+}
+
+proc blueAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_blue"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_blue");}
+        
+        }          
+}
+ 
+proc redAppend(){
+    
+    if (`radioButtonGrp -q -select nameRadio` == 1) {
+            $value = `textField -query -tx tfSuffix`;
+            rename ($value + "_red"); 
+            
+            }
+   
+    else if (`radioButtonGrp -q -select nameRadio` == 2) {
+        
+        string $selThings[] = `ls -selection -flatten`;
+        for($things in $selThings){
+        select $things;
+        rename ($things + "_red");}
+        
+        }          
+}
+
+
+
+//End-----------------------------------------------------
+
+ 
+proc string stringReplace(string $str, string $search, string $replace)
+{
+    string $retstr = "";
+
+    	// Sanity check please!
+    if ($search == "")
+        return $str;
+    
+    if ($str == "")
+        return $str;
+        
+        
+    int $len = size($str);
+    int $lenS = size($search);
+    
+    int $i, $j;
+    int $match;
+    
+    for ($i=1; $i <= $len; ++$i)
+        {
+	$match = 0;
+
+	// Now get substring from where we are currently
+	// to the number of letters past of the length
+	// of the search string.  Basically the same
+	// length as the search string.  So if it is identical
+	// we know we have a match.
+	//
+	// If not, we don't.  We also make sure we aren't
+	// trying to look past the end of the string...
+	//
+	$j = $i + ($lenS - 1);
+
+	if ($j <= $len)
+	    {
+	    string $part = `substring $str $i $j`;
+	    if ($part == $search)
+	        $match = 1;
+	    }
+	
+	if ($match == 1)
+	    {
+	    $retstr += $replace; // we did it, so insert replace str
+	    $i = $j;	// skip forward
+	    }
+	else
+	    {
+	    string $char = `substring $str $i $i`;
+	    $retstr += $char;
+	    }
+	}
+
+    return $retstr;
+	
+}
+
+// --------------------------------------------------------------------------
+
+/*
+ * getShortName() - Given a string, get last part after last | pipe.
+ */
+proc string getShortName(string $obj)
+{
+    string $ret = "";
+    
+    if ($obj == "")
+        return $ret;
+        
+    string $parts[];
+    int $cnt = tokenize($obj, "|", $parts);
+    
+    if ($cnt <= 0)
+        $ret = $obj;
+    else
+        $ret = $parts[($cnt-1)];
+    
+    return $ret;
+}
+
+// --------------------------------------------------------------------------
+
+/*
+ * chop() - Removes last char
+ */
+proc string chop(string $str)
+{
+    string $ret = "";
+
+    int $cnt = size($str);
+    
+    if ($cnt <= 1)
+        return $ret;
+    
+    $ret = `substring $str 1 ($cnt-1)`;
+
+    return $ret;
+}
+
+// --------------------------------------------------------------------------
+
+/*
+ * cR_doRename() - Does real work of renaming selected objects
+ *
+ *    $mode:  0=S&R 1=Pre 2=Suf 3=R&N
+ */
+global proc cR_doRename(int $mode)
+{
+    string $objs[] = `ls -sl -long`;
+    int $objCnt = size($objs);
+    int $i;
+
+	// Get all UI data...
+	//
+    string $search = `textField -q -tx tfSuffix`;
+    string $replace = `textField -q -tx tfReplace`;
+    string $prefix = `textField -q -tx tfSuffix`;
+    string $suffix = `textField -q -tx tfSuffix`;
+    string $rename = `textField -q -tx tfSuffix`;
+    int $start = `intField -q -v ifNumber`;
+    int $padding = `intField -q -v ifPadding`;
+    
+    string $shortName;
+    string $newShortName;
+    string $newName;
+
+	// Now do it
+	//
+    for ($i=0; $i < $objCnt; ++$i)
+        {
+	$obj = $objs[$i];
+	
+	$shortName = getShortName($obj);
+		
+	switch ($mode)
+	    {
+	    case 0:
+	        if ($search == "")
+	            {
+	            warning -sl 0 ("Can't search and replace, search entry field is blank!");
+	            return;
+	            }
+	        $newShortName = stringReplace($shortName, $search, $replace);
+	        break;
+
+	    case 1:
+	        if ($prefix == "")
+	            {
+	            warning -sl 0 ("Can't add prefix, prefix entry field is blank!");
+	            return;
+	    	    }
+	        $newShortName = ($prefix + $shortName);
+	        break;
+
+	    case 2:
+	        if ($suffix == "")
+	            {
+	            warning -sl 0 ("Can't add suffix, suffix entry field is blank!");
+	            return;
+	    	    }
+	        $newShortName = ($shortName + $suffix);
+	        break;
+
+	    case 3:
+	        if ($rename == "")
+	            {
+	            warning -sl 0 ("Can't rename and number, rename entry field is blank!");
+	            return;
+	            }
+	    		// get index of string as user wants
+	    	int $n = $i + $start;
+	    		// pad of 0's
+	    	string $padStr = "";
+	    	
+	    		// Add padding as needed
+	    	for ($p=1; $p < $padding; ++$p)
+	    	    {
+		    if ($n < pow(10, $p) )
+		        $padStr += "0";
+		    }
+	    	
+	    	$newShortName = ($rename+$padStr+$n);
+	        break;
+
+	    } // end of switch
+		
+	
+	$newName = `rename $obj $newShortName`;
+	select -r $newName;
+	string $newLongNames[] = `ls -sl -long`;
+	string $newLongName = $newLongNames[0];
+	
+	    // Now update rest of stuff in list in case |long|names
+	    // required it
+	for ($j=0; $j < $objCnt; ++$j)
+	    {
+	    string $tmp = $objs[$j];
+
+	    $tmp += "|";	// add to end for easy replacing
+	    $tmp = `substitute ($obj+"|") $tmp ("|"+$newLongName+"|")`;
+	    $tmp = chop($tmp);
+	    
+	    $objs[$j] = $tmp;
+	    }
+	
+
+	}  // end of for all objs
+
+    select $objs;
+    
+}
+
+
+// --------------------------------------------------------------------------
