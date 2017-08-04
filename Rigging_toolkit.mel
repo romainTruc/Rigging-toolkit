@@ -472,33 +472,55 @@ select -cl;
 
 proc slider(){
 
-curve -n "control_temp" -p -0.3 -0.07 0.0 -p -0.1 -0.07 0.0 -p -0.1 -0.035 0.0 -p 0.1 0.0 0.0 -p -0.1 0.035 0.0 -p -0.1 0.07 0.0 -p -0.3 0.07 0.0 -p -0.3 -0.07 0.0 -d 1;
+curve -n "cross_temp" -p -0.3 -0.07 0.0 -p -0.1 -0.07 0.0 -p -0.1 -0.035 0.0 -p 0.1 0.0 0.0 -p -0.1 0.035 0.0 -p -0.1 0.07 0.0 -p -0.3 0.07 0.0 -p -0.3 -0.07 0.0 -d 1;
 
-xform -pivots 0.1 0 0 "control_temp";
+curve -n "cross_temp1" -p -0.239  -0.035  0.0  -p -0.216  -0.012  0.0 -p  -0.192  0.012  0.0 -p -0.169  0.035  0.0 -d 3;
 
-setAttr  "control_temp.overrideEnabled" 1;
-setAttr  "control_temp.overrideColor" 17;
+curve -n "cross_temp2" -p -0.239  0.035  0.0  -p -0.216  0.012  0.0  -p -0.192  -0.012  0.0  -p -0.169  -0.035  0.0 -d 3;
 
-select -r "control_temp";
+group  -name "ctrl_temp" "cross_temp" "cross_temp1" "cross_temp2" ;
+
+
+string $shapes[] = `ls -shapes -dag "ctrl_temp"`; //selectionne juste les shapes du textShape transform dag important !
+
+select -hi;
+
+select $shapes;
+
+select -add "ctrl_temp";
+
+parent -r -s;
+
+select "cross_temp*";
+
+doDelete;
+
+
+xform -pivots -0.2 0 0 "ctrl_temp";
+
+setAttr  "ctrl_temp.overrideEnabled" 1;
+setAttr  "ctrl_temp.overrideColor" 17;
+
+select -r "ctrl_temp";
 
 FreezeTransformations;
 
 
 
-transformLimits -tx 0 0 -etx 1 1 control_temp;
-transformLimits -ty -1 1 -ety 1 1 control_temp;
-transformLimits -tz 0 0 -etz 1 1 control_temp;
+transformLimits -tx 0 0 -etx 1 1 ctrl_temp;
+transformLimits -ty -1 1 -ety 1 1 ctrl_temp;
+transformLimits -tz 0 0 -etz 1 1 ctrl_temp;
 
-setAttr -lock true -keyable false -channelBox false "control_temp.rx";
-setAttr -lock true -keyable false -channelBox false "control_temp.ry";
-setAttr -lock true -keyable false -channelBox false "control_temp.rz";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.rx";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.ry";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.rz";
 
-setAttr -lock true -keyable false -channelBox false "control_temp.sx";
-setAttr -lock true -keyable false -channelBox false "control_temp.sy";
-setAttr -lock true -keyable false -channelBox false "control_temp.sz";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.sx";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.sy";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.sz";
 
-setAttr -lock true -keyable false -channelBox false "control_temp.tz";
-setAttr -lock true -keyable false -channelBox false "control_temp.tx";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.tz";
+setAttr -lock true -keyable false -channelBox false "ctrl_temp.tx";
 //create slider shape start
 
 curve -n "crv_temp1" -p 0.1 -1.0 0.0 -p 0.1 1.0 0.0 -p -0.1 1.0 0.0 -p -0.1 -1.0 0.0 -p 0.1 -1.0 0.0 -d 1; //cadre
@@ -542,13 +564,13 @@ doDelete;
 setAttr  "slider_temp.overrideEnabled" 1;
 setAttr  "slider_temp.overrideColor" 18;
 
-select -r "control_temp";
+select -r "ctrl_temp";
 
 select -add "slider_temp";
 
 Parent;
 
-rename "control_temp" "controller";
+rename "ctrl_temp" "controller";
 rename "slider_temp" "Slider";
 
 select -cl;
