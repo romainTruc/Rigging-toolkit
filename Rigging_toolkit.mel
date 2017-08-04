@@ -1,6 +1,31 @@
-//Rigging toolkit 1.0
-//created by Romain Truchard
-//artstation.com/artist/romaintruc
+//---------------------------------------------------------------------------
+// Rigging toolkit - MEL Script
+//---------------------------------------------------------------------------
+//Copyright (c) 2017 Romain Truchard : artstation.com/artist/romaintruc
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of
+//this software and associated documentation files (the "Software"), to deal in
+//the Software without restriction, including without limitation the rights to
+//use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+//the Software, and to permit persons to whom the Software is furnished to do so,
+//subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all
+//copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+// DESCRIPTION:
+//      Rigging toolkit    
+//
+// AUTHOR:
+//      Romain Truchard - truchard.romain@gmail.com
+//----------------------------------------------------------------------------
 
 if (`window -exists rigTK`) deleteUI rigTK;
 
@@ -20,7 +45,7 @@ tabLayout tabList;
 
 
 
-string $tab1 = `columnLayout -w 275 -h 400 firstTab`;
+string $tab1 = `columnLayout -w 275 -h 475 firstTab`;
 
 frameLayout -w 275 one;     
 
@@ -79,8 +104,14 @@ separator -style "in" -w 275 -h 20;
     
     separator -style "in" -w 275 -h 20;
     
-    rowLayout -nc 10;
-        
+
+        text -label "Color picker";
+        text -l "";
+
+  
+
+    rowLayout -nc 13;
+    
         button -label "" -w 26 -h 22 -command "red;" -bgc 1 0.224 0.224 buttonSetRed;
         button -label "" -w 26 -h 22 -command "redPale;" -bgc 1 0.399 0.321 buttonSetLRed;
         button -label "" -w 26 -h 22 -command "orange;" -bgc 1 0.479 0.173 buttonSetOrange;
@@ -91,7 +122,7 @@ separator -style "in" -w 275 -h 20;
         button -label "" -w 26 -h 22 -command "pink;" -bgc 1 0.442 0.706 buttonSetPink;     
         button -label "" -w 26 -h 22 -command "purple;" -bgc 0.466 0.200 0.892 buttonSetViolet2; 
         button -label "R" -w 26 -h 22 -command "nocolor;" buttonSetViolet;
-    
+
     setParent ..;
     
     radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -labelArray3 "Viewport" "Outliner" "Both" -select 1 colorRadio;
@@ -99,7 +130,22 @@ separator -style "in" -w 275 -h 20;
      //End------------------------------------------------------------------------
 
 
+
 separator -style "in" -w 275 -h 20;
+text -label "Locking";
+        text -l "";
+
+
+    rowLayout -nc 10;
+        
+        button -label "Normal" -w 90 -h 22 -command "normal;" abc;
+        button -label "Template" -w 90 -h 22 -command "template;" bac;
+        button -label "Reference" -w 90 -h 22 -command "reference;" cab;
+    
+    setParent ..;
+
+
+
     
 setParent..;
 
@@ -117,13 +163,14 @@ frameLayout -w 275 two;
 
 separator -style "in" -w 275 -h 20;
 
+text -label "Create joint and place it :";
+
     //JointUtilities-------------------------------------------------------------
     
-    rowColumnLayout -nc 1 -cw 1 275;
+    rowColumnLayout -nc 2 -cw 1 138 -cw 2 138;
         
-        button -label "Joint to vertex" -c "jointOnAllVtx" jointToVetex;
-        separator -style "none" -w 275 -h 10;
-        button -label "Joint at center of selection" -c "jointCenter" mySlider;
+        button -label "To vertex" -c "jointOnAllVtx" jointToVetex;
+        button -label "To center of selection" -c "jointCenter" mySlider;
         
     setParent..;
     
@@ -260,40 +307,163 @@ showWindow rigTK;
 //                         ----------Functions----------
 // ---------------------------------------------------------------------------------
 
+
+
+
+
+proc template(){
+    
+    string $selection[] = `ls -selection -flatten`;
+    for($thing in $selection){
+    select $thing;
+    setAttr ($thing + ".overrideEnabled") 1 ;
+    setAttr ($thing + ".overrideDisplayType") 1 ;}
+         
+}
+
+
+proc reference(){
+
+    string $selection[] = `ls -selection -flatten`;
+    for($thing in $selection){
+    select $thing;
+    setAttr ($thing + ".overrideEnabled") 1 ;
+    setAttr ($thing + ".overrideDisplayType") 2 ;}
+         
+}
+
+proc normal(){
+
+    string $selection[] = `ls -selection -flatten`;
+    for($thing in $selection){
+    select $thing;
+    setAttr ($thing + ".overrideEnabled") 0 ;
+    setAttr ($thing + ".overrideDisplayType") 0 ;
+    }
+         
+}
+
+
+
+
+
 //JoystickCreator
 
 proc joystick(){
 
-string $joyName = `curve -d 1 -p -1.456834653e-016 -1 1 -p 1.456834653e-016 1 1 -p 1.456834653e-016 1 -1 -p -1.456834653e-016 -1 -1 -p -1.456834653e-016 -1 1  -n "joystick_frame_01"`; 
-setAttr ($joyName + ".rotateY") 90 ; 
+
+
+curve -n "crv_temp1" -p 1.0  -1.0  0.0  -p  1.0  1.0  0.0  -p -1.0  1.0  -0.0 -p  -1.0  -1.0  -0.0  -p  1.0  -1.0  0.0 -d 1; 
+
+curve -n "crv_temp2" -p 0.0 1.0 0.0 -p 0.0 0.967 0.0 -p 0.0 0.933 0.0 -p 0.0 0.9 0.0 -d 3;
+
+curve -n "crv_temp3" -p 1.0 -0.0 0.0 -p 0.967 -0.0 0.0 -p 0.933 -0.0 0.0 -p 0.9 -0.0 0.0 -d 3;
+
+curve -n "crv_temp4" -p -0.0 -1.0 0.0 -p -0.0 -0.967 0.0 -p -0.0 -0.933 0.0 -p -0.0 -0.9 0.0 -d 3;
+
+curve -n "crv_temp5" -p -1.0 -0.0 0.0 -p -0.967 -0.0 0.0 -p -0.933 -0.0 0.0 -p -0.9 -0.0 0.0 -d 3;
+
+curve -n "crv_temp6" -p 0.0 0.3 0.0 -p 0.0 0.233 0.0 -p 0.0 0.167 0.0 -p 0.0 0.1 0.0 -d 3;
+
+curve -n "crv_temp7" -p 0.3 -0.0 0.0 -p 0.233 -0.0 0.0 -p 0.167 -0.0 0.0 -p 0.1 -0.0 0.0 -d 3;
+
+curve -n "crv_temp8" -p -0.0 -0.3 0.0 -p -0.0 -0.233 0.0 -p -0.0 -0.167 0.0 -p -0.0 -0.1 0.0 -d 3;
+
+curve -n "crv_temp9" -p -0.3 0.0 0.0 -p -0.233 -0.0 0.0 -p -0.167 -0.0 0.0 -p -0.1 -0.0 0.0 -d 3;
+
+
+
+circle -n "control_tmp";
+
+curve -n "crv_temp10" -p -0.035 0.035 0.0 -p -0.012 0.012 0.0 -p 0.012 -0.012 0.0 -p 0.035 -0.035 0.0 -d 3;
+
+curve -n "crv_temp11" -p -0.035 -0.035 0.0 -p -0.012 -0.012 0.0 -p 0.012 0.012 0.0 -p 0.035 0.035 0.0 -d 3;
+
+setAttr "control_tmp.scale"  .1 .1 .1 ;
+
 FreezeTransformations;
 
-circle -n"joystick_controler_01";
-setAttr "joystick_controler_01.scale"  .1 .1 .1 ;
+group  -name "joystick_temp" "crv_temp1" "crv_temp2" "crv_temp3" "crv_temp4" "crv_temp5" "crv_temp6" "crv_temp7" "crv_temp8" "crv_temp9" ;
+
+string $shapes[] = `ls -shapes -dag "joystick_temp"`; //selectionne juste les shapes du textShape transform dag important !
+
+select -hi;
+
+select $shapes;
+
+select -add "joystick_temp";
+
+parent -r -s;
+
+group  -name "ctrl_tmp" "crv_temp10" "crv_temp11";
+
+string $shapesCtrl[] = `ls -shapes -dag "ctrl_tmp"`; //selectionne juste les shapes du textShape transform dag important !
+
+select -hi;
+
+select $shapesCtrl;
+
+select -add "ctrl_tmp";
+
+parent -r -s;
+
+select "crv_temp*";
+
+doDelete;
+
+select -r "control_tmp";
+
 FreezeTransformations;
 
-transformLimits -tx -1 1 -etx 1 1 joystick_controler_01;
-transformLimits -ty -1 1 -ety 1 1 joystick_controler_01;
-transformLimits -tz 0 0 -etz 1 1 joystick_controler_01;
+select $shapesCtrl;
 
-setAttr  "joystick_frame_01.overrideEnabled" 1;
-setAttr  "joystick_frame_01.overrideColor" 18;
+select -add "control_tmp";
 
-setAttr  "joystick_controler_01.overrideEnabled" 1;
-setAttr  "joystick_controler_01.overrideColor" 17;
+parent -r -s;
+
+select "ctrl_tmp";
+
+doDelete;
+
+transformLimits -tx -1 1 -etx 1 1 control_tmp;
+transformLimits -ty -1 1 -ety 1 1 control_tmp;
+transformLimits -tz 0 0 -etz 1 1 control_tmp;
+
+setAttr -lock true -keyable false -channelBox false "control_tmp.rx";
+setAttr -lock true -keyable false -channelBox false "control_tmp.ry";
+setAttr -lock true -keyable false -channelBox false "control_tmp.rz";
+
+setAttr -lock true -keyable false -channelBox false "control_tmp.sx";
+setAttr -lock true -keyable false -channelBox false "control_tmp.sy";
+setAttr -lock true -keyable false -channelBox false "control_tmp.sz";
+
+setAttr -lock true -keyable false -channelBox false "control_tmp.tz";
+
+setAttr  "joystick_temp.overrideEnabled" 1;
+setAttr  "joystick_temp.overrideColor" 18;
+
+setAttr  "control_tmp.overrideEnabled" 1;
+setAttr  "control_tmp.overrideColor" 17;
 
 
-select -r joystick_controler_01;
-select -add joystick_frame_01;
+select -r "control_tmp";
+select -add "joystick_temp";
 
 
 
 Parent;
 
-rename "joystick_controler_01" "controler";
-rename "joystick_frame_01" "joystick";
+rename "control_tmp" "controller";
+rename "joystick_temp" "Joystick";
 
 select -cl;
+
+
+
+
+
+
+
 
 
 }
@@ -302,38 +472,84 @@ select -cl;
 
 proc slider(){
 
-curve -p .1 -1.1 0 -p .1 1.1 0 -p-.1 1.1 0 -p -.1 -1.1 0 -p .1 -1.1 0;
-rebuildCurve -ch 1 -rpo 1 -rt 0 -end 1 -kr 0 -kcp 1 -kep 1 -kt 0 -s 0 -d 1 -tol 0.00 "curve1";
+curve -n "control_temp" -p -0.3 -0.07 0.0 -p -0.1 -0.07 0.0 -p -0.1 -0.035 0.0 -p 0.1 0.0 0.0 -p -0.1 0.035 0.0 -p -0.1 0.07 0.0 -p -0.3 0.07 0.0 -p -0.3 -0.07 0.0 -d 1;
 
-CreateNURBSCircle;
+xform -pivots 0.1 0 0 "control_temp";
 
-setAttr "nurbsCircle1.scaleZ" .1;
-setAttr "nurbsCircle1.scaleX" .1;
-setAttr "nurbsCircle1.scaleY" .1;
+setAttr  "control_temp.overrideEnabled" 1;
+setAttr  "control_temp.overrideColor" 17;
 
-
-rotate -r -90 0 0 ;
+select -r "control_temp";
 
 FreezeTransformations;
 
-transformLimits -tx 0 0 -etx 1 1 nurbsCircle1;
-transformLimits -ty -1 1 -ety 1 1 nurbsCircle1;
-transformLimits -tz 0 0 -etz 1 1 nurbsCircle1;
-
-setAttr  "curve1.overrideEnabled" 1;
-setAttr  "curve1.overrideColor" 18;
-
-setAttr  "nurbsCircle1.overrideEnabled" 1;
-setAttr  "nurbsCircle1.overrideColor" 17;
 
 
-select -r nurbsCircle1;
-select -add curve1;
+transformLimits -tx 0 0 -etx 1 1 control_temp;
+transformLimits -ty -1 1 -ety 1 1 control_temp;
+transformLimits -tz 0 0 -etz 1 1 control_temp;
+
+setAttr -lock true -keyable false -channelBox false "control_temp.rx";
+setAttr -lock true -keyable false -channelBox false "control_temp.ry";
+setAttr -lock true -keyable false -channelBox false "control_temp.rz";
+
+setAttr -lock true -keyable false -channelBox false "control_temp.sx";
+setAttr -lock true -keyable false -channelBox false "control_temp.sy";
+setAttr -lock true -keyable false -channelBox false "control_temp.sz";
+
+setAttr -lock true -keyable false -channelBox false "control_temp.tz";
+setAttr -lock true -keyable false -channelBox false "control_temp.tx";
+//create slider shape start
+
+curve -n "crv_temp1" -p 0.1 -1.0 0.0 -p 0.1 1.0 0.0 -p -0.1 1.0 0.0 -p -0.1 -1.0 0.0 -p 0.1 -1.0 0.0 -d 1; //cadre
+
+curve -n "crv_temp2" -p 0.1 0.8 -0.0 -p 0.067 0.8 -0.0 -p 0.033 0.8 -0.0 -p 0.0 0.8 -0.0 -d 3; //1
+
+curve -n "crv_temp3" -p 0.1 0.6 -0.0 -p 0.067 0.6 -0.0 -p 0.033 0.6 -0.0 -p 0.0 0.6 -0.0 -d 3; //2
+
+curve -n "crv_temp4" -p 0.1 0.4 -0.0 -p 0.067 0.4 -0.0 -p 0.033 0.4 -0.0 -p 0.0 0.4 -0.0 -d 3; //3
+
+curve -n "crv_temp5" -p 0.1 0.2 -0.0 -p 0.067 0.2 -0.0 -p 0.033 0.2 -0.0 -p 0.0 0.2 -0.0 -d 3; //4
+
+curve -n "crv_temp6" -p 0.1 -0.0 -0.0 -p 0.067 -0.0 -0.0 -p 0.033 -0.0 -0.0 -p 0.0 -0.0 -0.0 -d 3; //5
+
+curve -n "crv_temp7" -p 0.1 -0.2 -0.0 -p 0.067 -0.2 -0.0 -p 0.033 -0.2 -0.0 -p 0.0 -0.2 -0.0 -d 3; //6
+
+curve -n "crv_temp8" -p 0.1 -0.4 -0.0 -p 0.067 -0.4 -0.0 -p 0.033 -0.4 -0.0 -p 0.0 -0.4 -0.0 -d 3; //7
+
+curve -n "crv_temp9" -p 0.1 -0.6 -0.0 -p 0.067 -0.6 -0.0 -p 0.033 -0.6 -0.0 -p 0.0 -0.6 -0.0 -d 3; //8
+
+curve -n "crv_temp10" -p 0.1 -0.8 -0.0 -p 0.067 -0.8 -0.0 -p 0.033 -0.8 -0.0 -p 0.0 -0.8 -0.0 -d 3; //9
+
+group  -name "slider_temp" "crv_temp1" "crv_temp2" "crv_temp3" "crv_temp4" "crv_temp5" "crv_temp6" "crv_temp7" "crv_temp8" "crv_temp9" "crv_temp10"  ;
+
+string $shapes[] = `ls -shapes -dag "slider_temp"`; //selectionne juste les shapes du textShape transform dag important !
+
+select -hi;
+
+select $shapes;
+
+select -add "slider_temp";
+
+parent -r -s;
+
+select "crv_temp*";
+
+doDelete;
+
+//create slider shape end
+
+setAttr  "slider_temp.overrideEnabled" 1;
+setAttr  "slider_temp.overrideColor" 18;
+
+select -r "control_temp";
+
+select -add "slider_temp";
 
 Parent;
 
-rename "curve1" "slider";
-rename "nurbsCircle1" "controler";
+rename "control_temp" "controller";
+rename "slider_temp" "Slider";
 
 select -cl;
 
@@ -384,6 +600,8 @@ proc setTxt() {
    select "null1";
    
    rename $value;
+
+   CenterPivot;
  
          
 }
