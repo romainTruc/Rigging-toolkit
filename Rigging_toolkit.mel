@@ -206,6 +206,10 @@ separator -style "in" -w 275 -h 20;
     setParent ..;
     
         button -l "Resize joints" -c "setJointSize()";
+
+        text -label "";
+
+        button -l "Show/hide Local rotation axis" -c "ToggleLocalRotationAxes;";
     
     //End------------------------------------------------------------------------
 
