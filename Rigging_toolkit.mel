@@ -45,7 +45,7 @@ tabLayout tabList;
 
 
 
-string $tab1 = `columnLayout -w 275 -h 475 firstTab`;
+string $tab1 = `columnLayout -w 275 -h 500 firstTab`;
 
 frameLayout -w 275 one;     
 
@@ -59,7 +59,20 @@ separator -style "in" -w 275 -h 20;
         separator -style "none" -w 275 -h 10;
         textField userTxt;
         text -label "";
+        //list all fonts in array fonts
+        string $fonts[] = `fontDialog -FontList`;  
+        optionMenu  fontName;
+        //loop in fonts add item to label
+        for ( $item in $fonts ) {
+            $list = `menuItem -label $item` ;              
+        }
+
+     
+
+        text -label "";
         button -label "Create Nurbs text" -command "setTxt()";
+
+  
     
      setParent..;
     
@@ -592,10 +605,15 @@ $c = `curve -d 1 -p -1.456834653e-016 -0.6561 0.6561 -p 1.456834653e-016 0.6561 
 //textCreator------- 
 
 proc setTxt() {
-    
+   string $fontName = `optionMenu -q -v fontName`;
+
+   string $nameOk = ( "\"" + $fontName + "\""); //add quotation marks to variable (bien galéré sur celle là)
+
+   print $nameOk;
+
    $value = `textField -query -tx userTxt`;//2
     
-   textCurves -f "Helvetica" -t $value -n "text" ;
+   textCurves -font $nameOk -t $value -n "text" ;
     
    string $shapes[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
    
