@@ -29,7 +29,7 @@
 
 if (`window -exists rigTK`) deleteUI rigTK;
 
-window  -title "Rigging toolkit 1.0 "  rigTK;
+window  -title "Rigging toolkit 1.01 "  rigTK;
 
 rowColumnLayout -nc 1 -cw 1 285;
 
@@ -45,7 +45,7 @@ tabLayout tabList;
 
 
 
-string $tab1 = `columnLayout -w 275 -h 500 firstTab`;
+string $tab1 = `columnLayout -w 275 -h 555 firstTab`;
 
 frameLayout -w 275 one;     
 
@@ -176,7 +176,7 @@ frameLayout -w 275 two;
 
 separator -style "in" -w 275 -h 20;
 
-text -label "Create joint and place it :";
+text -label "Create joint(s) and place it :";
 
     //JointUtilities-------------------------------------------------------------
     
@@ -184,6 +184,28 @@ text -label "Create joint and place it :";
         
         button -label "To vertex" -c "jointOnAllVtx" jointToVetex;
         button -label "To center of selection" -c "jointCenter" mySlider;
+        text -label "";
+
+    setParent..;
+
+separator -style "in" -w 275 -h 20;
+
+        text -label "Edit joint(s)";
+        text -label "";
+
+    rowColumnLayout -nc 1 -cw 1 275;
+        //script jobs allows to toggle function when selection is changed
+        int $jobID = `scriptJob -e "SelectionChanged" updateObj`;
+        text -label "1-Store object or component";
+        textField -en off selObject;
+        button -label "store" -c "storeObj()";
+        button -label "reset" -c "resetObj()";
+        text -label "";
+        text -label "2 Edit joint(s)";
+        button -label "joint to stored vertex" -c "jntVtx()";
+        button -label "joint orient to stored object normals" -c "jntNrml()";
+        radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -labelArray3 "Xup" "Yup" "Zup" -select 1 normalAxis;
+
         
     setParent..;
     
@@ -324,6 +346,139 @@ showWindow rigTK;
 //                         ----------Functions----------
 // ---------------------------------------------------------------------------------
 
+
+//update text field
+
+proc updateObj(){
+
+
+     string $sel[] = `ls -sl`;
+
+
+     //For each object in your selection
+     for ($each in $sel){
+         //Get the name.
+         string $name = $each;  
+         //update  the name 
+         textField -e -tx $name selObject;  
+
+     }
+
+ }
+ 
+
+
+//store obj
+
+global proc storeObj(){
+
+scriptJob -ka;
+
+
+}
+
+global proc resetObj(){
+
+  //script jobs allows to toggle function when selection is changed
+        int $jobID = `scriptJob -e "SelectionChanged" updateObj`;
+
+}
+
+
+//move joint to vertex
+
+proc jntVtx(){
+
+
+
+
+    $value = `textField -query -tx selObject`;
+
+    //joint -p `pointPosition $value`;
+
+    float $pos[] = `xform -q -worldSpace -translation $value`;
+
+    //print("pos: " + $pos[0] + " " + $pos[1] + " " + $pos[2]);
+
+    float $x = $pos[0];
+    float $y = $pos[1];
+    float $z = $pos[2];
+
+    string $jnt[] = `ls -sl`;
+    
+    setAttr ( $jnt[0] + ".translateX") $x;
+    setAttr ( $jnt[0] + ".translateY") $y;
+    setAttr ( $jnt[0] + ".translateZ") $z;
+
+
+}
+
+//joint normal to object normal
+
+proc jntNrml(){
+
+    if (`radioButtonGrp -q -select normalAxis` == 1) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 1 0 0 -upVector 0 1 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+        if (`radioButtonGrp -q -select normalAxis` == 2) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 0 1 0 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+        if (`radioButtonGrp -q -select normalAxis` == 3) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 0 0 1 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+   
+}
 
 
 
