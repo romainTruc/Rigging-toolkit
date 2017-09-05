@@ -1,18 +1,8 @@
 //---------------------------------------------------------------------------
 // Rigging toolkit - MEL Script
 //---------------------------------------------------------------------------
-//Copyright (c) 2017 Romain Truchard : artstation.com/artist/romaintruc
-//
-//Permission is hereby granted, free of charge, to any person obtaining a copy of
-//this software and associated documentation files (the "Software"), to deal in
-//the Software without restriction, including without limitation the rights to
-//use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-//the Software, and to permit persons to whom the Software is furnished to do so,
-//subject to the following conditions:
-//
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
-//
+//Copyright (cc) 2017 Romain Truchard : artstation.com/artist/romaintruc
+
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 //FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -49,7 +39,7 @@ string $tab1 = `columnLayout -w 275 -h 555 firstTab`;
 
 frameLayout -w 275 one;     
 
-separator -style "in" -w 275 -h 20;
+separator -style "in" -w 275 -h 10;
 
     //NubsTextCreator------------------------------------------------------------
     
@@ -58,7 +48,7 @@ separator -style "in" -w 275 -h 20;
         text -label "Nurbs Text Creator";
         separator -style "none" -w 275 -h 10;
         textField userTxt;
-        text -label "";
+        text -label "" -h 3;
         //list all fonts in array fonts
         string $fonts[] = `fontDialog -FontList`;  
         optionMenu  fontName;
@@ -79,13 +69,13 @@ separator -style "in" -w 275 -h 20;
     //End------------------------------------------------------------------------
     
 
-separator -style "in" -w 275 -h 20;
+separator -style "in" -w 275 -h 10;
 
 
     //NurbsShapes----------------------------------------------------------------
     
         text -label "Nurbs shapes";
-        text -l "";
+        text -l "" -h 3;
     
     rowLayout -nc 6;
     
@@ -109,17 +99,32 @@ separator -style "in" -w 275 -h 20;
         button -label "Move" -c"moveShape" -w 50 -h 20  ;
      
     setParent ..;
+
+    text -l "Get nurbs curve code" ;
+
+   rowColumnLayout -nc 1 -cw 1 275; 
+
+        textField  nurbsCodeField;
+   
+        text -label "" -h 5;
+
+    rowLayout -nc 2;
+        button -label "get code " -c "getNurbsCode()" -w 135 -h 18;
+        button -label "run code" -c "runCode" -w 135 -h 18;
+    setParent ..;
+        
+    setParent..;
     
     //End------------------------------------------------------------------------
     
     
     //ColorMaker------------------------------------------------------------------------
     
-    separator -style "in" -w 275 -h 20;
+    separator -style "in" -w 275 -h 10;
     
 
         text -label "Color picker";
-        text -l "";
+        text -l "" -h 3;
 
   
 
@@ -144,9 +149,9 @@ separator -style "in" -w 275 -h 20;
 
 
 
-separator -style "in" -w 275 -h 20;
+separator -style "in" -w 275 -h 10;
 text -label "Locking";
-        text -l "";
+        text -l "" -h 3;
 
 
     rowLayout -nc 10;
@@ -199,11 +204,11 @@ separator -style "in" -w 275 -h 20;
         text -label "1-Store object or component";
         textField -en off selObject;
         button -label "store" -c "storeObj()";
-        button -label "reset" -c "resetObj()";
+        button -label "reset (selections should be cleared)" -c "resetObj()";
         text -label "";
         text -label "2 Edit joint(s)";
-        button -label "joint to stored vertex" -c "jntVtx()";
-        button -label "joint orient to stored object normals" -c "jntNrml()";
+        button -label "joint -> to stored vertex" -c "jntVtx()";
+        button -label "joint orient -> to stored object normals" -c "jntNrml()";
         radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -labelArray3 "Xup" "Yup" "Zup" -select 1 normalAxis;
 
         
@@ -347,6 +352,90 @@ showWindow rigTK;
 // ---------------------------------------------------------------------------------
 
 
+
+//get nurbs curve code
+
+
+proc getNurbsCode(){
+
+string $selNurbs[] = `ls -sl`;
+string $info[] = `listRelatives -s $selNurbs`;
+
+float $span = `getAttr $info.spans`;
+float $degr = `getAttr $info.degree`;
+
+string $deg = float($degr);
+
+
+
+for ($x = 0; $x <= $span; $x++){ 
+    select -add $selNurbs.cv[$x] ;
+ }
+
+string $ctrlPts[] = `ls -sl`;
+
+
+//DELETE beforeLast controlVertex of the arrax (because it always fucks up !)
+
+int $sizeOfArray = (size($ctrlPts));
+
+//int $beforeLastElement = ($sizeOfArray - 1);
+
+//print $beforeLastElement;
+
+
+int $removeIndex = ($sizeOfArray - 1); //this is the index you want removed
+
+$ctrlPts = stringArrayRemove ({$ctrlPts[$removeIndex]},$ctrlPts);
+
+
+//end of dis madness
+
+textField -edit -insertText "curve " nurbsCodeField; 
+
+
+for ($each in $ctrlPts){
+        
+
+         float $posCv[] = `xform -q -worldSpace -translation $each`;
+
+         string $xCv = float($posCv[0]);
+         string $yCv = float($posCv[1]);
+         string $zCv = float($posCv[2]);
+
+
+
+
+string $nrbCode = ( " -p " + $xCv + " " + $yCv + " " + $zCv);
+
+
+
+
+textField -edit -insertText $nrbCode nurbsCodeField; 
+        
+     }      
+
+
+
+textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; 
+
+
+}
+
+
+
+//runCode
+
+
+proc runCode(){
+
+string $curveCode = `textField -q -tx nurbsCodeField`;
+
+evalEcho $curveCode;
+
+
+}
+
 //update text field
 
 proc updateObj(){
@@ -372,8 +461,9 @@ proc updateObj(){
 
 global proc storeObj(){
 
+select -clear;
 scriptJob -ka;
-
+select -clear;
 
 }
 
