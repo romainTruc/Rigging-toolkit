@@ -1,5 +1,4 @@
-//---------------------------------------------------------------------------
-// Rigging toolkit - MEL Script
+// Rigging toolkit 1.05 - MEL Script
 //---------------------------------------------------------------------------
 //Copyright (cc) 2017 Romain Truchard : artstation.com/artist/romaintruc
 
@@ -19,7 +18,7 @@
 
 if (`window -exists rigTK`) deleteUI rigTK;
 
-window  -title "Rigging toolkit 1.01 "  rigTK;
+window  -title "Rigging toolkit 1.05 "  rigTK;
 
 rowColumnLayout -nc 1 -cw 1 285;
 
@@ -34,12 +33,11 @@ tabLayout tabList;
 // ---------------------------------------------------------------------------------
 
 
-
 string $tab1 = `columnLayout -w 275 -h 555 firstTab`;
 
 frameLayout -w 275 one;     
 
-separator -style "in" -w 275 -h 10;
+separator -style "in" -w 275 -h 3;
 
     //NubsTextCreator------------------------------------------------------------
     
@@ -48,7 +46,7 @@ separator -style "in" -w 275 -h 10;
         text -label "Nurbs Text Creator";
         separator -style "none" -w 275 -h 10;
         textField userTxt;
-        text -label "" -h 3;
+
         //list all fonts in array fonts
         string $fonts[] = `fontDialog -FontList`;  
         optionMenu  fontName;
@@ -59,7 +57,7 @@ separator -style "in" -w 275 -h 10;
 
      
 
-        text -label "";
+        text -label "" -h 1;
         button -label "Create Nurbs text" -command "setTxt()";
 
   
@@ -69,7 +67,7 @@ separator -style "in" -w 275 -h 10;
     //End------------------------------------------------------------------------
     
 
-separator -style "in" -w 275 -h 10;
+separator -style "in" -w 275 -h 3;
 
 
     //NurbsShapes----------------------------------------------------------------
@@ -80,11 +78,12 @@ separator -style "in" -w 275 -h 10;
     rowLayout -nc 6;
     
         button -label "Joystick" -w 50 -h 20 -command "joystick"  ;
-        button -label "Slider" -w 50 -h 20 -command "slider"  ;
-        button -label "Square" -w 50 -h 20 -command "square"  ;
+        button -label "Slider" -w 40 -h 20 -command "slider"  ;
+        button -label "Square" -w 42 -h 20 -command "square"  ;
+        button -label "Circle" -w 50 -h 20 -command "CreateNURBSCircle;"  ;
         button -label "Cube" -w 38 -h 20 -command "cube"  ;
         button -label "Arrow" -w 45 -h 20 -command "arrow"  ;
-        button -label "Pin" -w 30 -h 20 -command "pin"  ;
+        
     
     setParent ..;
     
@@ -93,10 +92,26 @@ separator -style "in" -w 275 -h 10;
     
         button -label "Orient" -c "orient" -w 44 -h 20  ;
         button -label "Cone" -c "coneShape" -w 38 -h 20 ;
-        button -label "Cross" -c "crossShape" -w 40 -h 20  ;
+
+         button -label "foot" -w 44 -h 20  -c "curve  -p 0.4249371493 4.798237341e-17 0.05965626747 -p 0.02479363527 6.785732323e-17 -0.3369861891 -p -0.4476029329 4.798237341e-17 0.05965626747 -p -0.1652321107 1.966335462e-32 0.8432678924 -p -0.6161659743 -4.798237341e-17 1.635912638 -p -0.5208473196 -6.785732323e-17 2.405743088 -p 0.6068085407 -4.798237341e-17 1.761965361 -p 0.4664682483 -3.644630068e-32 1.286896949 -p 0.4249371493 4.798237341e-17 0.05965626747 -d 3 ;"  ;
+        button -label "hand"  -w 38 -h 20 -c "hand";
         button -label "Rotate" -c "rotShape" -w 50 -h 20  ;
-        button -label "Sphere" -c"sphereShape" -w 45 -h 20 ;
-        button -label "Move" -c"moveShape" -w 50 -h 20  ;
+        button -label "Sphere" -c"sphereShape" -w 55 -h 20 ;
+     
+    setParent ..;
+
+        rowLayout -nc 8;
+        
+      
+        button -label "Move" -c "moveShape" -w 35 -h 20  ;
+        button -label "Pin" -c"pin" -w 30 -h 20 ;
+        button -label "Crown"  -w 40 -h 20 -c "curve  -p 10.23597986 0.5387466956 -5.064001608 -p 10.15148588 0.5387466956 -5.062031611 -p 9.56002042 -0.5387466956 -5.048241451 -p 9.475526441 -0.5387466956 -5.046271454 -p 8.58145858 -0.5387466956 -6.782167047 -p 7.226633651 -0.5387466956 -8.241302021 -p 5.569970572 -0.5387466956 -9.259395858 -p 5.575918388 -0.5387466956 -9.334794753 -p 5.617553638 0.5387466956 -9.862593802 -p 5.623501454 0.5387466956 -9.937992697 -p 5.001839687 0.5387466956 -10.29059582 -p 4.344093509 0.5387466956 -10.5859802 -p 3.656702513 0.5387466956 -10.81827359 -p 3.606075155 0.5387466956 -10.76522235 -p 3.251679087 -0.5387466956 -10.39385887 -p 3.201051728 -0.5387466956 -10.34080762 -p 2.190574766 -0.5387466956 -10.65877312 -p 1.115474937 -0.5387466956 -10.83086909 -p -7.092061795e-06 -0.5387466956 -10.83086909 -p -0.90576267 -0.5387466956 -10.83086909 -p -1.784795359 -0.5387466956 -10.71701313 -p -2.62448129 -0.5387466956 -10.5043222 -p -2.671915677 -0.5387466956 -10.55988243 -p -3.003960654 0.5387466956 -10.94880906 -p -3.05139504 0.5387466956 -11.00436929 -p -3.751523379 0.5387466956 -10.81058579 -p -4.424716067 0.5387466956 -10.55280353 -p -5.063966148 0.5387466956 -10.2359444 -p -5.062219942 0.5387466956 -10.1609001 -p -5.049996345 -0.5387466956 -9.63558328 -p -5.048250139 -0.5387466956 -9.560538985 -p -6.768344619 -0.5387466956 -8.633166803 -p -8.202614824 -0.5387466956 -7.245987887 -p -9.190595767 -0.5387466956 -5.564601881 -p -9.27364298 -0.5387466956 -5.571158032 -p -9.854980945 0.5387466956 -5.617051683 -p -9.938028157 0.5387466956 -5.623607835 -p -10.29056036 0.5387466956 -5.001875147 -p -10.58594474 0.5387466956 -4.344128969 -p -10.81823813 0.5387466956 -3.656808894 -p -10.75430462 0.5387466956 -3.595786253 -p -10.3067643 -0.5387466956 -3.168622271 -p -10.24283079 -0.5387466956 -3.10759963 -p -10.50899587 -0.5387466956 -2.176000579 -p -10.65458171 -0.5387466956 -1.193423788 -p -10.65458171 -0.5387466956 -0.1763653923 -p -10.65458171 -0.5387466956 0.7370779806 -p -10.53919387 -0.5387466956 1.623585703 -p -10.32297109 -0.5387466956 2.469654489 -p -10.3986773 -0.5387466956 2.534286166 -p -10.92862762 0.5387466956 2.986713719 -p -11.00433383 0.5387466956 3.051345396 -p -10.81062125 0.5387466956 3.751487919 -p -10.55276807 0.5387466956 4.424680607 -p -10.23597986 0.5387466956 5.063930688 -p -10.13068428 0.5387466956 5.061475283 -p -9.39360577 -0.5387466956 5.044287228 -p -9.288310194 -0.5387466956 5.041831823 -p -8.391901953 -0.5387466956 6.633886219 -p -7.100097084 -0.5387466956 7.973335559 -p -5.543446261 -0.5387466956 8.923629285 -p -5.552341193 -0.5387466956 9.036335204 -p -5.614606521 0.5387466956 9.825286778 -p -5.623501454 0.5387466956 9.937992697 -p -5.001839687 0.5387466956 10.29058164 -p -4.34416443 0.5387466956 10.5859802 -p -3.656844355 0.5387466956 10.81820267 -p -3.57692077 0.5387466956 10.73447778 -p -3.017448482 -0.5387466956 10.148396 -p -2.937524897 -0.5387466956 10.0646711 -p -2.004067725 -0.5387466956 10.33199928 -p -1.019349131 -0.5387466956 10.47813831 -p -7.092061795e-06 -0.5387466956 10.47813831 -p 0.8160055362 -0.5387466956 10.47813831 -p 1.609493776 -0.5387466956 10.38331744 -p 2.372925858 -0.5387466956 10.20961866 -p 2.448308993 -0.5387466956 10.29792341 -p 2.975997722 0.5387466956 10.91606455 -p 3.051380856 0.5387466956 11.00436929 -p 3.751523379 0.5387466956 10.81057161 -p 4.424716067 0.5387466956 10.55280353 -p 5.063895227 0.5387466956 10.2359444 -p 5.061247551 0.5387466956 10.12216838 -p 5.042713576 -0.5387466956 9.325725986 -p 5.0400659 -0.5387466956 9.211949965 -p 6.647495886 -0.5387466956 8.347200688 -p 8.005370402 -0.5387466956 7.080728664 -p 8.983918902 -0.5387466956 5.54819085 -p 9.089929982 -0.5387466956 5.556554671 -p 9.832017078 0.5387466956 5.615102172 -p 9.938028157 0.5387466956 5.623465994 -p 10.29054618 0.5387466956 5.001804226 -p 10.58601566 0.5387466956 4.344058049 -p 10.81823813 0.5387466956 3.656737974 -p 10.74537029 0.5387466956 3.587187607 -p 10.23528883 -0.5387466956 3.100328783 -p 10.16242099 -0.5387466956 3.030778417 -p 10.48156377 -0.5387466956 2.018500071 -p 10.65458171 -0.5387466956 0.9413860963 -p 10.65458171 -0.5387466956 -0.1763653923 -p 10.65458171 -0.5387466956 -0.9846902256 -p 10.56149131 -0.5387466956 -1.77090201 -p 10.39098396 -0.5387466956 -2.527766843 -p 10.45913326 -0.5387466956 -2.585943232 -p 10.93618453 0.5387466956 -2.993183191 -p 11.00433383 0.5387466956 -3.05135958 -p 10.81062125 0.5387466956 -3.75155884 -p 10.23597986 0.5387466956 -5.064001608 -d 3 ;"  ;
+        text -l "Nurbs Ball :" -w 75;
+        button -label "" -c"YellowBall" -bgc 0.973 0.992 0.259 -w 20 -h 20  ;
+        button -label "" -c "GreenBall" -bgc 0.271 0.992 0.231 -w 20 -h 20  ;
+        button -label "" -c"RedBall" -bgc 0.831 0.027 0.09 -w 20 -h 20  ;
+        button -label "" -c "BlueBall" -bgc 0.031 0.125 0.906 -w 20 -h 20  ;
+        
      
     setParent ..;
 
@@ -105,14 +120,21 @@ separator -style "in" -w 275 -h 10;
    rowColumnLayout -nc 1 -cw 1 275; 
 
         textField  nurbsCodeField;
-   
-        text -label "" -h 5;
+
+  optionMenu  fontName;
+      menuItem -label "Single curve";
+    menuItem -label "Multiple curves";
 
     rowLayout -nc 2;
         button -label "get code " -c "getNurbsCode()" -w 135 -h 18;
         button -label "run code" -c "runCode" -w 135 -h 18;
     setParent ..;
-        
+
+        text -label "" -h 5;
+        text -label "Merge curves" -h 18;
+        text -label "" -h 5;
+         button -label "merge" -c "mergeCurves" -w 135 -h 18;
+
     setParent..;
     
     //End------------------------------------------------------------------------
@@ -120,7 +142,7 @@ separator -style "in" -w 275 -h 10;
     
     //ColorMaker------------------------------------------------------------------------
     
-    separator -style "in" -w 275 -h 10;
+    separator -style "in" -w 275 -h 3;
     
 
         text -label "Color picker";
@@ -351,92 +373,201 @@ showWindow rigTK;
 //                         ----------Functions----------
 // ---------------------------------------------------------------------------------
 
+//NurbsBall
 
 
-//get nurbs curve code
+proc YellowBall(){
+
+ sphere -p 0 0 0 -ax 0 1 0 -ssw 0 -esw 360 -r 1 -d 3 -s 4 -nsp 4 -n "YellowNurbs";
 
 
-proc getNurbsCode(){
+shadingNode -asShader lambert -name "yellowLambert1";
+select -r YellowNurbs;
+hyperShade -assign yellowLambert1; 
 
-string $selNurbs[] = `ls -sl`;
-string $info[] = `listRelatives -s $selNurbs`;
+setAttr "yellowLambert1.color" -type double3 1 1 0 ;
+setAttr "yellowLambert1.ambientColor" -type double3 1 1 1 ;
 
-float $span = `getAttr $info.spans`;
-float $degr = `getAttr $info.degree`;
-
-string $deg = float($degr);
-
+}
 
 
-for ($x = 0; $x <= $span; $x++){ 
-    select -add $selNurbs.cv[$x] ;
- }
+proc GreenBall(){
 
-string $ctrlPts[] = `ls -sl`;
+ sphere -p 0 0 0 -ax 0 1 0 -ssw 0 -esw 360 -r 1 -d 3 -s 4 -nsp 4 -n "GreenNurbs";
 
 
-//DELETE beforeLast controlVertex of the arrax (because it always fucks up !)
+shadingNode -asShader lambert -name "greenLambert";
+select -r GreenNurbs;
+hyperShade -assign greenLambert; 
 
-int $sizeOfArray = (size($ctrlPts));
+setAttr "greenLambert.color" -type double3 0 1 0 ;
+setAttr "greenLambert.ambientColor" -type double3 1 1 1 ;
 
-//int $beforeLastElement = ($sizeOfArray - 1);
-
-//print $beforeLastElement;
-
-
-int $removeIndex = ($sizeOfArray - 1); //this is the index you want removed
-
-$ctrlPts = stringArrayRemove ({$ctrlPts[$removeIndex]},$ctrlPts);
+}
 
 
-//end of dis madness
+proc RedBall(){
 
-textField -edit -insertText "curve " nurbsCodeField; 
-
-
-for ($each in $ctrlPts){
-        
-
-         float $posCv[] = `xform -q -worldSpace -translation $each`;
-
-         string $xCv = float($posCv[0]);
-         string $yCv = float($posCv[1]);
-         string $zCv = float($posCv[2]);
+ sphere -p 0 0 0 -ax 0 1 0 -ssw 0 -esw 360 -r 1 -d 3 -s 4 -nsp 4 -n "RedNurbs";
 
 
+shadingNode -asShader lambert -name "redLambert";
+select -r RedNurbs;
+hyperShade -assign redLambert; 
+
+setAttr "redLambert.color" -type double3 1 0 0 ;
+setAttr "redLambert.ambientColor" -type double3 1 1 1 ;
+
+}
 
 
-string $nrbCode = ( " -p " + $xCv + " " + $yCv + " " + $zCv);
+proc BlueBall(){
+
+ sphere -p 0 0 0 -ax 0 1 0 -ssw 0 -esw 360 -r 1 -d 3 -s 4 -nsp 4 -n "BlueNurbs";
 
 
+shadingNode -asShader lambert -name "blueLambert";
+select -r BlueNurbs;
+hyperShade -assign blueLambert; 
 
-
-textField -edit -insertText $nrbCode nurbsCodeField; 
-        
-     }      
-
-
-
-textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; 
-
+setAttr "blueLambert.color" -type double3 0 0 1 ;
+setAttr "blueLambert.ambientColor" -type double3 1 1 1 ;
 
 }
 
 
 
-//runCode
+//get nurbs curve code-------------------------------
+
+
+proc getNurbsCode(){ //by romain truchard 
+
+textField -edit -tx "" nurbsCodeField; //clear field
+
+string $selectedCurve[] = `ls -sl`; //bring selection in an array
+
+// if there are no curves, inform the user. 
+ if( size($selectedCurve) == 0 ) 
+        {
+            error( "There are no curves selected! Please select a curve\n" );
+        }
+
+string $shapeOfCurve[] = `listRelatives -s $selectedCurve`; //get the shape of the curve
+
+ if( size($shapeOfCurve) > 1 ) 
+        {
+            error( "There are more than 1 curve please select the Multiple curves option.\n" );
+        }
+
+    float $span = `getAttr $shapeOfCurve.spans`; //get the number of CVs in curve
+
+    float $degr = `getAttr $shapeOfCurve.degree`; //get the degree of the curve (between 1 & 3)
+
+    string $deg = float($degr); // convert degree value to string to display in textField
+
+    for ($x = 0; $x <= $span; $x++){ //small loop to select all the CVs
+
+        select -add $selectedCurve.cv[$x] ;
+
+     }
+
+    string $ctrlPts[] = `ls -sl`; //get all the cv's name of curve in list
+
+    string $finalCvs[] = stringArrayRemove($selectedCurve, $ctrlPts); //remove name of curve from the list 
+
+    //(having the name of the curve caused an additional "0 0 0" value in the end wich fucked up the curve)
+
+    textField -edit -insertText "curve " nurbsCodeField; // -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
+
+    for ($each in $finalCvs){ //loop trough a clean list of all CVs in curve 
+        
+        float $posCv[] = `xform -q -worldSpace -translation $each`; //get the position of each CV / output exemple = 1 0.4 2
+
+        string $xCv = float($posCv[0]);//get each space coordinate by selecting number in array (x = 0 y = 1 z = 2)
+        string $yCv = float($posCv[1]);// written this way to convert float value to string in order to display in textField
+        string $zCv = float($posCv[2]);
+
+        string $nrbCode = ( " -p " + $xCv + " " + $yCv + " " + $zCv); //added -p and spaces to correctly display the code
+
+        textField -edit -insertText $nrbCode nurbsCodeField; //effectively insert what we just created in the text field
+            
+    }      
+
+    //function to insert first three -p cv's at the end to close the curve
+
+    string $firstCv = $finalCvs[0];
+
+    float $posFirstCv[] = `xform -q -worldSpace -translation $firstCv`;
+
+    string $xOne = float($posFirstCv[0]);
+    string $yOne = float($posFirstCv[1]);
+    string $zOne = float($posFirstCv[2]);
+
+    string $firstNurbsCode = ( " -p " + $xOne + " " + $yOne + " " + $zOne);
+
+    textField -edit -insertText $firstNurbsCode  nurbsCodeField; 
+
+    //end insert first to last
+
+    textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; //insert degree info at the end to finish the curve code
+
+    select -cl;
+
+}
+
+//end of get code-----------------------------------------------
+
+//runCode-------------------------------------------------------
 
 
 proc runCode(){
 
+
 string $curveCode = `textField -q -tx nurbsCodeField`;
+
 
 evalEcho $curveCode;
 
 
+textField -edit -tx "" nurbsCodeField; //delete textField
+
+
 }
 
-//update text field
+//end of get run code-------------------------------------------
+
+
+//merge curves--------------------------------------------------
+
+proc mergeCurves(){
+
+
+string $selectCrv[] = `ls -sl`; //bring selection in an array
+
+string $shapeCrv[] = `ls -shapes -dag $selectCrv`; //selectionne juste les shapes du textShape transform dag important !
+
+select $shapeCrv;
+
+string $firstChild = $selectCrv[0];
+
+select -add $firstChild;
+
+parent -r -s;
+
+stringArrayRemoveAtIndex(0, $selectCrv);
+
+select $selectCrv;
+
+delete;
+
+
+}
+
+
+//end of merge curves--------------------------------------------------
+
+
+//update textfield on selection ---------------------------------------
 
 proc updateObj(){
 
@@ -455,9 +586,10 @@ proc updateObj(){
 
  }
  
+//end of update textfield on selection --------------------------------
 
 
-//store obj
+//store obj-------------------------------------------------------------
 
 global proc storeObj(){
 
@@ -743,11 +875,11 @@ curve -n "cross_temp2" -p -0.239  0.035  0.0  -p -0.216  0.012  0.0  -p -0.192  
 group  -name "ctrl_temp" "cross_temp" "cross_temp1" "cross_temp2" ;
 
 
-string $shapes[] = `ls -shapes -dag "ctrl_temp"`; //selectionne juste les shapes du textShape transform dag important !
+string $shapesSlider[] = `ls -shapes -dag "ctrl_temp"`; //selectionne juste les shapes du textShape transform dag important !
 
 select -hi;
 
-select $shapes;
+select $shapesSlider;
 
 select -add "ctrl_temp";
 
@@ -807,11 +939,11 @@ curve -n "crv_temp10" -p 0.1 -0.8 -0.0 -p 0.067 -0.8 -0.0 -p 0.033 -0.8 -0.0 -p 
 
 group  -name "slider_temp" "crv_temp1" "crv_temp2" "crv_temp3" "crv_temp4" "crv_temp5" "crv_temp6" "crv_temp7" "crv_temp8" "crv_temp9" "crv_temp10"  ;
 
-string $shapes[] = `ls -shapes -dag "slider_temp"`; //selectionne juste les shapes du textShape transform dag important !
+string $shapesTemp[] = `ls -shapes -dag "slider_temp"`; //selectionne juste les shapes du textShape transform dag important !
 
 select -hi;
 
-select $shapes;
+select $shapesTemp;
 
 select -add "slider_temp";
 
@@ -860,7 +992,7 @@ proc setTxt() {
     
    textCurves -font $nameOk -t $value -n "text" ;
     
-   string $shapes[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
+   string $shapesTxt[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
    
    select -hi;
    
@@ -868,7 +1000,7 @@ proc setTxt() {
    
    CreateEmptyGroup;
     
-   select $shapes;
+   select $shapesTxt;
    
    renameSelectionList ("crv") ;
    
@@ -1370,6 +1502,22 @@ proc incrementName(){
 
 
 //SHAPES--------------------------------------------------------------------
+proc hand(){
+
+curve -n palmTemp01  -p -0.4664580021 0.003125000266 -1.608314611 -p -0.45428276 0.003125000266 -1.600478587 -p -0.4464447492 0.003125000266 -1.588301359 -p -0.4436731333 0.003125000266 -1.572506128 -p -0.4436731333 0.003125000266 0.4645302886 -p -0.4451195393 0.003125000266 0.482433537 -p -0.4494587574 0.003125000266 0.5006993804 -p -0.4566927745 0.003125000266 0.5182410273 -p -0.4668215904 0.003125000266 0.5339746667 -p -0.8063276598 0.003125000266 0.9815052139 -p -0.8374313502 0.003125000266 1.009656488 -p -0.8757710445 0.003125000266 1.024425525 -p -0.9170035509 0.003125000266 1.025450725 -p -0.9567896513 0.003125000266 1.012369492 -p -1.446759699 0.003125000266 0.7461662084 -p -1.543209948 0.003125000266 0.6852810573 -p -1.755400496 0.003125000266 0.4905715578 -p -1.967593032 0.003125000266 0.1439526675 -p -2.064043281 0.003125000266 -0.3726616497 -p -1.952220994 0.003125000266 -0.8784855394 -p -1.701871552 0.003125000266 -1.233482856 -p -1.440670091 0.003125000266 -1.447421807 -p -1.296295721 0.003125000266 -1.530069607 -p -1.288578906 0.003125000266 -1.533926028 -p -1.211418707 0.003125000266 -1.548696059 -p -1.041666665 0.003125000266 -1.573954521 -p -0.7937888294 0.003125000266 -1.598487792 -p -0.482253233 0.003125000266 -1.611088214 -p -0.4664580021 0.003125000266 -1.608314611 -d 1 ;
+curve -n thumbTemp01 -p -0.4205246761 0.005208333695 0.7114435226 -p -0.2390166121 0.005208333695 0.7908349225 -p 0.01012682913 0.005208333695 0.9588395543 -p 0.1963376996 0.005208333695 1.22305403 -p 0.1890440779 0.005208333695 1.591072975 -p 0.180061658 0.005208333695 1.603853204 -p 0.1663784184 0.005208333695 1.612292228 -p 0.1505235829 0.005208333695 1.614944635 -p 0.1350303489 0.005208333695 1.610363024 -p -0.6172835819 0.005208333695 1.193696756 -p -0.6569484861 0.005208333695 1.160059868 -p -0.6770829351 0.005208333695 1.115571954 -p -0.676961739 0.005208333695 1.066743829 -p -0.6558636816 0.005208333695 1.020085314 -p -0.4205246761 0.005208333695 0.7114435226 -d 1 ;
+curve -n indexTemp01 -p 1.599633692 0.001041666836 0.1473282772 -p 1.660879451 0.001041666836 0.1935039955 -p 1.701871552 0.001041666836 0.258486966 -p 1.716820397 0.001041666836 0.3372147675 -p 1.701871552 0.001041666836 0.415942569 -p 1.660879451 0.001041666836 0.4809265329 -p 1.599633692 0.001041666836 0.5271022512 -p 1.523919898 0.001041666836 0.5494063092 -p -0.1697520413 0.001041666836 0.5494063092 -p -0.2161085603 0.001041666836 0.539942085 -p -0.2541462577 0.001041666836 0.5142018192 -p -0.2798875169 0.001041666836 0.4761641218 -p -0.2893507477 0.001041666836 0.4298076028 -p -0.2893507477 0.001041666836 0.2407645183 -p -0.2798875169 0.001041666836 0.1944079993 -p -0.2541462577 0.001041666836 0.1563703018 -p -0.2161085603 0.001041666836 0.130630036 -p -0.1697520413 0.001041666836 0.1211658119 -p 1.523919898 0.001041666836 0.1211658119 -p 1.599633692 0.001041666836 0.1473282772 -d 1 ;   
+curve -n middleTemp01 -p 1.946856576 -0.001041666351 -0.4313761984 -p 2.008102335 -0.001041666351 -0.3852004801 -p 2.049094436 -0.001041666351 -0.3202165162 -p 2.064043281 -0.001041666351 -0.2414887147 -p 2.049094436 -0.001041666351 -0.1627609132 -p 2.008102335 -0.001041666351 -0.09777694928 -p 1.946856576 -0.001041666351 -0.05160123103 -p 1.871142782 -0.001041666351 -0.02929717298 -p -0.1697520413 -0.001041666351 -0.02929717298 -p -0.2161085603 -0.001041666351 -0.03876139715 -p -0.2541462577 -0.001041666351 -0.06450166296 -p -0.2798875169 -0.001041666351 -0.1025393604 -p -0.2893507477 -0.001041666351 -0.1488958794 -p -0.2893507477 -0.001041666351 -0.3379389639 -p -0.2798875169 -0.001041666351 -0.3842954829 -p -0.2541462577 -0.001041666351 -0.4223331804 -p -0.2161085603 -0.001041666351 -0.4480734462 -p -0.1697520413 -0.001041666351 -0.4575376703 -p 1.871142782 -0.001041666351 -0.4575376703 -p 1.946856576 -0.001041666351 -0.4313761984 -d 1 ;
+curve -n ringTemp01 -p 1.638213791 -0.003125000023 -1.010078687 -p 1.699459551 -0.003125000023 -0.9639029689 -p 1.740451652 -0.003125000023 -0.8989199984 -p 1.755402483 -0.003125000023 -0.8201921969 -p 1.740451652 -0.003125000023 -0.7414643953 -p 1.699459551 -0.003125000023 -0.6764804315 -p 1.638213791 -0.003125000023 -0.6303047132 -p 1.562499998 -0.003125000023 -0.6080006552 -p -0.1697520413 -0.003125000023 -0.6080006552 -p -0.2161085603 -0.003125000023 -0.6174648793 -p -0.2541462577 -0.003125000023 -0.6432051452 -p -0.2798875169 -0.003125000023 -0.6812428426 -p -0.2893507477 -0.003125000023 -0.7275993616 -p -0.2893507477 -0.003125000023 -0.9166424461 -p -0.2798875169 -0.003125000023 -0.9629989651 -p -0.2541462577 -0.003125000023 -1.001036663 -p -0.2161085603 -0.003125000023 -1.026777922 -p -0.1697520413 -0.003125000023 -1.036241153 -p 1.562499998 -0.003125000023 -1.036241153 -p 1.638213791 -0.003125000023 -1.010078687 -d 1 ;
+curve -n pinkyTemp01 -p 1.290990907 -0.005208333695 -1.588782169 -p 1.352238653 -0.005208333695 -1.542606451 -p 1.393228767 -0.005208333695 -1.477623481 -p 1.408179599 -0.005208333695 -1.398895679 -p 1.393228767 -0.005208333695 -1.320167878 -p 1.352238653 -0.005208333695 -1.255184907 -p 1.290990907 -0.005208333695 -1.209009189 -p 1.215279101 -0.005208333695 -1.186705131 -p -0.1697520413 -0.005208333695 -1.186705131 -p -0.2161085603 -0.005208333695 -1.196168362 -p -0.2541462577 -0.005208333695 -1.221909621 -p -0.2798875169 -0.005208333695 -1.259947318 -p -0.2893507477 -0.005208333695 -1.306303837 -p -0.2893507477 -0.005208333695 -1.495345928 -p -0.2798875169 -0.005208333695 -1.541702447 -p -0.2541462577 -0.005208333695 -1.579740145 -p -0.2161085603 -0.005208333695 -1.605481404 -p -0.1697520413 -0.005208333695 -1.614944635 -p 1.215279101 -0.005208333695 -1.611088214 -p 1.290990907 -0.005208333695 -1.588782169 -d 1 ;  
+
+select "*Temp01";
+
+group -n Hand;
+}
+
+
+
 proc square(){
    string $sqr = `curve -d 1 -p -1.456834653e-016 -1 1 -p 1.456834653e-016 1 1 -p 1.456834653e-016 1 -1 -p -1.456834653e-016 -1 -1 -p -1.456834653e-016 -1 1  -n "square"`; 
 setAttr ($sqr + ".rotateY") 90 ; 
