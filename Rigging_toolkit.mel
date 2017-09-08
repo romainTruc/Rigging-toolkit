@@ -1,4 +1,4 @@
-// Rigging toolkit 1.06 - MEL Script
+// Rigging toolkit 1.2 - MEL Script
 //---------------------------------------------------------------------------
 //Copyright (cc) 2017 Romain Truchard : artstation.com/artist/romaintruc
 
@@ -18,7 +18,7 @@
 
 if (`window -exists rigTK`) deleteUI rigTK;
 
-window  -title "Rigging toolkit 1.05 "  rigTK;
+window  -title "Rigging toolkit 1.2 "  rigTK;
 
 rowColumnLayout -nc 1 -cw 1 285;
 
@@ -37,13 +37,13 @@ string $tab1 = `columnLayout -w 275 -h 555 firstTab`;
 
 frameLayout -w 275 one;     
 
-separator -style "in" -w 275 -h 3;
+separator -style "in" -w 275 -h 2;
 
     //NubsTextCreator------------------------------------------------------------
     
     rowColumnLayout -nc 1 -cw 1 275;
     
-        text -label "Nurbs Text Creator";
+        text -label "Nurbs Text Creator" -h 10;
         separator -style "none" -w 275 -h 10;
         textField userTxt;
 
@@ -107,10 +107,10 @@ separator -style "in" -w 275 -h 3;
         button -label "Pin" -c"pin" -w 30 -h 20 ;
         button -label "Crown"  -w 40 -h 20 -c "curve  -p 10.23597986 0.5387466956 -5.064001608 -p 10.15148588 0.5387466956 -5.062031611 -p 9.56002042 -0.5387466956 -5.048241451 -p 9.475526441 -0.5387466956 -5.046271454 -p 8.58145858 -0.5387466956 -6.782167047 -p 7.226633651 -0.5387466956 -8.241302021 -p 5.569970572 -0.5387466956 -9.259395858 -p 5.575918388 -0.5387466956 -9.334794753 -p 5.617553638 0.5387466956 -9.862593802 -p 5.623501454 0.5387466956 -9.937992697 -p 5.001839687 0.5387466956 -10.29059582 -p 4.344093509 0.5387466956 -10.5859802 -p 3.656702513 0.5387466956 -10.81827359 -p 3.606075155 0.5387466956 -10.76522235 -p 3.251679087 -0.5387466956 -10.39385887 -p 3.201051728 -0.5387466956 -10.34080762 -p 2.190574766 -0.5387466956 -10.65877312 -p 1.115474937 -0.5387466956 -10.83086909 -p -7.092061795e-06 -0.5387466956 -10.83086909 -p -0.90576267 -0.5387466956 -10.83086909 -p -1.784795359 -0.5387466956 -10.71701313 -p -2.62448129 -0.5387466956 -10.5043222 -p -2.671915677 -0.5387466956 -10.55988243 -p -3.003960654 0.5387466956 -10.94880906 -p -3.05139504 0.5387466956 -11.00436929 -p -3.751523379 0.5387466956 -10.81058579 -p -4.424716067 0.5387466956 -10.55280353 -p -5.063966148 0.5387466956 -10.2359444 -p -5.062219942 0.5387466956 -10.1609001 -p -5.049996345 -0.5387466956 -9.63558328 -p -5.048250139 -0.5387466956 -9.560538985 -p -6.768344619 -0.5387466956 -8.633166803 -p -8.202614824 -0.5387466956 -7.245987887 -p -9.190595767 -0.5387466956 -5.564601881 -p -9.27364298 -0.5387466956 -5.571158032 -p -9.854980945 0.5387466956 -5.617051683 -p -9.938028157 0.5387466956 -5.623607835 -p -10.29056036 0.5387466956 -5.001875147 -p -10.58594474 0.5387466956 -4.344128969 -p -10.81823813 0.5387466956 -3.656808894 -p -10.75430462 0.5387466956 -3.595786253 -p -10.3067643 -0.5387466956 -3.168622271 -p -10.24283079 -0.5387466956 -3.10759963 -p -10.50899587 -0.5387466956 -2.176000579 -p -10.65458171 -0.5387466956 -1.193423788 -p -10.65458171 -0.5387466956 -0.1763653923 -p -10.65458171 -0.5387466956 0.7370779806 -p -10.53919387 -0.5387466956 1.623585703 -p -10.32297109 -0.5387466956 2.469654489 -p -10.3986773 -0.5387466956 2.534286166 -p -10.92862762 0.5387466956 2.986713719 -p -11.00433383 0.5387466956 3.051345396 -p -10.81062125 0.5387466956 3.751487919 -p -10.55276807 0.5387466956 4.424680607 -p -10.23597986 0.5387466956 5.063930688 -p -10.13068428 0.5387466956 5.061475283 -p -9.39360577 -0.5387466956 5.044287228 -p -9.288310194 -0.5387466956 5.041831823 -p -8.391901953 -0.5387466956 6.633886219 -p -7.100097084 -0.5387466956 7.973335559 -p -5.543446261 -0.5387466956 8.923629285 -p -5.552341193 -0.5387466956 9.036335204 -p -5.614606521 0.5387466956 9.825286778 -p -5.623501454 0.5387466956 9.937992697 -p -5.001839687 0.5387466956 10.29058164 -p -4.34416443 0.5387466956 10.5859802 -p -3.656844355 0.5387466956 10.81820267 -p -3.57692077 0.5387466956 10.73447778 -p -3.017448482 -0.5387466956 10.148396 -p -2.937524897 -0.5387466956 10.0646711 -p -2.004067725 -0.5387466956 10.33199928 -p -1.019349131 -0.5387466956 10.47813831 -p -7.092061795e-06 -0.5387466956 10.47813831 -p 0.8160055362 -0.5387466956 10.47813831 -p 1.609493776 -0.5387466956 10.38331744 -p 2.372925858 -0.5387466956 10.20961866 -p 2.448308993 -0.5387466956 10.29792341 -p 2.975997722 0.5387466956 10.91606455 -p 3.051380856 0.5387466956 11.00436929 -p 3.751523379 0.5387466956 10.81057161 -p 4.424716067 0.5387466956 10.55280353 -p 5.063895227 0.5387466956 10.2359444 -p 5.061247551 0.5387466956 10.12216838 -p 5.042713576 -0.5387466956 9.325725986 -p 5.0400659 -0.5387466956 9.211949965 -p 6.647495886 -0.5387466956 8.347200688 -p 8.005370402 -0.5387466956 7.080728664 -p 8.983918902 -0.5387466956 5.54819085 -p 9.089929982 -0.5387466956 5.556554671 -p 9.832017078 0.5387466956 5.615102172 -p 9.938028157 0.5387466956 5.623465994 -p 10.29054618 0.5387466956 5.001804226 -p 10.58601566 0.5387466956 4.344058049 -p 10.81823813 0.5387466956 3.656737974 -p 10.74537029 0.5387466956 3.587187607 -p 10.23528883 -0.5387466956 3.100328783 -p 10.16242099 -0.5387466956 3.030778417 -p 10.48156377 -0.5387466956 2.018500071 -p 10.65458171 -0.5387466956 0.9413860963 -p 10.65458171 -0.5387466956 -0.1763653923 -p 10.65458171 -0.5387466956 -0.9846902256 -p 10.56149131 -0.5387466956 -1.77090201 -p 10.39098396 -0.5387466956 -2.527766843 -p 10.45913326 -0.5387466956 -2.585943232 -p 10.93618453 0.5387466956 -2.993183191 -p 11.00433383 0.5387466956 -3.05135958 -p 10.81062125 0.5387466956 -3.75155884 -p 10.23597986 0.5387466956 -5.064001608 -d 3 ;"  ;
         text -l "Nurbs Ball :" -w 75;
-        button -label "" -c"YellowBall" -bgc 0.973 0.992 0.259 -w 20 -h 20  ;
-        button -label "" -c "GreenBall" -bgc 0.271 0.992 0.231 -w 20 -h 20  ;
-        button -label "" -c"RedBall" -bgc 0.831 0.027 0.09 -w 20 -h 20  ;
-        button -label "" -c "BlueBall" -bgc 0.031 0.125 0.906 -w 20 -h 20  ;
+         button -label "" -c"RedBall" -bgc 0.831 0.027 0.09 -w 20 -h 10  ;
+        button -label "" -c"YellowBall" -bgc 0.973 0.992 0.259 -w 20 -h 10  ;
+        button -label "" -c "GreenBall" -bgc 0.271 0.992 0.231 -w 20 -h 10  ;
+        button -label "" -c "BlueBall" -bgc 0.031 0.125 0.906 -w 20 -h 10  ;
         
      
     setParent ..;
@@ -120,20 +120,24 @@ separator -style "in" -w 275 -h 3;
    rowColumnLayout -nc 1 -cw 1 275; 
 
         textField  nurbsCodeField;
-
-  optionMenu  fontName;
+radioButtonGrp -nrb 2 -cw 1 150 -cw 2 110  -labelArray2 "closed curve(s)" "opened curve(s)" -select 1 closedOrOpen;
+  optionMenu  -changeCommand "enableButton()" codeOption ;
       menuItem -label "Mel";
     menuItem -label "Python";
 
     rowLayout -nc 2;
-        button -label "get code " -c "getNurbsCode()" -w 135 -h 18;
-        button -label "run code" -c "runCode" -w 135 -h 18;
+        button -label "get code " -c "getNurbsCode()" -w 135 -h 18 getCode;
+        button -label "run code" -c "runCode" -w 136 -h 18 runCode;
     setParent ..;
 
         text -label "" -h 5;
-        text -label "Merge curves" -h 18;
+        text -label "Curve actions" -h 18;
         text -label "" -h 5;
          button -label "merge" -c "mergeCurves" -w 135 -h 18;
+         text -label "" -h 2;
+         button -label "import SVG" -c "importSvg" -w 135 -h 18;
+         int $jobCrv = `scriptJob -e "readingFile" convertToCurves`;
+         int $jobMesh = `scriptJob -e "SelectTypeChanged" deleteMesh`;
 
     setParent..;
     
@@ -146,7 +150,7 @@ separator -style "in" -w 275 -h 3;
     
 
         text -label "Color picker";
-        text -l "" -h 3;
+      
 
   
 
@@ -171,16 +175,15 @@ separator -style "in" -w 275 -h 3;
 
 
 
-separator -style "in" -w 275 -h 10;
+separator -style "in" -w 275 -h 2;
 text -label "Locking";
-        text -l "" -h 3;
-
+        
 
     rowLayout -nc 10;
         
         button -label "Normal" -w 90 -h 22 -command "normal;" abc;
-        button -label "Template" -w 90 -h 22 -command "template;" bac;
-        button -label "Reference" -w 90 -h 22 -command "reference;" cab;
+        button -label "Template" -w 91 -h 22 -command "template;" bac;
+        button -label "Reference" -w 91 -h 22 -command "reference;" cab;
     
     setParent ..;
 
@@ -373,6 +376,26 @@ showWindow rigTK;
 //                         ----------Functions----------
 // ---------------------------------------------------------------------------------
 
+//import svg
+proc importSvg(){
+createSVGCallback();
+AESCGFileBrowser "AESVGAssignFileAttribute  svg1.svgFilepath" "svg1.svgFilepath ";
+
+
+}
+
+//convertToCurves
+proc convertToCurves(){
+
+convertTypeCapsToCurves();
+
+}
+
+proc deleteMesh(){
+    delete svgMesh1;
+}
+
+
 //NurbsBall
 
 
@@ -476,32 +499,202 @@ setAttr "blueLambert.ambientColor" -type double3 1 1 1 ;
 
 proc getNurbsCode(){ //by romain truchard 
 
-textField -edit -tx "" nurbsCodeField; //clear field
 
-string $userSelect[] = `ls -sl`; //bring selection in an array
-// 
 
-// if there are no curves, inform the user. 
- if( size($userSelect) == 0 ) 
+        if (`radioButtonGrp -q -select closedOrOpen` == 1) { ///CLOSED CURVE---------------0---------------------0-------------0-------------
+
+
+                textField -edit -tx "" nurbsCodeField; //clear field
+
+                string $userSelect[] = `ls -sl`; //bring selection in an array
+
+                // if there are no curves, inform the user. 
+                if( size($userSelect) == 0 ) 
+                {
+                    error( "There are no curves selected! Please select a curve\n" );
+                }
+
+                string $shapeOfCurve[] = `listRelatives -s $userSelect`; //get the shape of the curve
+
+                string $children[] = `listRelatives -c $userSelect`; //get the shape of the curve
+
+                string $catchTransform[] = `ls -shapes -dag $userSelect`; //selectionne juste les shapes de la selection (transform dag important) !
+
+                if( size($catchTransform) > 1 ) 
+                {
+                    
+
+
+                    for ($each in $children){ //big loop to parse each curve
+
+                    select $each ;
+
+                   // selectCurveCV all;
+
+                   float $span = `getAttr $each.spans`; //get the number of CVs in curve
+                    float $degr = `getAttr $each.degree`; //get the degree of the curve (between 1 & 3)
+                    string $deg = float($degr);
+                   //print $span;
+
+                     for ($x = 0; $x <= $span; $x++){ //small loop to select all the CVs
+
+                select -add $each.cv[$x] ;
+
+                    }
+
+                    string $points[] = `ls -sl`;
+
+                    string $finalCvs[] = stringArrayRemove($children, $points);
+
+                    print $finalCvs;
+                    
+
+                textField -edit -insertText "curve " nurbsCodeField; 
+
+                     for ($each in $finalCvs){
+
+                float $posCv[] = `xform -q -worldSpace -translation $each`; //get the position of each CV / output exemple = 1 0.4 2
+
+                string $xCv = float($posCv[0]);//get each space coordinate by selecting number in array (x = 0 y = 1 z = 2)
+                string $yCv = float($posCv[1]);// written this way to convert float value to string in order to display in textField
+                string $zCv = float($posCv[2]);
+
+                string $melCode = ( " -p " + $xCv + " " + $yCv + " " + $zCv + " "); //added -p and spaces to correctly display the code
+
+                textField -edit -insertText $melCode nurbsCodeField; //effectively insert what we just created in the text field
+
+                     }
+
+                //function to insert first three -p cv's at the end to close the curve
+
+                string $firstCv = $finalCvs[0];
+
+                float $posFirstCv[] = `xform -q -worldSpace -translation $firstCv`;
+
+                string $xOne = float($posFirstCv[0]);
+                string $yOne = float($posFirstCv[1]);
+                string $zOne = float($posFirstCv[2]);
+
+                string $firstNurbsCode = ( " -p " + $xOne + " " + $yOne + " " + $zOne);
+
+                textField -edit -insertText $firstNurbsCode  nurbsCodeField; 
+
+                //end insert first to last
+
+
+
+                // -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
+                textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; 
+                     
+                    }//end loop curves
+
+                } // end if statement
+
+                else{ 
+
+                float $span = `getAttr $shapeOfCurve.spans`; //get the number of CVs in curve
+
+                float $degr = `getAttr $shapeOfCurve.degree`; //get the degree of the curve (between 1 & 3)
+
+                string $deg = float($degr); // convert degree value to string to display in textField
+
+                for ($x = 0; $x <= $span; $x++){ //small loop to select all the CVs
+
+                select -add $userSelect.cv[$x] ;
+
+                }
+
+
+
+                string $ctrlPts[] = `ls -sl`; //get all the cv's name of curve in list
+
+                string $finalCvs[] = stringArrayRemove($userSelect, $ctrlPts); //remove name of curve from the list 
+
+                //(having the name of the curve caused an additional "0 0 0" value in the end wich fucked up the curve)
+
+                        //--------------------------------------------------------------------------------------------------------------------------------------
+
+                       
+
+                            textField -edit -insertText "curve " nurbsCodeField; // -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
+
+                                for ($each in $finalCvs){ //loop trough a clean list of all CVs in curve 
+
+                                    float $posCv[] = `xform -q -worldSpace -translation $each`; //get the position of each CV / output exemple = 1 0.4 2
+
+                                    string $xCv = float($posCv[0]);//get each space coordinate by selecting number in array (x = 0 y = 1 z = 2)
+                                    string $yCv = float($posCv[1]);// written this way to convert float value to string in order to display in textField
+                                    string $zCv = float($posCv[2]);
+
+                                    string $nrbCode = ( " -p " + $xCv + " " + $yCv + " " + $zCv); //added -p and spaces to correctly display the code
+
+                                    textField -edit -insertText $nrbCode nurbsCodeField; //effectively insert what we just created in the text field
+                                        
+                                }      
+
+                            //function to insert first three -p cv's at the end to close the curve
+
+                            string $firstCv = $finalCvs[0];
+
+                            float $posFirstCv[] = `xform -q -worldSpace -translation $firstCv`;
+
+                            string $xOne = float($posFirstCv[0]);
+                            string $yOne = float($posFirstCv[1]);
+                            string $zOne = float($posFirstCv[2]);
+
+                            string $firstNurbsCode = ( " -p " + $xOne + " " + $yOne + " " + $zOne);
+
+                            textField -edit -insertText $firstNurbsCode  nurbsCodeField; 
+
+                            //end insert first to last
+
+                            textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; //insert degree info at the end to finish the curve code
+
+
+               
+                select -cl;
+
+                }//END IF ONLY ONE CURVE-----------------------i--------------------------------------i-------------------------i----------------
+
+
+
+        }//END IF CLOSED CURVE------------0----------------------0------------------------0--------------------------
+
+       
+
+
+
+
+         else if (`radioButtonGrp -q -select closedOrOpen` == 2) { ///OPEN CURVE
+
+
+
+        textField -edit -tx "" nurbsCodeField; //clear field
+
+        string $userSelect[] = `ls -sl`; //bring selection in an array
+        // 
+
+        // if there are no curves, inform the user. 
+        if( size($userSelect) == 0 ) //IF MULTIPLE CURVES--------------------a--------------a----------a----------
         {
             error( "There are no curves selected! Please select a curve\n" );
         }
 
-string $shapeOfCurve[] = `listRelatives -s $userSelect`; //get the shape of the curve
+        string $shapeOfCurve[] = `listRelatives -s $userSelect`; //get the shape of the curve
 
-string $children[] = `listRelatives -c $userSelect`; //get the shape of the curve
+        string $children[] = `listRelatives -c $userSelect`; //get the shape of the curve
 
-string $catchTransform[] = `ls -shapes -dag $userSelect`; //selectionne juste les shapes de la selection (transform dag important) !
+        string $catchTransform[] = `ls -shapes -dag $userSelect`; //selectionne juste les shapes de la selection (transform dag important) !
 
-if( size($catchTransform) > 1 ) 
+        if( size($catchTransform) > 1 ) 
         {
             
-    
+
 
             for ($each in $children){ //big loop to parse each curve
 
             select $each ;
-    
+
            // selectCurveCV all;
 
            float $span = `getAttr $each.spans`; //get the number of CVs in curve
@@ -522,9 +715,9 @@ if( size($catchTransform) > 1 )
             print $finalCvs;
             
 
- textField -edit -insertText "curve " nurbsCodeField; 
+        textField -edit -insertText "curve " nurbsCodeField; 
 
-             for ($each in $points){
+             for ($each in $finalCvs){
 
         float $posCv[] = `xform -q -worldSpace -translation $each`; //get the position of each CV / output exemple = 1 0.4 2
 
@@ -538,40 +731,43 @@ if( size($catchTransform) > 1 )
 
              }
 
+        
 
-// -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
- textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; 
+
+
+        // -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
+        textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; 
              
-            }
+            }//end loop curves
 
-        } // end if statement
+        } //END IF MULTIPLE CURVES----------------------------------------a---------------------a-----------------a-----------
 
-    else{ 
+        else{ //IF THE THERE IS ONLY ONE CURVE -------------------i--------------------i--------------------i--------------i-----
 
-    float $span = `getAttr $shapeOfCurve.spans`; //get the number of CVs in curve
+        float $span = `getAttr $shapeOfCurve.spans`; //get the number of CVs in curve
 
-    float $degr = `getAttr $shapeOfCurve.degree`; //get the degree of the curve (between 1 & 3)
+        float $degr = `getAttr $shapeOfCurve.degree`; //get the degree of the curve (between 1 & 3)
 
-    string $deg = float($degr); // convert degree value to string to display in textField
+        string $deg = float($degr); // convert degree value to string to display in textField
 
-    for ($x = 0; $x <= $span; $x++){ //small loop to select all the CVs
+        for ($x = 0; $x <= $span; $x++){ //small loop to select all the CVs
 
         select -add $userSelect.cv[$x] ;
 
-     }
+        }
 
 
 
-    string $ctrlPts[] = `ls -sl`; //get all the cv's name of curve in list
+        string $ctrlPts[] = `ls -sl`; //get all the cv's name of curve in list
 
-    string $finalCvs[] = stringArrayRemove($userSelect, $ctrlPts); //remove name of curve from the list 
+        string $finalCvs[] = stringArrayRemove($userSelect, $ctrlPts); //remove name of curve from the list 
 
-    //(having the name of the curve caused an additional "0 0 0" value in the end wich fucked up the curve)
+        //(having the name of the curve caused an additional "0 0 0" value in the end wich fucked up the curve)
 
         textField -edit -insertText "curve " nurbsCodeField; // -insertText : very useful tool to insert at the bracket (insert word "curve" to make code work)
 
-    for ($each in $finalCvs){ //loop trough a clean list of all CVs in curve 
-        
+        for ($each in $finalCvs){ //loop trough a clean list of all CVs in curve 
+
         float $posCv[] = `xform -q -worldSpace -translation $each`; //get the position of each CV / output exemple = 1 0.4 2
 
         string $xCv = float($posCv[0]);//get each space coordinate by selecting number in array (x = 0 y = 1 z = 2)
@@ -582,40 +778,51 @@ if( size($catchTransform) > 1 )
 
         textField -edit -insertText $nrbCode nurbsCodeField; //effectively insert what we just created in the text field
             
-    }      
+        }      
 
-    //function to insert first three -p cv's at the end to close the curve
+       
 
-    string $firstCv = $finalCvs[0];
-
-    float $posFirstCv[] = `xform -q -worldSpace -translation $firstCv`;
-
-    string $xOne = float($posFirstCv[0]);
-    string $yOne = float($posFirstCv[1]);
-    string $zOne = float($posFirstCv[2]);
-
-    string $firstNurbsCode = ( " -p " + $xOne + " " + $yOne + " " + $zOne);
-
-    textField -edit -insertText $firstNurbsCode  nurbsCodeField; 
-
-    //end insert first to last
-
-    textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; //insert degree info at the end to finish the curve code
+        textField -edit -insertText ( " -d " + $deg + " ;") nurbsCodeField; //insert degree info at the end to finish the curve code
 
 
-    select -cl;
+        select -cl;
 
-}//end else statement
+        }//END IF ONLY ONE CURVE-----------------------i--------------------------------------i-------------------------i----------------
 
+
+
+
+        }///END OPEN CURVE-----------------0----------------------------------0--------------------------------0----------------------0------
 }
 
 //end of get code-----------------------------------------------
 
 //runCode-------------------------------------------------------
 
+proc enableButton()
+{
+string $value= `optionMenu -q -v codeOption`;
+
+
+if ($value == "Python") {
+    button -e -enable false runCode;
+    button -e -l "paste Py code in console" runCode;
+
+    //change function if python is selected
+
+    button -e -c "converToPython" getCode;
+
+
+}else if($value == "Mel"){
+    button -e -enable true runCode; 
+    button -e -l "run code" runCode;
+
+    button -e -c "getNurbsCode" getCode;
+}
+
+}
 
 proc runCode(){
-
 
 string $curveCode = `textField -q -tx nurbsCodeField`;
 
@@ -628,7 +835,44 @@ textField -edit -tx "" nurbsCodeField; //delete textField
 
 }
 
+
+proc converToPython(){
+
+getNurbsCode;
+
+string $valueTxt = `textField -q -tx nurbsCodeField`;
+
+
+string $aReplace = substituteAllString($valueTxt, "-p", "] [");
+
+string $bReplace = substituteAllString($aReplace, "curve  ] ", "mc.curve(p=[");
+
+string $cReplace = substituteAllString($bReplace, " ", ", ");
+
+string $dReplace = substituteAllString($cReplace, ", ], [, ", "], [");
+
+string $eReplace = substituteAllString($dReplace, ", -d, ", "]],d=");
+
+string $fReplace = substituteAllString($eReplace, ", ;", ") ");
+
+string $gReplace = substituteAllString($fReplace, "p=[[, ", "p=[[");
+
+string $hReplace = substituteAllString($gReplace, ", ]", "]");
+
+
+
+
+textField -edit -tx ($hReplace) nurbsCodeField;
+
+
+
+}
+
+
+
+
 //end of get run code-------------------------------------------
+
 
 
 //merge curves--------------------------------------------------
