@@ -1,143 +1,166 @@
-// Rigging toolkit 1.2 - MEL Script
-//---------------------------------------------------------------------------
-//Copyright (cc) 2017 Romain Truchard : artstation.com/artist/romaintruc
+//1.5
 
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-//FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-//IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-// DESCRIPTION:
-//      Rigging toolkit    
-//
-// AUTHOR:
-//      Romain Truchard - truchard.romain@gmail.com
-//----------------------------------------------------------------------------
 
 if (`window -exists rigTK`) deleteUI rigTK;
 
-window  -title "Rigging toolkit 1.2 "  rigTK;
+window  -title "Rigging toolkit 1.2 " -h 430 rigTK;
 
-rowColumnLayout -nc 1 -cw 1 285;
+string $form = `formLayout`;
 
-// UI ------------------------------------------------------------------------------
-
-
-tabLayout tabList;
-
+tabLayout -w 285 windowTabs;
 
 // ---------------------------------------------------------------------------------
 //                                         Tab 1                                    
 // ---------------------------------------------------------------------------------
+string $tab1 = `rowColumnLayout -h 430`;
+
+	proc sep(){separator -style "in" -w 275 -h 10;}
+	proc space(){text -l "" -h 4;}
+		
+		sep;
+
+		text -l "NURBS TEXT CREATOR" -h 15 -bgc 0.227 0.227 0.227;space;
+
+		rowLayout -nc 2 ;
+
+				textField -w 248 -ec "setTxt()" userTxt;
+
+				button -l "▶" -al "center"  -c "setTxt()" -w 24 -h 20 -bgc 0.071 1 0.776; 
+
+		setParent..;
+
+		
 
 
-string $tab1 = `columnLayout -w 275 -h 555 firstTab`;
+				//list all fonts in array fonts
+				string $fonts[] = `fontDialog -FontList`;  
+				optionMenu  -w 275 fontName;
+				//loop in fonts add item to label
+				for ( $item in $fonts ) {
+				    $list = `menuItem -label $item` ;              
+				}
 
-frameLayout -w 275 one;     
+		
 
-separator -style "in" -w 275 -h 2;
+		sep;
 
-    //NubsTextCreator------------------------------------------------------------
+
+		text -l "NURBS SHAPES" -h 15  -bgc 0.227 0.227 0.227;
+		space;
+		        
+		 
+
+		rowLayout -nc 2;
+
+				string $formShapes = `formLayout -w 136`;
+
+						paneLayout -h 100 -w 135;
+
+								string $editor = `modelEditor -gr off `;
+
+						setParent ..;
+
+				setParent..;
+
+
+				string $listShapes = `formLayout -w 136`;
+
+						string $listScroll = `textScrollList 
+						-numberOfRows 8 
+						-allowMultiSelection false 
+						-h 105 
+						-w 136
+						-dcc "scollListFunction" 
+						-sc "changeImage" 
+						-append "Joystick"    
+						-append "Slider"    
+						-append "Square"
+						-append "Circle"    
+						-append "Cube"     
+						-append "Arrow"
+						-append "Orient"    
+						-append "Cone"    
+						-append "foot"
+						-append "hand"      
+						-append "Rotate"   
+						-append "Sphere"
+						-append "Move" 
+						-append "Pin" 
+						-append "Crown"
+						-si "Joystick"
+						myScrollList`; 
+
+				setParent..;
+
+		setParent..;
+
+						if( `objExists shapesCam1` ) {
+						delete shapesCam1;
+						}
+						string $cameraShapes[] = `camera -position 0 -200 0 -rotation 0 0 0 -n "shapesCam"`;
+
+						//    Attach the camera to the model editor.
+						modelEditor -edit -camera $cameraShapes[0] $editor;
+
+						//lock camera
+						setAttr -lock true "shapesCam1.tx";setAttr -lock true "shapesCam1.ty";setAttr -lock true "shapesCam1.tz";setAttr -lock true "shapesCam1.rx";setAttr -lock true "shapesCam1.ry";setAttr -lock true "shapesCam1.rz";setAttr -lock true "shapesCam1.sx";setAttr -lock true "shapesCam1.sy";setAttr -lock true "shapesCam1.sz";
+						
+						//hide $cameraShapes[0];
+						
+						//doHideInOutliner 1;
+						
+sep;
+     text -l "GET NURBS CURVE CODE" -h 15  -bgc 0.227 0.227 0.227;
+space;
+   rowColumnLayout -nc 1 -cw 1 275;
+
+      rowLayout -nc 3;  
+
+        
+
+        textField -w 180 -tx "Select curve and click on play " nurbsCodeField;
+
+        optionMenu  -changeCommand "enableButton()" -w 68 codeOption ;
+        menuItem -label "Mel";
+        menuItem -label "Python";
+
+button -l "▶" -c "getNurbsCode()" -w 24 -h 20 -bgc 0.071 1 0.776 getCode; 
+         
+         
+    setParent ..;
+ 
+
+    rowLayout -nc 2; 
+
+ textField -tx "Give your curve a name" -w 180 -en off curveNameField;
+
+ button -l "Run code" -c "runCode" -h 20 runCode; 
+       
+       // button -l "Add to list " -c "addToList" -h 20 -w 92 -en off curveToList; 
+
+    setParent ..;
+   
+
+
+
+
+    radioButtonGrp -nrb 2 -cw 1 27 -cw 2 110 -label ""  -labelArray2 "closed curve(s)" "opened curve(s)" -select 1 closedOrOpen;
+
     
-    rowColumnLayout -nc 1 -cw 1 275;
-    
-        text -label "Nurbs Text Creator" -h 10;
-        separator -style "none" -w 275 -h 10;
-        textField userTxt;
-
-        //list all fonts in array fonts
-        string $fonts[] = `fontDialog -FontList`;  
-        optionMenu  fontName;
-        //loop in fonts add item to label
-        for ( $item in $fonts ) {
-            $list = `menuItem -label $item` ;              
-        }
+sep;
 
      
+        text -l "CURVE ACTIONS" -h 15  -bgc 0.227 0.227 0.227;
+space;
 
-        text -label "" -h 1;
-        button -label "Create Nurbs text" -command "setTxt()";
+        rowLayout -nc 2;
 
-  
-    
-     setParent..;
-    
-    //End------------------------------------------------------------------------
-    
-
-separator -style "in" -w 275 -h 3;
-
-
-    //NurbsShapes----------------------------------------------------------------
-    
-        text -label "Nurbs shapes";
-        text -l "" -h 3;
-    
-    rowLayout -nc 6;
-    
-        button -label "Joystick" -w 50 -h 20 -command "joystick"  ;
-        button -label "Slider" -w 40 -h 20 -command "slider"  ;
-        button -label "Square" -w 42 -h 20 -command "square"  ;
-        button -label "Circle" -w 50 -h 20 -command "CreateNURBSCircle;"  ;
-        button -label "Cube" -w 38 -h 20 -command "cube"  ;
-        button -label "Arrow" -w 45 -h 20 -command "arrow"  ;
+         button -label "★ merge curves" -c "mergeCurves" -w 135 -h 18;
         
-    
-    setParent ..;
-    
-    
-    rowLayout -nc 6;
-    
-        button -label "Orient" -c "orient" -w 44 -h 20  ;
-        button -label "Cone" -c "coneShape" -w 38 -h 20 ;
-
-         button -label "foot" -w 44 -h 20  -c "curve  -p 0.4249371493 4.798237341e-17 0.05965626747 -p 0.02479363527 6.785732323e-17 -0.3369861891 -p -0.4476029329 4.798237341e-17 0.05965626747 -p -0.1652321107 1.966335462e-32 0.8432678924 -p -0.6161659743 -4.798237341e-17 1.635912638 -p -0.5208473196 -6.785732323e-17 2.405743088 -p 0.6068085407 -4.798237341e-17 1.761965361 -p 0.4664682483 -3.644630068e-32 1.286896949 -p 0.4249371493 4.798237341e-17 0.05965626747 -d 3 ;"  ;
-        button -label "hand"  -w 38 -h 20 -c "hand";
-        button -label "Rotate" -c "rotShape" -w 50 -h 20  ;
-        button -label "Sphere" -c"sphereShape" -w 55 -h 20 ;
-     
-    setParent ..;
-
-        rowLayout -nc 8;
+         button -label "↓ import SVG" -c "importSvg" -w 135 -h 18;
+         
+        setParent..;
         
-      
-        button -label "Move" -c "moveShape" -w 35 -h 20  ;
-        button -label "Pin" -c"pin" -w 30 -h 20 ;
-        button -label "Crown"  -w 40 -h 20 -c "curve  -p 10.23597986 0.5387466956 -5.064001608 -p 10.15148588 0.5387466956 -5.062031611 -p 9.56002042 -0.5387466956 -5.048241451 -p 9.475526441 -0.5387466956 -5.046271454 -p 8.58145858 -0.5387466956 -6.782167047 -p 7.226633651 -0.5387466956 -8.241302021 -p 5.569970572 -0.5387466956 -9.259395858 -p 5.575918388 -0.5387466956 -9.334794753 -p 5.617553638 0.5387466956 -9.862593802 -p 5.623501454 0.5387466956 -9.937992697 -p 5.001839687 0.5387466956 -10.29059582 -p 4.344093509 0.5387466956 -10.5859802 -p 3.656702513 0.5387466956 -10.81827359 -p 3.606075155 0.5387466956 -10.76522235 -p 3.251679087 -0.5387466956 -10.39385887 -p 3.201051728 -0.5387466956 -10.34080762 -p 2.190574766 -0.5387466956 -10.65877312 -p 1.115474937 -0.5387466956 -10.83086909 -p -7.092061795e-06 -0.5387466956 -10.83086909 -p -0.90576267 -0.5387466956 -10.83086909 -p -1.784795359 -0.5387466956 -10.71701313 -p -2.62448129 -0.5387466956 -10.5043222 -p -2.671915677 -0.5387466956 -10.55988243 -p -3.003960654 0.5387466956 -10.94880906 -p -3.05139504 0.5387466956 -11.00436929 -p -3.751523379 0.5387466956 -10.81058579 -p -4.424716067 0.5387466956 -10.55280353 -p -5.063966148 0.5387466956 -10.2359444 -p -5.062219942 0.5387466956 -10.1609001 -p -5.049996345 -0.5387466956 -9.63558328 -p -5.048250139 -0.5387466956 -9.560538985 -p -6.768344619 -0.5387466956 -8.633166803 -p -8.202614824 -0.5387466956 -7.245987887 -p -9.190595767 -0.5387466956 -5.564601881 -p -9.27364298 -0.5387466956 -5.571158032 -p -9.854980945 0.5387466956 -5.617051683 -p -9.938028157 0.5387466956 -5.623607835 -p -10.29056036 0.5387466956 -5.001875147 -p -10.58594474 0.5387466956 -4.344128969 -p -10.81823813 0.5387466956 -3.656808894 -p -10.75430462 0.5387466956 -3.595786253 -p -10.3067643 -0.5387466956 -3.168622271 -p -10.24283079 -0.5387466956 -3.10759963 -p -10.50899587 -0.5387466956 -2.176000579 -p -10.65458171 -0.5387466956 -1.193423788 -p -10.65458171 -0.5387466956 -0.1763653923 -p -10.65458171 -0.5387466956 0.7370779806 -p -10.53919387 -0.5387466956 1.623585703 -p -10.32297109 -0.5387466956 2.469654489 -p -10.3986773 -0.5387466956 2.534286166 -p -10.92862762 0.5387466956 2.986713719 -p -11.00433383 0.5387466956 3.051345396 -p -10.81062125 0.5387466956 3.751487919 -p -10.55276807 0.5387466956 4.424680607 -p -10.23597986 0.5387466956 5.063930688 -p -10.13068428 0.5387466956 5.061475283 -p -9.39360577 -0.5387466956 5.044287228 -p -9.288310194 -0.5387466956 5.041831823 -p -8.391901953 -0.5387466956 6.633886219 -p -7.100097084 -0.5387466956 7.973335559 -p -5.543446261 -0.5387466956 8.923629285 -p -5.552341193 -0.5387466956 9.036335204 -p -5.614606521 0.5387466956 9.825286778 -p -5.623501454 0.5387466956 9.937992697 -p -5.001839687 0.5387466956 10.29058164 -p -4.34416443 0.5387466956 10.5859802 -p -3.656844355 0.5387466956 10.81820267 -p -3.57692077 0.5387466956 10.73447778 -p -3.017448482 -0.5387466956 10.148396 -p -2.937524897 -0.5387466956 10.0646711 -p -2.004067725 -0.5387466956 10.33199928 -p -1.019349131 -0.5387466956 10.47813831 -p -7.092061795e-06 -0.5387466956 10.47813831 -p 0.8160055362 -0.5387466956 10.47813831 -p 1.609493776 -0.5387466956 10.38331744 -p 2.372925858 -0.5387466956 10.20961866 -p 2.448308993 -0.5387466956 10.29792341 -p 2.975997722 0.5387466956 10.91606455 -p 3.051380856 0.5387466956 11.00436929 -p 3.751523379 0.5387466956 10.81057161 -p 4.424716067 0.5387466956 10.55280353 -p 5.063895227 0.5387466956 10.2359444 -p 5.061247551 0.5387466956 10.12216838 -p 5.042713576 -0.5387466956 9.325725986 -p 5.0400659 -0.5387466956 9.211949965 -p 6.647495886 -0.5387466956 8.347200688 -p 8.005370402 -0.5387466956 7.080728664 -p 8.983918902 -0.5387466956 5.54819085 -p 9.089929982 -0.5387466956 5.556554671 -p 9.832017078 0.5387466956 5.615102172 -p 9.938028157 0.5387466956 5.623465994 -p 10.29054618 0.5387466956 5.001804226 -p 10.58601566 0.5387466956 4.344058049 -p 10.81823813 0.5387466956 3.656737974 -p 10.74537029 0.5387466956 3.587187607 -p 10.23528883 -0.5387466956 3.100328783 -p 10.16242099 -0.5387466956 3.030778417 -p 10.48156377 -0.5387466956 2.018500071 -p 10.65458171 -0.5387466956 0.9413860963 -p 10.65458171 -0.5387466956 -0.1763653923 -p 10.65458171 -0.5387466956 -0.9846902256 -p 10.56149131 -0.5387466956 -1.77090201 -p 10.39098396 -0.5387466956 -2.527766843 -p 10.45913326 -0.5387466956 -2.585943232 -p 10.93618453 0.5387466956 -2.993183191 -p 11.00433383 0.5387466956 -3.05135958 -p 10.81062125 0.5387466956 -3.75155884 -p 10.23597986 0.5387466956 -5.064001608 -d 3 ;"  ;
-        text -l "Nurbs Ball :" -w 75;
-         button -label "" -c"RedBall" -bgc 0.831 0.027 0.09 -w 20 -h 10  ;
-        button -label "" -c"YellowBall" -bgc 0.973 0.992 0.259 -w 20 -h 10  ;
-        button -label "" -c "GreenBall" -bgc 0.271 0.992 0.231 -w 20 -h 10  ;
-        button -label "" -c "BlueBall" -bgc 0.031 0.125 0.906 -w 20 -h 10  ;
-        
-     
-    setParent ..;
-
-    text -l "Get nurbs curve code" ;
-
-   rowColumnLayout -nc 1 -cw 1 275; 
-
-        textField  nurbsCodeField;
-radioButtonGrp -nrb 2 -cw 1 150 -cw 2 110  -labelArray2 "closed curve(s)" "opened curve(s)" -select 1 closedOrOpen;
-  optionMenu  -changeCommand "enableButton()" codeOption ;
-      menuItem -label "Mel";
-    menuItem -label "Python";
-
-    rowLayout -nc 2;
-        button -label "get code " -c "getNurbsCode()" -w 135 -h 18 getCode;
-        button -label "run code" -c "runCode" -w 136 -h 18 runCode;
-    setParent ..;
-
-        text -label "" -h 5;
-        text -label "Curve actions" -h 18;
-        text -label "" -h 5;
-         button -label "merge" -c "mergeCurves" -w 135 -h 18;
-         text -label "" -h 2;
-         button -label "import SVG" -c "importSvg" -w 135 -h 18;
-         int $jobCrv = `scriptJob -e "readingFile" convertToCurves`;
-         int $jobMesh = `scriptJob -e "SelectTypeChanged" deleteMesh`;
 
     setParent..;
     
@@ -146,12 +169,13 @@ radioButtonGrp -nrb 2 -cw 1 150 -cw 2 110  -labelArray2 "closed curve(s)" "opene
     
     //ColorMaker------------------------------------------------------------------------
     
-    separator -style "in" -w 275 -h 3;
+sep;
     
 
-        text -label "Color picker";
+     text -l "COLOR PICKER" -h 15  -bgc 0.227 0.227 0.227;space;
       
 
+        text -label "" -h 2;
   
 
     rowLayout -nc 13;
@@ -175,228 +199,872 @@ radioButtonGrp -nrb 2 -cw 1 150 -cw 2 110  -labelArray2 "closed curve(s)" "opene
 
 
 
-separator -style "in" -w 275 -h 2;
-text -label "Locking";
-        
 
-    rowLayout -nc 10;
-        
-        button -label "Normal" -w 90 -h 22 -command "normal;" abc;
-        button -label "Template" -w 91 -h 22 -command "template;" bac;
-        button -label "Reference" -w 91 -h 22 -command "reference;" cab;
-    
-    setParent ..;
-
-
-
-    
-setParent..;
-
-setParent..;
-
-
-// ---------------------------------------------------------------------------------
-//                                         Tab 2
-// ---------------------------------------------------------------------------------
-
-
-string $tab2 = `columnLayout -w 275 -h 400 secondTab`;
-
-frameLayout -w 275 two;
-
-separator -style "in" -w 275 -h 20;
-
-text -label "Create joint(s) and place it :";
-
-    //JointUtilities-------------------------------------------------------------
-    
-    rowColumnLayout -nc 2 -cw 1 138 -cw 2 138;
-        
-        button -label "To vertex" -c "jointOnAllVtx" jointToVetex;
-        button -label "To center of selection" -c "jointCenter" mySlider;
-        text -label "";
-
-    setParent..;
-
-separator -style "in" -w 275 -h 20;
-
-        text -label "Edit joint(s)";
-        text -label "";
-
-    rowColumnLayout -nc 1 -cw 1 275;
-        //script jobs allows to toggle function when selection is changed
-        int $jobID = `scriptJob -e "SelectionChanged" updateObj`;
-        text -label "1-Store object or component";
-        textField -en off selObject;
-        button -label "store" -c "storeObj()";
-        button -label "reset (selections should be cleared)" -c "resetObj()";
-        text -label "";
-        text -label "2 Edit joint(s)";
-        button -label "joint -> to stored vertex" -c "jntVtx()";
-        button -label "joint orient -> to stored object normals" -c "jntNrml()";
-        radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -labelArray3 "Xup" "Yup" "Zup" -select 1 normalAxis;
-
-        
-    setParent..;
-    
-    //End------------------------------------------------------------------------
-    
-separator -style "in" -w 275 -h 20;
-   
-    //JointSize------------------------------------------------------------------
-    
-        text -label "Set joint size";
-        text -label "";
-        
-    rowColumnLayout -nc 2 -cw 1 60 -cw 2 100;
-    
-        text -l "Radius:  " -al "right";
-        floatSliderGrp -min 0 -max 100 -w 200 -field true userSize;
-    
-    setParent "..";
-    
-    rowLayout -nc 10;
-    
-        button -label ".25" -w 26 -h 20 -command "radPoint25;"  buttonRadPoint25;
-        button -label ".5" -w 26 -h 20 -command "radPoint5;"  buttonRadPoint5;
-        button -label ".75" -w 26 -h 20 -command "radPoint75;"  buttonRadPoint75;
-        button -label "1" -w 26 -h 20 -command "rad1;"  buttonRad1;
-        button -label "5" -w 26 -h 20 -command "rad5;"  buttonRad5;
-        button -label "10" -w 26 -h 20 -command "rad10;"  buttonRad10;
-        button -label "20" -w 26 -h 20 -command "rad20;"  buttonRad20;
-        button -label "30" -w 26 -h 20 -command "rad30;"  buttonRad30;
-        button -label "40" -w 26 -h 20 -command "rad40;"  buttonRad40;
-        button -label "50" -w 26 -h 20 -command "rad50;"  buttonRad50;
-        
-    setParent ..;
-    
-        button -l "Resize joints" -c "setJointSize()";
-
-        text -label "";
-
-        button -l "Show/hide Local rotation axis" -c "ToggleLocalRotationAxes;";
-    
-    //End------------------------------------------------------------------------
-
-
-setParent..;
-
-setParent..;
-
-
-// ---------------------------------------------------------------------------------
-//                                         Tab 3
-// ---------------------------------------------------------------------------------
-
-
-string $tab3 = `columnLayout -w 275 -h 400 thirdTab`;
-
-frameLayout -w 275 three;
-
-    //NameCreator--------------------------------------------------------------------
+  
        
-    rowColumnLayout -nc 2 -cw 1 50 -cw 2 225;
-        
-        text -l "Name: " -al "right";
-        textField -tx "" tfSuffix;
-    	
-    setParent "..";
-    	    
-    rowLayout -nc 7;
-    
-        button -label "_left" -w 35 -h 20 -command "leftAppend";
-        button -label "_right" -w 40 -h 20 -command "rightAppend" ;
-        button -label "_top" -w 30 -h 20 -command "upAppend" ;
-        button -label "_bottom" -w 50 -h 20 -command "bottomAppend";
-        button -label "_center" -w 55 -h 20 -command "middleAppend";
-        button -label "_IK" -w 25 -h 20 -command "ikAppend";
-        button -label "_FK" -w 25 -h 20 -command "fkAppend";  
-    
-    setParent ..;
-    
-    rowLayout -nc 7;
-    
-        button -label "_L" -w 25 -h 20 -command "lAppend";
-        button -label "_R" -w 25 -h 20 -command "rAppend" ;
-        button -label "_joint" -w 50 -h 20 -command "jointAppend" ;
-        button -label "_back" -w 45 -h 20 -command "backAppend";
-        button -label "_front" -w 45 -h 20 -command "frontAppend";
-        button -label "_blue" -w 35 -h 20 -command "blueAppend";
-        button -label "_red" -w 35 -h 20 -command "redAppend";
-        
-    setParent ..;
-       
-        radioButtonGrp -nrb 2 -cw 1 60 -cw 2 60 -label "                       " -labelArray2 "Create" "Append" -select 1 nameRadio;
-        
-    separator -style "in" -w 275 -h 20;
-    	
-    	button -l "Add Suffix" -al "center" -w 275 -c ("cR_doRename(2);") butSuffix;
-    	button -l "Add Prefix" -al "center" -w 275 -c ("cR_doRename(1);") butPrefix;
-    
-    separator -style "in" -w 275 -h 20;	
-    	
-    rowColumnLayout -nc 2 -cw 1 50 -cw 2 225;
-    
-        text -l "Replace: " -al "right";
-        textField -tx "" tfReplace;
-    
-    setParent "..";
-    	   
-        button -l "Search And Replace" -al "center" -w 275 -c ("cR_doRename(0);") butSearchReplace;
-        intField -v 1 -w 60 -min 0 -vis false ifNumber;
-        intField -v 0 -w 60 -min 0 -vis false ifPadding;
-        
-        button -l "Increment Name" -al "center" -w 275 -c "incrementName" butIncrmnt;
-        
-        
-     separator -style "in" -w 275 -h 20;
-        
-    //End------------------------------------------------------------------------
-    
-setParent..;
 
+  
+
+
+setParent ..;
 
 // ---------------------------------------------------------------------------------
-//                         ----------Build Window----------
+//                                         Tab 2                                    
 // ---------------------------------------------------------------------------------
+string $tab2 = `rowColumnLayout -nc 1`;
 
 
-tabLayout -edit
--tabLabel $tab1 "Tools" 
--tabLabel $tab2 "Joints" 
--tabLabel $tab3 "Naming" 
-tabList;
+sep;
 
-frameLayout -e -w 275 one;
+		text -l "CREATE AND PLACE JOINTS" -h 15  -bgc 0.227 0.227 0.227;space;
+
+
+		//JointUtilities-------------------------------------------------------------
+
+		rowLayout -nc 2 ;
+
+		button -label "To vertex" -c "jointOnAllVtx" -w 135 jointToVetex;
+		button -label "To center of selection" -c "jointCenter"  -w 136 mySlider;
+
+
+		setParent..;
+
+		sep;
+
+
+		text -l "EDIT SELECTED JOINTS" -h 15  -bgc 0.227 0.227 0.227;space;
+		//script jobs allows to toggle function when selection is changed
+		int $selectChanged = `scriptJob -e "SelectionChanged" updateObj`;
+		text -label "1.Store object or vertices";
+
+		rowLayout -nc 3 ;
+
+		textField -en off -w 203 selObject ;
+
+		button -label "store" -c "storeObj()" -w 50 buttonStore ;
+		button -label "R" -c "resetObj()";
+
+		setParent "..";
+
+		text -label "" -h 2;
+
+
+		text -label "2.Edit joint(s)";
+
+		rowLayout -nc 2;
+
+		optionMenu   -w 248  -cc "greyOutRadio"  editJointOptionMenu;
+		menuItem -label "joint orients -> to stored object normals";
+		menuItem -label "selected joints -> to stored vertices";
+
+
+
+		button -l "▶" -al "center"  -c "doEditJoints" -w 24 -h 20 -bgc 0.071 1 0.776 ; 
+
+		// button -label "" -c "jntVtx()";
+		//button -label "" -c "jntNrml()";
+		setParent..;
+
+		radioButtonGrp -nrb 3 -cw 1 110 -cw 2 110 -cw 3 90 -h 18 -labelArray3 "Xup" "Yup" "Zup" -en on -select 1 normalAxis;
+
+
+		//End------------------------------------------------------------------------
+
+		button -l "Show / hide Local rotation axis" -c "ToggleLocalRotationAxes;" -h 18;
+sep;
+		//NameCreator--------------------------------------------------------------------
+		text -l "RENAMING OBJECTS" -h 15  -bgc 0.227 0.227 0.227;space;
+		rowColumnLayout -nc 2 -cw 1 50 -cw 2 225;
+
+		text  -en off -l "Name: " txOne;
+		textField -en off -tx "" tfOne ;
+
+		setParent "..";
+
+		rowLayout -nc 3;
+
+		optionMenu  -changeCommand "bigRenameFunc()"  -w 70 nameOption;
+		menuItem -label "Add";
+		menuItem -label "Replace";
+		menuItem -label "Order";
+
+		textField -tx "_example" -w 175 tfTwo;
+
+		button -l "▶" -al "center"  -c "doIt" -w 24 -h 20 -bgc 0.071 1 0.776  butSearchReplace; 
+
+		setParent ..;
+
+
+
+		radioButtonGrp -nrb 2 -cw 1 60 -cw 2 60 -label "                       " -labelArray2 "Suffix" "Prefix" -select 1 nameRadio;
+
+
+sep;
+		text -l "MOVE IN OUTLINER" -h 15  -bgc 0.227 0.227 0.227;space;
+
+		 button -label "Reorder based on selection" -command "resortSel;" -h 18;space;
+        rowLayout -nc 4 ;
+          button -label "▲ Up" -command "reorder -relative -1" -w 69 -h 18;
+          button -label "▼ Down" -command "reorder -relative 1" -w 69 -h 18;
+          button -label "△ First" -command "reorder -front" -w 69 -h 18;
+          button -label "▽ Last" -command "reorder -back" -w 69 -h 18;
+     
+    
+    setParent "..";
+    sep;
+    text -l "LOCKING" -h 15  -bgc 0.227 0.227 0.227;space;
+        rowLayout -nc 3 ;
+          button -label "Normal" -command "normal;" -w 91.6 -h 18;
+          button -label "Reference" -command "reference;" -w 91.6 -h 18;
+          button -label " Template" -command "template;" -w 91.6 -h 18;
+  
+         
+    
+    setParent "..";
+
+
+
+
+
+setParent ..;
+
+// ---------------------------------------------------------------------------------
+//                                         Tab 3                                    
+// ---------------------------------------------------------------------------------
+string $tab3 = `rowColumnLayout -nc 1`;
+
+
+
+
+setParent ..;
+
+tabLayout -edit -tl $tab1 "Tools" -tl $tab2 "Joints" -tl $tab3 "Face" windowTabs;
+
+
 
 showWindow rigTK;
 
 
-// ---------------------------------------------------------------------------------
-//                         ----------Functions----------
-// ---------------------------------------------------------------------------------
 
-//import svg
-proc importSvg(){
-createSVGCallback();
-AESCGFileBrowser "AESVGAssignFileAttribute  svg1.svgFilepath" "svg1.svgFilepath ";
+
+
+
+
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//--------------------------------------------------FUNCTIONS-------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------//
+
+
+
+//-------------Colors & joints
+
+proc jointCenter(){
+    
+
+ConvertSelectionToVertices;
+ 
+string $vertices[] = `ls -selection -flatten`;
+ 
+int $totalVertices = size($vertices);
+ 
+float $xPosSum = 0;
+float $yPosSum = 0;
+float $zPosSum = 0;
+ 
+for ($vertex in $vertices)
+{
+        float $worldSpacePos[] = `xform -q -worldSpace -translation $vertex`;
+ 
+        $xPosSum += $worldSpacePos[0];
+        $yPosSum += $worldSpacePos[1];
+        $zPosSum += $worldSpacePos[2];
+}
+ 
+float $xAvgPos = $xPosSum / $totalVertices;
+float $yAvgPos = $yPosSum / $totalVertices;
+float $zAvgPos = $zPosSum / $totalVertices;
+
+joint -position $xAvgPos $yAvgPos $zAvgPos;
+CenterPivot;
+  
+}
+
+
+
+
+proc jointOnAllVtx(){
+
+
+ConvertSelectionToVertices;
+ 
+string $selVerts[] = `ls -selection -flatten`;
+
+for($vrts in $selVerts){
+    
+    //selectionner chaque vertex
+    select $vrts;
+    // creer cluster sur chaque vertex selectionnée
+    string $cl[] = `newCluster "-relative -envelope 1"`;
+    // clear selection so joint not parented to cluster
+    select -cl;
+    //create joint
+    string $jnt = `joint`;
+    //point constrain to the cluster
+    string $ptCnjnt[] = `pointConstraint -offset 0 0 0 -weight 1 $cl $jnt`;
+    //find point constraint
+    string $findPtCn[] = `listRelatives -typ pointConstraint $jnt`;
+    //delete point constraint
+    select $findPtCn[0]; doDelete;
+    //select cluster delete it
+    select -replace $cl; doDelete;
+    
+    }
+
+}
+
+
+
+proc left(){
+
+string $selJnts[] = `ls -selection -flatten`;
+
+for($jnts in $selJnts){
+    
+    //selectionner chaque vertex
+    select $jnts;
+    rename ($jnts + "_Left") ;
+    
+    
+    }
+}
+
+
+proc right(){
+
+string $selJnts[] = `ls -selection -flatten`;
+
+for($jnts in $selJnts){
+    
+    //selectionner chaque vertex
+    select $jnts;
+    rename ($jnts + "_Right") ;
+    
+    
+    }
+}
+
+
+
+proc arm(){
+
+rename "Arm";
 
 
 }
 
-//convertToCurves
-proc convertToCurves(){
 
-convertTypeCapsToCurves();
+
+proc radPoint25(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .25 ;} }
+proc radPoint5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .5 ;} }
+proc radPoint75(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .75 ;} }
+proc rad1(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 1 ;} }
+proc rad5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 5 ;} }
+proc rad10(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 10 ;} }
+proc rad20(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 20 ;} }
+proc rad30(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 30 ;} }
+proc rad40(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 40 ;} }
+proc rad50(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 50 ;} }
+
+proc setJointSize() {
+  
+  float $dist = `floatSliderGrp	 -q -value userSize`;
+  string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") $dist ;}
+}
+
+
+
+proc red(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 13 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 13 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
+    }
+    }
+              
+}
+
+proc redPale(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 4 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 4 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
+    }
+    }
+              
+}
+
+proc orange(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 21 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 21 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
+    }
+    }
+              
+}
+
+proc yellow(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 17 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 17 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
+    }
+    }
+              
+}
+
+
+//string $colRadio1 = ``;
+
+
+
+
+proc green(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 14 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.527 1 0.276 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 14 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.527 1 0.276; 
+    }
+    }
+              
+}
+
+
+proc cyan(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 18 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.321 1 0.869 ; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 18 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.321 1 0.869; 
+    }
+    }
+              
+}
+
+proc blue(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 6 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 6 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
+    }
+    }
+              
+}
+
+proc pink(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 9 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 9 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
+    }
+    }
+              
+}
+
+proc purple(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 30 ; 
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 1 ;
+    setAttr ($jnts + ".overrideColor") 30 ; 
+    setAttr ($jnts + ".useOutlinerColor") 1 ;
+    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
+    }
+    }
+              
+}
+
+
+
+proc nocolor(){
+    
+    if (`radioButtonGrp -q -select colorRadio` == 1) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled") 0 ;
+    }          
+    }
+   
+    else if (`radioButtonGrp -q -select colorRadio` == 2) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".useOutlinerColor") 0 ;
+    }
+    }
+        
+    else if (`radioButtonGrp -q -select colorRadio` == 3) {
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    setAttr ($jnts + ".overrideEnabled")0 ;
+    setAttr ($jnts + ".useOutlinerColor")0 ;
+    }
+    }
+              
+}
+
+
+proc incrementName(){
+    
+    string $value = `textField -q -tx tfSuffix`;
+    string $selJnts[] = `ls -selection -flatten`;
+    for($jnts in $selJnts){
+    select $jnts;
+    renameSelectionList $value;
+    
+    }          
+
+              
+}
+
+
+
+//Get Curve--------------------------------------------------------------------
+
+
+global proc greyOutRadio( ){
+   string $value= `optionMenu -q -v editJointOptionMenu`;
+
+    if ($value == "selected joints -> to stored vertices") {
+
+
+radioButtonGrp -e -en off normalAxis;
+
+}else if($value == "sjoint orients -> to stored object normals"){
+    radioButtonGrp -e -en on normalAxis;
+}
 
 }
 
-proc deleteMesh(){
-    delete svgMesh1;
+global proc doEditJoints( ){
+   string $value= `optionMenu -q -v editJointOptionMenu`;
+
+    if ($value == "selected joints -> to stored vertices") {
+
+
+
+
+    $value = `textField -query -tx selObject`;
+
+    //joint -p `pointPosition $value`;
+
+    float $pos[] = `xform -q -worldSpace -translation $value`;
+
+    //print("pos: " + $pos[0] + " " + $pos[1] + " " + $pos[2]);
+
+    float $x = $pos[0];
+    float $y = $pos[1];
+    float $z = $pos[2];
+
+    string $jnt[] = `ls -sl`;
+    
+    setAttr ( $jnt[0] + ".translateX") $x;
+    setAttr ( $jnt[0] + ".translateY") $y;
+    setAttr ( $jnt[0] + ".translateZ") $z;
+
+    }else if($value == "joint orients -> to stored object normals"){
+
+    if (`radioButtonGrp -q -select normalAxis` == 1) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 1 0 0 -upVector 0 1 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+        if (`radioButtonGrp -q -select normalAxis` == 2) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 0 1 0 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+        if (`radioButtonGrp -q -select normalAxis` == 3) {
+    
+    $value = `textField -query -tx selObject`;
+    string $jnts[] = `ls -sl`;
+
+     for ($each in $jnts){
+        //Get the name.
+        select -r $value;
+        select -add $each;
+        normalConstraint -weight 1 -aimVector 0 0 1 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
+        ToggleLocalRotationAxes;
+        $ch = `listRelatives -c $jnts`;
+        select -r $ch;
+        delete;
+        select -r $jnts;
+        FreezeTransformations;
+
+     }         
+    }
+
+    }
+
+
+
+
+
 }
 
 
-//NurbsBall
+
+
+
+global proc doIt( ){
+   string $value= `optionMenu -q -v nameOption`;
+    if ($value == "Add") {
+
+
+            string $userTxt= `textField -q -tx tfTwo`;
+            string $userSelect[] = `ls -sl`; //bring selection in an array
+
+        for($each in $userSelect){
+
+                if (`radioButtonGrp -q -select nameRadio` == 1) {
+          
+                rename $each ($each + $userTxt);
+
+                }
+                else if (`radioButtonGrp -q -select nameRadio` == 2){
+                
+                    rename $each ($userTxt + $each );
+
+               }
+
+        }
+
+    }else if($value == "Order"){
+
+        string $userTxt= `textField -q -tx tfOne`;
+        string $startNumber= `textField -q -tx tfTwo`;
+        string $userSelect[] = `ls -sl`; //bring selection in an array
+        
+        for ($each in $userSelect){
+            rename $each ($userTxt + $startNumber);
+        }
+
+    }else if($value == "Replace"){
+
+        string $userTxt= `textField -q -tx tfOne`;
+        string $replaceTxt= `textField -q -tx tfTwo`;
+        string $userSelect[] = `ls -sl`; //bring selection in an array
+        
+        for ($each in $userSelect){
+
+                
+                string $replace = substituteAllString($each, $userTxt, $replaceTxt);
+
+               rename $each $replace;               
+                
+        }
+            
+        }
+
+}
+
+
+global proc bigRenameFunc(){
+
+string $value= `optionMenu -q -v nameOption`;
+
+
+if ($value == "Add") {
+
+    radioButtonGrp -e -en on nameRadio;
+    textField -e  -tx "_example" tfTwo;
+     textField -e -en off tfOne;
+     text -e -en off txOne;
+
+}else if($value == "Replace"){
+
+   radioButtonGrp -e -en off nameRadio;
+   textField -e  -tx "" tfTwo;
+        textField -e -en on tfOne;
+     text -e -en on txOne;
+
+}else if($value == "Order"){
+
+    radioButtonGrp -e -en off nameRadio;
+     textField -e  -tx "1" tfTwo;
+     textField -e -en on tfOne;
+     text -e -en on txOne;
+   
+
+
+}
+
+
+
+
+}
+
+
+//resort selection
+
+global proc resortSel()
+{
+string $usrtList[] = `ls -sl`;// Unsorted selection list
+//if ($mode = 1)// control for reorder function
+
+for ($each in $usrtList)
+{
+reorder -b $each;
+}
+sort $usrtList;
+}
+
+
+
+
+
 
 
 proc YellowBall(){
@@ -806,7 +1474,7 @@ string $value= `optionMenu -q -v codeOption`;
 
 if ($value == "Python") {
     button -e -enable false runCode;
-    button -e -l "paste Py code in console" runCode;
+    button -e -l "import maya.cmds as mc + paste code in console" runCode;
 
     //change function if python is selected
 
@@ -815,7 +1483,7 @@ if ($value == "Python") {
 
 }else if($value == "Mel"){
     button -e -enable true runCode; 
-    button -e -l "run code" runCode;
+    button -e -l "Run code" runCode;
 
     button -e -c "getNurbsCode" getCode;
 }
@@ -845,7 +1513,7 @@ string $valueTxt = `textField -q -tx nurbsCodeField`;
 
 string $aReplace = substituteAllString($valueTxt, "-p", "] [");
 
-string $bReplace = substituteAllString($aReplace, "curve  ] ", "mc.curve(p=[");
+string $bReplace = substituteAllString($aReplace, "curve  ] ", "cmds.curve(p=[");
 
 string $cReplace = substituteAllString($bReplace, " ", ", ");
 
@@ -930,7 +1598,7 @@ proc updateObj(){
 //store obj-------------------------------------------------------------
 
 global proc storeObj(){
-
+button -e -bgc 0.071 1 0.776 -l "stored !" buttonStore;  
 select -clear;
 scriptJob -ka;
 select -clear;
@@ -938,106 +1606,12 @@ select -clear;
 }
 
 global proc resetObj(){
-
-  //script jobs allows to toggle function when selection is changed
-        int $jobID = `scriptJob -e "SelectionChanged" updateObj`;
-
-}
-
-
-//move joint to vertex
-
-proc jntVtx(){
-
-
-
-
-    $value = `textField -query -tx selObject`;
-
-    //joint -p `pointPosition $value`;
-
-    float $pos[] = `xform -q -worldSpace -translation $value`;
-
-    //print("pos: " + $pos[0] + " " + $pos[1] + " " + $pos[2]);
-
-    float $x = $pos[0];
-    float $y = $pos[1];
-    float $z = $pos[2];
-
-    string $jnt[] = `ls -sl`;
-    
-    setAttr ( $jnt[0] + ".translateX") $x;
-    setAttr ( $jnt[0] + ".translateY") $y;
-    setAttr ( $jnt[0] + ".translateZ") $z;
-
-
-}
-
-//joint normal to object normal
-
-proc jntNrml(){
-
-    if (`radioButtonGrp -q -select normalAxis` == 1) {
-    
-    $value = `textField -query -tx selObject`;
-    string $jnts[] = `ls -sl`;
-
-     for ($each in $jnts){
-        //Get the name.
-        select -r $value;
-        select -add $each;
-        normalConstraint -weight 1 -aimVector 1 0 0 -upVector 0 1 0 -worldUpType "vector" -worldUpVector 0 1 0;    
-        ToggleLocalRotationAxes;
-        $ch = `listRelatives -c $jnts`;
-        select -r $ch;
-        delete;
-        select -r $jnts;
-        FreezeTransformations;
-
-     }         
-    }
-
-        if (`radioButtonGrp -q -select normalAxis` == 2) {
-    
-    $value = `textField -query -tx selObject`;
-    string $jnts[] = `ls -sl`;
-
-     for ($each in $jnts){
-        //Get the name.
-        select -r $value;
-        select -add $each;
-        normalConstraint -weight 1 -aimVector 0 1 0 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
-        ToggleLocalRotationAxes;
-        $ch = `listRelatives -c $jnts`;
-        select -r $ch;
-        delete;
-        select -r $jnts;
-        FreezeTransformations;
-
-     }         
-    }
-
-        if (`radioButtonGrp -q -select normalAxis` == 3) {
-    
-    $value = `textField -query -tx selObject`;
-    string $jnts[] = `ls -sl`;
-
-     for ($each in $jnts){
-        //Get the name.
-        select -r $value;
-        select -add $each;
-        normalConstraint -weight 1 -aimVector 0 0 1 -upVector 1 0 0 -worldUpType "vector" -worldUpVector 0 1 0;    
-        ToggleLocalRotationAxes;
-        $ch = `listRelatives -c $jnts`;
-        select -r $ch;
-        delete;
-        select -r $jnts;
-        FreezeTransformations;
-
-     }         
-    }
-
-   
+button -e -bgc 0.365 0.365 0.365  -l "store" buttonStore;  
+string $selection[] = `ls -selection`;
+select -clear;
+  //kill script jobs allows to toggle function when selection is changed
+ int $jobID = `scriptJob -e "SelectionChanged" updateObj`;
+select $selection;
 }
 
 
@@ -1076,14 +1650,426 @@ proc normal(){
 }
 
 
+//textCreator--------------------------------------------------------------------
+
+proc setTxt() {
+   string $fontName = `optionMenu -q -v fontName`;
+
+   string $nameOk = ( "\"" + $fontName + "\""); //add quotation marks to variable (bien galéré sur celle là)
+
+   print $nameOk;
+
+   $value = `textField -query -tx userTxt`;//2
+    
+   textCurves -font $nameOk -t $value -n "text" ;
+    
+   string $shapesTxt[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
+   
+   select -hi;
+   
+   FreezeTransformations;
+   
+   CreateEmptyGroup;
+    
+   select $shapesTxt;
+   
+   renameSelectionList ("crv") ;
+   
+   select "crv*";
+   
+   select -add "null1";
+   
+   parent -r -s;
+   
+   select "textShape";
+   
+   doDelete;
+   
+   select "crv*";
+   
+   renameSelectionList ("curve") ;
+   
+   select "null1";
+   
+   rename $value;
+
+   CenterPivot;
+ 
+         
+}
 
 
+
+//SHAPES--------------------------------------------------------------------
+
+//CREATE THE FIRST SHAPE IN THE LIST
+
+    deleteExistingShapes;
+            
+    joystick; 
+    string $stck = "Joystick";
+    select -r $stck;
+    doHideInOutliner 1;
+    rename $stck "JoystickPrev";
+    setAttr JoystickPrev.translateY -200;
+    setAttr JoystickPrev.translateZ -3;
+
+
+    reference;
+    select -clear; 
+
+
+
+select -r $cameraShapes[0];
+doHideInOutliner 1;
+reference;
+
+
+global proc scollListFunction(){
+
+string $selectedItem[] = `textScrollList -q -si myScrollList`;
+
+ string $test = string($selectedItem[0]);
+
+if($test == "Joystick"){ joystick;
+
+}else if($test == "Slider"){ slider; 
+
+}else if($test == "Square"){ square;
+
+}else if($test == "Circle"){ CreateNURBSCircle;
+
+}else if($test == "Cube"){ cube;
+
+}else if($test == "Arrow"){ arrow;
+
+}else if($test == "Orient"){ orient;
+
+}else if($test == "Cone"){ coneShape;
+
+}else if($test == "foot"){ foot;
+
+}else if($test == "hand"){ hand;
+
+}else if($test == "Rotate"){ rotShape;
+
+}else if($test == "Sphere"){ sphereShape;
+
+}else if($test == "Move"){ moveShape;
+
+}else if($test == "Pin"){ pin;
+
+}else if($test == "Crown"){ crown;
+}
+
+
+
+
+
+}
+
+
+
+global proc changeImage(){
+
+string $selectedItem[] = `textScrollList -q -si myScrollList`;
+
+ string $test = string($selectedItem[0]);
+
+if($test == "Joystick"){
+
+    deleteExistingShapes;
+            
+    joystick; 
+    string $js = "Joystick";
+    select -r $js;
+    doHideInOutliner 1;
+    rename $js "JoystickPrev";
+    setAttr JoystickPrev.translateY -200;
+    setAttr JoystickPrev.translateZ -3;
+    reference;
+    select -clear; 
+
+}else if($test == "Slider"){ 
+
+    deleteExistingShapes;
+            
+    slider; 
+    string $sld = "Slider";
+    select -r $sld;
+    doHideInOutliner 1;
+    rename $sld "SliderPrev";
+    setAttr SliderPrev.translateY -200;
+    setAttr SliderPrev.translateZ -2.2;
+    setAttr SliderPrev.rotateZ -90; 
+     reference;
+   
+    select -clear;
+
+}else if($test == "Square"){ 
+
+    deleteExistingShapes;
+            
+    square; 
+    string $sqr = "square";
+    select -r $sqr;
+    doHideInOutliner 1;
+    rename $sqr "SquarePrev";
+    setAttr SquarePrev.translateY -200;
+    setAttr SquarePrev.translateZ -3.5;
+     green; FreezeTransformations;
+     reference;
+    select -clear;
+
+
+}else if($test == "Circle"){
+
+    deleteExistingShapes;
+            
+    CreateNURBSCircle; 
+    string $crcl = "nurbsCircle1";
+    select -r $crcl;
+    doHideInOutliner 1;
+    rename $crcl "CirclePrev";
+    setAttr CirclePrev.translateY -200;
+    setAttr CirclePrev.translateZ -3.5;
+    setAttr CirclePrev.rotateX 90;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "Cube"){ 
+    
+    deleteExistingShapes;
+            
+    cube; 
+    string $cb = "cube";
+    select -r $cb;
+    doHideInOutliner 1;
+    rename $cb "CubePrev";
+    setAttr CubePrev.translateY -200;
+    setAttr CubePrev.translateZ -2.2;
+    setAttr CubePrev.rotateY 20;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "Arrow"){ 
+
+    deleteExistingShapes;
+            
+    arrow; 
+    string $arw = "arrow";
+    select -r $arw;
+    doHideInOutliner 1;
+    rename $arw "ArrowShape";
+    setAttr ArrowShape.translateY -200;
+    setAttr ArrowShape.translateZ -2.2;
+    setAttr ArrowShape.translateX -0.7;
+    setAttr ArrowShape.rotateX -90;
+    setAttr ArrowShape.rotateZ 90;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "Orient"){ 
+
+
+    deleteExistingShapes;
+            
+    orient; 
+    string $ornt = "orient";
+    select -r $ornt;
+    doHideInOutliner 1;
+    rename $ornt "OrientShape";
+    setAttr OrientShape.translateY -200;
+    setAttr OrientShape.translateZ -3;
+    setAttr OrientShape.rotateY 90;
+    
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "Cone"){ 
+
+
+    deleteExistingShapes;
+            
+    coneShape; 
+    string $cne = "cone";
+    select -r $cne;
+    doHideInOutliner 1;
+    rename $cne "ConeShape";
+    setAttr ConeShape.translateY -200.45;
+    setAttr ConeShape.translateZ -2.03;
+    setAttr ConeShape.rotateZ 90;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "foot"){ 
+
+        deleteExistingShapes;
+            
+    foot; 
+    string $fot = "foot";
+    select -r $fot;
+    doHideInOutliner 1;
+    rename $fot "FootPrev";
+    setAttr FootPrev.translateY -199.874;
+    setAttr FootPrev.translateZ -3;
+    setAttr FootPrev.translateX -0.953;
+    setAttr FootPrev.rotateX -94.211;
+    setAttr FootPrev.rotateZ -90;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+}else if($test == "hand"){ 
+
+    deleteExistingShapes;
+            
+    hand; 
+    string $hnd = "hand";
+    select -r $hnd;
+    doHideInOutliner 1;
+    rename $hnd "HandPrev";
+    setAttr HandPrev.translateY -199.951;
+    setAttr HandPrev.translateZ -6.278;
+    setAttr HandPrev.translateX 0.34;
+    setAttr HandPrev.rotateX 90;
+    setAttr HandPrev.rotateZ 90;
+     green; FreezeTransformations;
+     reference;
+    select -clear; 
+
+
+
+}else if($test == "Rotate"){ 
+
+
+    deleteExistingShapes;
+            
+    rotShape; 
+    string $rtt = "rotation";
+    select -r $rtt;
+    doHideInOutliner 1;
+    rename $rtt "RotatePrev";
+    setAttr RotatePrev.translateY -200.439;
+    setAttr RotatePrev.translateZ -2.373;
+    //setAttr RotatePrev.translateX 0.34;
+    setAttr RotatePrev.rotateX 90;
+    setAttr RotatePrev.rotateZ -90;
+     green;
+     FreezeTransformations;
+     reference;
+    select -clear; 
+
+
+}else if($test == "Sphere"){
+
+    deleteExistingShapes;
+            
+    sphereShape; 
+    string $sph = "sphere";
+    select -r $sph;
+    doHideInOutliner 1;
+    rename $sph "SpherePrev";
+    setAttr SpherePrev.translateY -200.034;
+    setAttr SpherePrev.translateZ -2.788;
+    //setAttr SpherePrev.translateX 0.34;
+    setAttr SpherePrev.rotateX 15.302;
+    setAttr SpherePrev.rotateY 10.946;
+    setAttr SpherePrev.rotateZ -90;
+     green;
+     FreezeTransformations;
+     reference;
+    select -clear; 
+
+
+}else if($test == "Move"){ 
+
+     deleteExistingShapes;
+            
+    moveShape; 
+    string $mve = "move";
+    select -r $mve;
+    doHideInOutliner 1;
+    rename $mve "MovePrev";
+    setAttr MovePrev.translateY -200.034;
+    setAttr MovePrev.translateZ -17.948;
+    //setAttr MovePrev.translateX 0.34;
+    setAttr MovePrev.rotateX 90;
+
+     green;
+     FreezeTransformations;
+     reference;
+    select -clear; 
+
+
+}else if($test == "Pin"){ 
+
+         deleteExistingShapes;
+            
+    pin; 
+    string $pin = "pin";
+    select -r $pin;
+    doHideInOutliner 1;
+    rename $pin "PinPrev";
+    setAttr PinPrev.translateY -200.649;
+    setAttr PinPrev.translateZ -3;
+    //setAttr MovePrev.translateX 0.34;
+   setAttr PinPrev.rotateY 90;
+
+     green;
+    FreezeTransformations;
+    reference;
+    select -clear;
+
+}else if($test == "Crown"){ 
+
+
+    deleteExistingShapes;
+            
+    crown; 
+    string $crw = "crown";
+    select -r $crw;
+    doHideInOutliner 1;
+    rename $crw "CrownPrev";
+    setAttr CrownPrev.translateY -200.649;
+    setAttr CrownPrev.translateZ -28.542;
+    //setAttr MovePrev.translateX 0.34;
+    setAttr CrownPrev.rotateX 10.08;
+
+     green;
+   FreezeTransformations;
+   reference;
+    select -clear;   } 
+
+
+
+}
+proc deleteExistingShapes(){
+if( `objExists JoystickPrev` ) {delete JoystickPrev;}
+if( `objExists SliderPrev` ) {delete SliderPrev;}
+if( `objExists SquarePrev` ) {delete SquarePrev;}
+if( `objExists CirclePrev` ) {delete CirclePrev;}
+if( `objExists CubePrev` ) {delete CubePrev;}
+if( `objExists ArrowShape` ) {delete ArrowShape;}
+if( `objExists OrientShape` ) {delete OrientShape;}
+if( `objExists ConeShape` ) {delete ConeShape;}
+if( `objExists FootPrev` ) {delete FootPrev;}
+if( `objExists HandPrev` ) {delete HandPrev;}
+if( `objExists RotatePrev` ) {delete RotatePrev;}
+if( `objExists SpherePrev` ) {delete SpherePrev;}
+if( `objExists MovePrev` ) {delete MovePrev;}
+if( `objExists PinPrev` ) {delete PinPrev;}
+if( `objExists CrownPrev` ) {delete CrownPrev;}
+}
 
 //JoystickCreator
 
 proc joystick(){
-
-
 
 curve -n "crv_temp1" -p 1.0  -1.0  0.0  -p  1.0  1.0  0.0  -p -1.0  1.0  -0.0 -p  -1.0  -1.0  -0.0  -p  1.0  -1.0  0.0 -d 1; 
 
@@ -1102,8 +2088,6 @@ curve -n "crv_temp7" -p 0.3 -0.0 0.0 -p 0.233 -0.0 0.0 -p 0.167 -0.0 0.0 -p 0.1 
 curve -n "crv_temp8" -p -0.0 -0.3 0.0 -p -0.0 -0.233 0.0 -p -0.0 -0.167 0.0 -p -0.0 -0.1 0.0 -d 3;
 
 curve -n "crv_temp9" -p -0.3 0.0 0.0 -p -0.233 -0.0 0.0 -p -0.167 -0.0 0.0 -p -0.1 -0.0 0.0 -d 3;
-
-
 
 circle -n "control_tmp";
 
@@ -1181,21 +2165,12 @@ setAttr  "control_tmp.overrideColor" 17;
 select -r "control_tmp";
 select -add "joystick_temp";
 
-
-
 Parent;
 
 rename "control_tmp" "controller";
 rename "joystick_temp" "Joystick";
 
 select -cl;
-
-
-
-
-
-
-
 
 
 }
@@ -1212,7 +2187,6 @@ curve -n "cross_temp2" -p -0.239  0.035  0.0  -p -0.216  0.012  0.0  -p -0.192  
 
 group  -name "ctrl_temp" "cross_temp" "cross_temp1" "cross_temp2" ;
 
-
 string $shapesSlider[] = `ls -shapes -dag "ctrl_temp"`; //selectionne juste les shapes du textShape transform dag important !
 
 select -hi;
@@ -1227,7 +2201,6 @@ select "cross_temp*";
 
 doDelete;
 
-
 xform -pivots -0.2 0 0 "ctrl_temp";
 
 setAttr  "ctrl_temp.overrideEnabled" 1;
@@ -1236,8 +2209,6 @@ setAttr  "ctrl_temp.overrideColor" 17;
 select -r "ctrl_temp";
 
 FreezeTransformations;
-
-
 
 transformLimits -tx 0 0 -etx 1 1 ctrl_temp;
 transformLimits -ty -1 1 -ety 1 1 ctrl_temp;
@@ -1309,552 +2280,6 @@ select -cl;
 
 }
 
-//FrameCreator
-
-proc frame(){
-    
-$c = `curve -d 1 -p -1.456834653e-016 -0.6561 0.6561 -p 1.456834653e-016 0.6561 0.6561 -p 1.456834653e-016 0.6561 -0.6561 -p -1.456834653e-016 -0.6561 -0.6561 -p -1.456834653e-016 -0.6561 0.6561`;
-  
-}
-
-//textCreator------- 
-
-proc setTxt() {
-   string $fontName = `optionMenu -q -v fontName`;
-
-   string $nameOk = ( "\"" + $fontName + "\""); //add quotation marks to variable (bien galéré sur celle là)
-
-   print $nameOk;
-
-   $value = `textField -query -tx userTxt`;//2
-    
-   textCurves -font $nameOk -t $value -n "text" ;
-    
-   string $shapesTxt[] = `ls -shapes -dag "textShape"`; //selectionne juste les shapes du textShape transform dag important !
-   
-   select -hi;
-   
-   FreezeTransformations;
-   
-   CreateEmptyGroup;
-    
-   select $shapesTxt;
-   
-   renameSelectionList ("crv") ;
-   
-   select "crv*";
-   
-   select -add "null1";
-   
-   parent -r -s;
-   
-   select "textShape";
-   
-   doDelete;
-   
-   select "crv*";
-   
-   renameSelectionList ("curve") ;
-   
-   select "null1";
-   
-   rename $value;
-
-   CenterPivot;
- 
-         
-}
-
-
-//-------------
-
-proc jointCenter(){
-    
-
-ConvertSelectionToVertices;
- 
-string $vertices[] = `ls -selection -flatten`;
- 
-int $totalVertices = size($vertices);
- 
-float $xPosSum = 0;
-float $yPosSum = 0;
-float $zPosSum = 0;
- 
-for ($vertex in $vertices)
-{
-        float $worldSpacePos[] = `xform -q -worldSpace -translation $vertex`;
- 
-        $xPosSum += $worldSpacePos[0];
-        $yPosSum += $worldSpacePos[1];
-        $zPosSum += $worldSpacePos[2];
-}
- 
-float $xAvgPos = $xPosSum / $totalVertices;
-float $yAvgPos = $yPosSum / $totalVertices;
-float $zAvgPos = $zPosSum / $totalVertices;
-
-joint -position $xAvgPos $yAvgPos $zAvgPos;
-CenterPivot;
-  
-}
-
-
-
-
-proc jointOnAllVtx(){
-
-
-ConvertSelectionToVertices;
- 
-string $selVerts[] = `ls -selection -flatten`;
-
-for($vrts in $selVerts){
-    
-    //selectionner chaque vertex
-    select $vrts;
-    // creer cluster sur chaque vertex selectionnée
-    string $cl[] = `newCluster "-relative -envelope 1"`;
-    // clear selection so joint not parented to cluster
-    select -cl;
-    //create joint
-    string $jnt = `joint`;
-    //point constrain to the cluster
-    string $ptCnjnt[] = `pointConstraint -offset 0 0 0 -weight 1 $cl $jnt`;
-    //find point constraint
-    string $findPtCn[] = `listRelatives -typ pointConstraint $jnt`;
-    //delete point constraint
-    select $findPtCn[0]; doDelete;
-    //select cluster delete it
-    select -replace $cl; doDelete;
-    
-    }
-
-}
-
-
-
-proc left(){
-
-string $selJnts[] = `ls -selection -flatten`;
-
-for($jnts in $selJnts){
-    
-    //selectionner chaque vertex
-    select $jnts;
-    rename ($jnts + "_Left") ;
-    
-    
-    }
-}
-
-
-proc right(){
-
-string $selJnts[] = `ls -selection -flatten`;
-
-for($jnts in $selJnts){
-    
-    //selectionner chaque vertex
-    select $jnts;
-    rename ($jnts + "_Right") ;
-    
-    
-    }
-}
-
-
-
-proc arm(){
-
-rename "Arm";
-
-
-}
-
-
-
-proc radPoint25(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .25 ;} }
-proc radPoint5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .5 ;} }
-proc radPoint75(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") .75 ;} }
-proc rad1(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 1 ;} }
-proc rad5(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 5 ;} }
-proc rad10(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 10 ;} }
-proc rad20(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 20 ;} }
-proc rad30(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 30 ;} }
-proc rad40(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 40 ;} }
-proc rad50(){ string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") 50 ;} }
-
-proc setJointSize() {
-  
-  float $dist = `floatSliderGrp	 -q -value userSize`;
-  string $selJnts[] = `ls -selection -flatten`; for($jnts in $selJnts){ select $jnts; setAttr ($jnts + ".radius") $dist ;}
-}
-
-
-
-proc red(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 13 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 13 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.224 0.224 ; 
-    }
-    }
-              
-}
-
-proc redPale(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 4 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 4 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.399 0.321 ; 
-    }
-    }
-              
-}
-
-proc orange(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 21 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 21 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 0.479 0.173 ; 
-    }
-    }
-              
-}
-
-proc yellow(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 17 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 17 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor") 1 1 0.390 ; 
-    }
-    }
-              
-}
-
-
-proc green(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 14 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.527 1 0.276 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 14 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.527 1 0.276; 
-    }
-    }
-              
-}
-
-
-proc cyan(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 18 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.321 1 0.869 ; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 18 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.321 1 0.869; 
-    }
-    }
-              
-}
-
-proc blue(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 6 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 6 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.256 0.628 1; 
-    }
-    }
-              
-}
-
-proc pink(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 9 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 9 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")1 0.442 0.706; 
-    }
-    }
-              
-}
-
-proc purple(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 30 ; 
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 1 ;
-    setAttr ($jnts + ".overrideColor") 30 ; 
-    setAttr ($jnts + ".useOutlinerColor") 1 ;
-    setAttr ($jnts + ".outlinerColor")0.466 0.200 0.892; 
-    }
-    }
-              
-}
-
-
-
-proc nocolor(){
-    
-    if (`radioButtonGrp -q -select colorRadio` == 1) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled") 0 ;
-    }          
-    }
-   
-    else if (`radioButtonGrp -q -select colorRadio` == 2) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".useOutlinerColor") 0 ;
-    }
-    }
-        
-    else if (`radioButtonGrp -q -select colorRadio` == 3) {
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    setAttr ($jnts + ".overrideEnabled")0 ;
-    setAttr ($jnts + ".useOutlinerColor")0 ;
-    }
-    }
-              
-}
-
-
-proc incrementName(){
-    
-    string $value = `textField -q -tx tfSuffix`;
-    string $selJnts[] = `ls -selection -flatten`;
-    for($jnts in $selJnts){
-    select $jnts;
-    renameSelectionList $value;
-    
-    }          
-
-              
-}
-
-
-
-//SHAPES--------------------------------------------------------------------
-proc hand(){
-
-curve -n palmTemp01  -p -0.4664580021 0.003125000266 -1.608314611 -p -0.45428276 0.003125000266 -1.600478587 -p -0.4464447492 0.003125000266 -1.588301359 -p -0.4436731333 0.003125000266 -1.572506128 -p -0.4436731333 0.003125000266 0.4645302886 -p -0.4451195393 0.003125000266 0.482433537 -p -0.4494587574 0.003125000266 0.5006993804 -p -0.4566927745 0.003125000266 0.5182410273 -p -0.4668215904 0.003125000266 0.5339746667 -p -0.8063276598 0.003125000266 0.9815052139 -p -0.8374313502 0.003125000266 1.009656488 -p -0.8757710445 0.003125000266 1.024425525 -p -0.9170035509 0.003125000266 1.025450725 -p -0.9567896513 0.003125000266 1.012369492 -p -1.446759699 0.003125000266 0.7461662084 -p -1.543209948 0.003125000266 0.6852810573 -p -1.755400496 0.003125000266 0.4905715578 -p -1.967593032 0.003125000266 0.1439526675 -p -2.064043281 0.003125000266 -0.3726616497 -p -1.952220994 0.003125000266 -0.8784855394 -p -1.701871552 0.003125000266 -1.233482856 -p -1.440670091 0.003125000266 -1.447421807 -p -1.296295721 0.003125000266 -1.530069607 -p -1.288578906 0.003125000266 -1.533926028 -p -1.211418707 0.003125000266 -1.548696059 -p -1.041666665 0.003125000266 -1.573954521 -p -0.7937888294 0.003125000266 -1.598487792 -p -0.482253233 0.003125000266 -1.611088214 -p -0.4664580021 0.003125000266 -1.608314611 -d 1 ;
-curve -n thumbTemp01 -p -0.4205246761 0.005208333695 0.7114435226 -p -0.2390166121 0.005208333695 0.7908349225 -p 0.01012682913 0.005208333695 0.9588395543 -p 0.1963376996 0.005208333695 1.22305403 -p 0.1890440779 0.005208333695 1.591072975 -p 0.180061658 0.005208333695 1.603853204 -p 0.1663784184 0.005208333695 1.612292228 -p 0.1505235829 0.005208333695 1.614944635 -p 0.1350303489 0.005208333695 1.610363024 -p -0.6172835819 0.005208333695 1.193696756 -p -0.6569484861 0.005208333695 1.160059868 -p -0.6770829351 0.005208333695 1.115571954 -p -0.676961739 0.005208333695 1.066743829 -p -0.6558636816 0.005208333695 1.020085314 -p -0.4205246761 0.005208333695 0.7114435226 -d 1 ;
-curve -n indexTemp01 -p 1.599633692 0.001041666836 0.1473282772 -p 1.660879451 0.001041666836 0.1935039955 -p 1.701871552 0.001041666836 0.258486966 -p 1.716820397 0.001041666836 0.3372147675 -p 1.701871552 0.001041666836 0.415942569 -p 1.660879451 0.001041666836 0.4809265329 -p 1.599633692 0.001041666836 0.5271022512 -p 1.523919898 0.001041666836 0.5494063092 -p -0.1697520413 0.001041666836 0.5494063092 -p -0.2161085603 0.001041666836 0.539942085 -p -0.2541462577 0.001041666836 0.5142018192 -p -0.2798875169 0.001041666836 0.4761641218 -p -0.2893507477 0.001041666836 0.4298076028 -p -0.2893507477 0.001041666836 0.2407645183 -p -0.2798875169 0.001041666836 0.1944079993 -p -0.2541462577 0.001041666836 0.1563703018 -p -0.2161085603 0.001041666836 0.130630036 -p -0.1697520413 0.001041666836 0.1211658119 -p 1.523919898 0.001041666836 0.1211658119 -p 1.599633692 0.001041666836 0.1473282772 -d 1 ;   
-curve -n middleTemp01 -p 1.946856576 -0.001041666351 -0.4313761984 -p 2.008102335 -0.001041666351 -0.3852004801 -p 2.049094436 -0.001041666351 -0.3202165162 -p 2.064043281 -0.001041666351 -0.2414887147 -p 2.049094436 -0.001041666351 -0.1627609132 -p 2.008102335 -0.001041666351 -0.09777694928 -p 1.946856576 -0.001041666351 -0.05160123103 -p 1.871142782 -0.001041666351 -0.02929717298 -p -0.1697520413 -0.001041666351 -0.02929717298 -p -0.2161085603 -0.001041666351 -0.03876139715 -p -0.2541462577 -0.001041666351 -0.06450166296 -p -0.2798875169 -0.001041666351 -0.1025393604 -p -0.2893507477 -0.001041666351 -0.1488958794 -p -0.2893507477 -0.001041666351 -0.3379389639 -p -0.2798875169 -0.001041666351 -0.3842954829 -p -0.2541462577 -0.001041666351 -0.4223331804 -p -0.2161085603 -0.001041666351 -0.4480734462 -p -0.1697520413 -0.001041666351 -0.4575376703 -p 1.871142782 -0.001041666351 -0.4575376703 -p 1.946856576 -0.001041666351 -0.4313761984 -d 1 ;
-curve -n ringTemp01 -p 1.638213791 -0.003125000023 -1.010078687 -p 1.699459551 -0.003125000023 -0.9639029689 -p 1.740451652 -0.003125000023 -0.8989199984 -p 1.755402483 -0.003125000023 -0.8201921969 -p 1.740451652 -0.003125000023 -0.7414643953 -p 1.699459551 -0.003125000023 -0.6764804315 -p 1.638213791 -0.003125000023 -0.6303047132 -p 1.562499998 -0.003125000023 -0.6080006552 -p -0.1697520413 -0.003125000023 -0.6080006552 -p -0.2161085603 -0.003125000023 -0.6174648793 -p -0.2541462577 -0.003125000023 -0.6432051452 -p -0.2798875169 -0.003125000023 -0.6812428426 -p -0.2893507477 -0.003125000023 -0.7275993616 -p -0.2893507477 -0.003125000023 -0.9166424461 -p -0.2798875169 -0.003125000023 -0.9629989651 -p -0.2541462577 -0.003125000023 -1.001036663 -p -0.2161085603 -0.003125000023 -1.026777922 -p -0.1697520413 -0.003125000023 -1.036241153 -p 1.562499998 -0.003125000023 -1.036241153 -p 1.638213791 -0.003125000023 -1.010078687 -d 1 ;
-curve -n pinkyTemp01 -p 1.290990907 -0.005208333695 -1.588782169 -p 1.352238653 -0.005208333695 -1.542606451 -p 1.393228767 -0.005208333695 -1.477623481 -p 1.408179599 -0.005208333695 -1.398895679 -p 1.393228767 -0.005208333695 -1.320167878 -p 1.352238653 -0.005208333695 -1.255184907 -p 1.290990907 -0.005208333695 -1.209009189 -p 1.215279101 -0.005208333695 -1.186705131 -p -0.1697520413 -0.005208333695 -1.186705131 -p -0.2161085603 -0.005208333695 -1.196168362 -p -0.2541462577 -0.005208333695 -1.221909621 -p -0.2798875169 -0.005208333695 -1.259947318 -p -0.2893507477 -0.005208333695 -1.306303837 -p -0.2893507477 -0.005208333695 -1.495345928 -p -0.2798875169 -0.005208333695 -1.541702447 -p -0.2541462577 -0.005208333695 -1.579740145 -p -0.2161085603 -0.005208333695 -1.605481404 -p -0.1697520413 -0.005208333695 -1.614944635 -p 1.215279101 -0.005208333695 -1.611088214 -p 1.290990907 -0.005208333695 -1.588782169 -d 1 ;  
-
-select "*Temp01";
-
-group -n Hand;
-}
-
-
 
 proc square(){
    string $sqr = `curve -d 1 -p -1.456834653e-016 -1 1 -p 1.456834653e-016 1 1 -p 1.456834653e-016 1 -1 -p -1.456834653e-016 -1 -1 -p -1.456834653e-016 -1 1  -n "square"`; 
@@ -1862,6 +2287,18 @@ setAttr ($sqr + ".rotateY") 90 ;
 FreezeTransformations;
     
 }
+
+
+proc hand(){
+curve  -p 1.599633692 0.001041666836 0.1473282772  -p 1.660879451 0.001041666836 0.1935039955  -p 1.701871552 0.001041666836 0.258486966  -p 1.716820397 0.001041666836 0.3372147675  -p 1.701871552 0.001041666836 0.415942569  -p 1.660879451 0.001041666836 0.4809265329  -p 1.599633692 0.001041666836 0.5271022512  -p 1.523919898 0.001041666836 0.5494063092  -p -0.1697520413 0.001041666836 0.5494063092  -p -0.2161085603 0.001041666836 0.539942085  -p -0.2541462577 0.001041666836 0.5142018192  -p -0.2798875169 0.001041666836 0.4761641218  -p -0.2893507477 0.001041666836 0.4298076028  -p -0.2893507477 0.001041666836 0.2407645183  -p -0.2798875169 0.001041666836 0.1944079993  -p -0.2541462577 0.001041666836 0.1563703018  -p -0.2161085603 0.001041666836 0.130630036  -p -0.1697520413 0.001041666836 0.1211658119  -p 1.523919898 0.001041666836 0.1211658119  -p 1.599633692 0.001041666836 0.1473282772  -p 1.599633692 0.001041666836 0.1473282772 -d 1 -n "hand";curve  -p 1.599633692 0.001041666836 0.1473282772  -p 1.660879451 0.001041666836 0.1935039955  -p 1.701871552 0.001041666836 0.258486966  -p 1.716820397 0.001041666836 0.3372147675  -p 1.701871552 0.001041666836 0.415942569  -p 1.660879451 0.001041666836 0.4809265329  -p 1.599633692 0.001041666836 0.5271022512  -p 1.523919898 0.001041666836 0.5494063092  -p -0.1697520413 0.001041666836 0.5494063092  -p -0.2161085603 0.001041666836 0.539942085  -p -0.2541462577 0.001041666836 0.5142018192  -p -0.2798875169 0.001041666836 0.4761641218  -p -0.2893507477 0.001041666836 0.4298076028  -p -0.2893507477 0.001041666836 0.2407645183  -p -0.2798875169 0.001041666836 0.1944079993  -p -0.2541462577 0.001041666836 0.1563703018  -p -0.2161085603 0.001041666836 0.130630036  -p -0.1697520413 0.001041666836 0.1211658119  -p 1.523919898 0.001041666836 0.1211658119  -p 1.599633692 0.001041666836 0.1473282772  -p 1.599633692 0.001041666836 0.1473282772 -d 1 -n "hand";curve  -p 1.946856576 -0.001041666351 -0.4313761984  -p 2.008102335 -0.001041666351 -0.3852004801  -p 2.049094436 -0.001041666351 -0.3202165162  -p 2.064043281 -0.001041666351 -0.2414887147  -p 2.049094436 -0.001041666351 -0.1627609132  -p 2.008102335 -0.001041666351 -0.09777694928  -p 1.946856576 -0.001041666351 -0.05160123103  -p 1.871142782 -0.001041666351 -0.02929717298  -p -0.1697520413 -0.001041666351 -0.02929717298  -p -0.2161085603 -0.001041666351 -0.03876139715  -p -0.2541462577 -0.001041666351 -0.06450166296  -p -0.2798875169 -0.001041666351 -0.1025393604  -p -0.2893507477 -0.001041666351 -0.1488958794  -p -0.2893507477 -0.001041666351 -0.3379389639  -p -0.2798875169 -0.001041666351 -0.3842954829  -p -0.2541462577 -0.001041666351 -0.4223331804  -p -0.2161085603 -0.001041666351 -0.4480734462  -p -0.1697520413 -0.001041666351 -0.4575376703  -p 1.871142782 -0.001041666351 -0.4575376703  -p 1.946856576 -0.001041666351 -0.4313761984  -p 1.946856576 -0.001041666351 -0.4313761984 -d 1 -n "hand";curve  -p 1.946856576 -0.001041666351 -0.4313761984  -p 2.008102335 -0.001041666351 -0.3852004801  -p 2.049094436 -0.001041666351 -0.3202165162  -p 2.064043281 -0.001041666351 -0.2414887147  -p 2.049094436 -0.001041666351 -0.1627609132  -p 2.008102335 -0.001041666351 -0.09777694928  -p 1.946856576 -0.001041666351 -0.05160123103  -p 1.871142782 -0.001041666351 -0.02929717298  -p -0.1697520413 -0.001041666351 -0.02929717298  -p -0.2161085603 -0.001041666351 -0.03876139715  -p -0.2541462577 -0.001041666351 -0.06450166296  -p -0.2798875169 -0.001041666351 -0.1025393604  -p -0.2893507477 -0.001041666351 -0.1488958794  -p -0.2893507477 -0.001041666351 -0.3379389639  -p -0.2798875169 -0.001041666351 -0.3842954829  -p -0.2541462577 -0.001041666351 -0.4223331804  -p -0.2161085603 -0.001041666351 -0.4480734462  -p -0.1697520413 -0.001041666351 -0.4575376703  -p 1.871142782 -0.001041666351 -0.4575376703  -p 1.946856576 -0.001041666351 -0.4313761984  -p 1.946856576 -0.001041666351 -0.4313761984 -d 1 -n "hand";curve  -p -0.4664580021 0.003125000266 -1.608314611  -p -0.45428276 0.003125000266 -1.600478587  -p -0.4464447492 0.003125000266 -1.588301359  -p -0.4436731333 0.003125000266 -1.572506128  -p -0.4436731333 0.003125000266 0.4645302886  -p -0.4451195393 0.003125000266 0.482433537  -p -0.4494587574 0.003125000266 0.5006993804  -p -0.4566927745 0.003125000266 0.5182410273  -p -0.4668215904 0.003125000266 0.5339746667  -p -0.8063276598 0.003125000266 0.9815052139  -p -0.8374313502 0.003125000266 1.009656488  -p -0.8757710445 0.003125000266 1.024425525  -p -0.9170035509 0.003125000266 1.025450725  -p -0.9567896513 0.003125000266 1.012369492  -p -1.446759699 0.003125000266 0.7461662084  -p -1.543209948 0.003125000266 0.6852810573  -p -1.755400496 0.003125000266 0.4905715578  -p -1.967593032 0.003125000266 0.1439526675  -p -2.064043281 0.003125000266 -0.3726616497  -p -1.952220994 0.003125000266 -0.8784855394  -p -1.701871552 0.003125000266 -1.233482856  -p -1.440670091 0.003125000266 -1.447421807  -p -1.296295721 0.003125000266 -1.530069607  -p -1.288578906 0.003125000266 -1.533926028  -p -1.211418707 0.003125000266 -1.548696059  -p -1.041666665 0.003125000266 -1.573954521  -p -0.7937888294 0.003125000266 -1.598487792  -p -0.482253233 0.003125000266 -1.611088214  -p -0.4664580021 0.003125000266 -1.608314611  -p -0.4664580021 0.003125000266 -1.608314611 -d 1 -n "hand";curve  -p -0.4664580021 0.003125000266 -1.608314611  -p -0.45428276 0.003125000266 -1.600478587  -p -0.4464447492 0.003125000266 -1.588301359  -p -0.4436731333 0.003125000266 -1.572506128  -p -0.4436731333 0.003125000266 0.4645302886  -p -0.4451195393 0.003125000266 0.482433537  -p -0.4494587574 0.003125000266 0.5006993804  -p -0.4566927745 0.003125000266 0.5182410273  -p -0.4668215904 0.003125000266 0.5339746667  -p -0.8063276598 0.003125000266 0.9815052139  -p -0.8374313502 0.003125000266 1.009656488  -p -0.8757710445 0.003125000266 1.024425525  -p -0.9170035509 0.003125000266 1.025450725  -p -0.9567896513 0.003125000266 1.012369492  -p -1.446759699 0.003125000266 0.7461662084  -p -1.543209948 0.003125000266 0.6852810573  -p -1.755400496 0.003125000266 0.4905715578  -p -1.967593032 0.003125000266 0.1439526675  -p -2.064043281 0.003125000266 -0.3726616497  -p -1.952220994 0.003125000266 -0.8784855394  -p -1.701871552 0.003125000266 -1.233482856  -p -1.440670091 0.003125000266 -1.447421807  -p -1.296295721 0.003125000266 -1.530069607  -p -1.288578906 0.003125000266 -1.533926028  -p -1.211418707 0.003125000266 -1.548696059  -p -1.041666665 0.003125000266 -1.573954521  -p -0.7937888294 0.003125000266 -1.598487792  -p -0.482253233 0.003125000266 -1.611088214  -p -0.4664580021 0.003125000266 -1.608314611  -p -0.4664580021 0.003125000266 -1.608314611 -d 1 -n "hand";curve  -p 1.290990907 -0.005208333695 -1.588782169  -p 1.352238653 -0.005208333695 -1.542606451  -p 1.393228767 -0.005208333695 -1.477623481  -p 1.408179599 -0.005208333695 -1.398895679  -p 1.393228767 -0.005208333695 -1.320167878  -p 1.352238653 -0.005208333695 -1.255184907  -p 1.290990907 -0.005208333695 -1.209009189  -p 1.215279101 -0.005208333695 -1.186705131  -p -0.1697520413 -0.005208333695 -1.186705131  -p -0.2161085603 -0.005208333695 -1.196168362  -p -0.2541462577 -0.005208333695 -1.221909621  -p -0.2798875169 -0.005208333695 -1.259947318  -p -0.2893507477 -0.005208333695 -1.306303837  -p -0.2893507477 -0.005208333695 -1.495345928  -p -0.2798875169 -0.005208333695 -1.541702447  -p -0.2541462577 -0.005208333695 -1.579740145  -p -0.2161085603 -0.005208333695 -1.605481404  -p -0.1697520413 -0.005208333695 -1.614944635  -p 1.215279101 -0.005208333695 -1.611088214  -p 1.290990907 -0.005208333695 -1.588782169  -p 1.290990907 -0.005208333695 -1.588782169 -d 1 -n "hand";curve  -p 1.290990907 -0.005208333695 -1.588782169  -p 1.352238653 -0.005208333695 -1.542606451  -p 1.393228767 -0.005208333695 -1.477623481  -p 1.408179599 -0.005208333695 -1.398895679  -p 1.393228767 -0.005208333695 -1.320167878  -p 1.352238653 -0.005208333695 -1.255184907  -p 1.290990907 -0.005208333695 -1.209009189  -p 1.215279101 -0.005208333695 -1.186705131  -p -0.1697520413 -0.005208333695 -1.186705131  -p -0.2161085603 -0.005208333695 -1.196168362  -p -0.2541462577 -0.005208333695 -1.221909621  -p -0.2798875169 -0.005208333695 -1.259947318  -p -0.2893507477 -0.005208333695 -1.306303837  -p -0.2893507477 -0.005208333695 -1.495345928  -p -0.2798875169 -0.005208333695 -1.541702447  -p -0.2541462577 -0.005208333695 -1.579740145  -p -0.2161085603 -0.005208333695 -1.605481404  -p -0.1697520413 -0.005208333695 -1.614944635  -p 1.215279101 -0.005208333695 -1.611088214  -p 1.290990907 -0.005208333695 -1.588782169  -p 1.290990907 -0.005208333695 -1.588782169 -d 1 -n "hand";curve  -p 1.638213791 -0.003125000023 -1.010078687  -p 1.699459551 -0.003125000023 -0.9639029689  -p 1.740451652 -0.003125000023 -0.8989199984  -p 1.755402483 -0.003125000023 -0.8201921969  -p 1.740451652 -0.003125000023 -0.7414643953  -p 1.699459551 -0.003125000023 -0.6764804315  -p 1.638213791 -0.003125000023 -0.6303047132  -p 1.562499998 -0.003125000023 -0.6080006552  -p -0.1697520413 -0.003125000023 -0.6080006552  -p -0.2161085603 -0.003125000023 -0.6174648793  -p -0.2541462577 -0.003125000023 -0.6432051452  -p -0.2798875169 -0.003125000023 -0.6812428426  -p -0.2893507477 -0.003125000023 -0.7275993616  -p -0.2893507477 -0.003125000023 -0.9166424461  -p -0.2798875169 -0.003125000023 -0.9629989651  -p -0.2541462577 -0.003125000023 -1.001036663  -p -0.2161085603 -0.003125000023 -1.026777922  -p -0.1697520413 -0.003125000023 -1.036241153  -p 1.562499998 -0.003125000023 -1.036241153  -p 1.638213791 -0.003125000023 -1.010078687  -p 1.638213791 -0.003125000023 -1.010078687 -d 1 -n "hand";curve  -p 1.638213791 -0.003125000023 -1.010078687  -p 1.699459551 -0.003125000023 -0.9639029689  -p 1.740451652 -0.003125000023 -0.8989199984  -p 1.755402483 -0.003125000023 -0.8201921969  -p 1.740451652 -0.003125000023 -0.7414643953  -p 1.699459551 -0.003125000023 -0.6764804315  -p 1.638213791 -0.003125000023 -0.6303047132  -p 1.562499998 -0.003125000023 -0.6080006552  -p -0.1697520413 -0.003125000023 -0.6080006552  -p -0.2161085603 -0.003125000023 -0.6174648793  -p -0.2541462577 -0.003125000023 -0.6432051452  -p -0.2798875169 -0.003125000023 -0.6812428426  -p -0.2893507477 -0.003125000023 -0.7275993616  -p -0.2893507477 -0.003125000023 -0.9166424461  -p -0.2798875169 -0.003125000023 -0.9629989651  -p -0.2541462577 -0.003125000023 -1.001036663  -p -0.2161085603 -0.003125000023 -1.026777922  -p -0.1697520413 -0.003125000023 -1.036241153  -p 1.562499998 -0.003125000023 -1.036241153  -p 1.638213791 -0.003125000023 -1.010078687  -p 1.638213791 -0.003125000023 -1.010078687 -d 1 -n "hand";curve  -p -0.4205246761 0.005208333695 0.7114435226  -p -0.2390166121 0.005208333695 0.7908349225  -p 0.01012682913 0.005208333695 0.9588395543  -p 0.1963376996 0.005208333695 1.22305403  -p 0.1890440779 0.005208333695 1.591072975  -p 0.180061658 0.005208333695 1.603853204  -p 0.1663784184 0.005208333695 1.612292228  -p 0.1505235829 0.005208333695 1.614944635  -p 0.1350303489 0.005208333695 1.610363024  -p -0.6172835819 0.005208333695 1.193696756  -p -0.6569484861 0.005208333695 1.160059868  -p -0.6770829351 0.005208333695 1.115571954  -p -0.676961739 0.005208333695 1.066743829  -p -0.6558636816 0.005208333695 1.020085314  -p -0.4205246761 0.005208333695 0.7114435226  -p -0.4205246761 0.005208333695 0.7114435226 -d 1 -n "hand";curve  -p -0.4205246761 0.005208333695 0.7114435226  -p -0.2390166121 0.005208333695 0.7908349225  -p 0.01012682913 0.005208333695 0.9588395543  -p 0.1963376996 0.005208333695 1.22305403  -p 0.1890440779 0.005208333695 1.591072975  -p 0.180061658 0.005208333695 1.603853204  -p 0.1663784184 0.005208333695 1.612292228  -p 0.1505235829 0.005208333695 1.614944635  -p 0.1350303489 0.005208333695 1.610363024  -p -0.6172835819 0.005208333695 1.193696756  -p -0.6569484861 0.005208333695 1.160059868  -p -0.6770829351 0.005208333695 1.115571954  -p -0.676961739 0.005208333695 1.066743829  -p -0.6558636816 0.005208333695 1.020085314  -p -0.4205246761 0.005208333695 0.7114435226  -p -0.4205246761 0.005208333695 0.7114435226 -d 1 -n "hand";
+
+select -r "hand*";
+mergeCurves;
+
+}
+
+
+
 
 
 proc cube(){
@@ -1883,20 +2320,20 @@ curve -d 1 -p -0.5 0.5 -0.5 -p -0.5 0.5 0.499886 -p 0.498585 0.5 0.5
 proc arrow(){
 curve -d 1 -p -0.25 0 0 -p -0.25 0 -1 -p -0.5 0 -1 -p 0 0 -1.5 -p 0.5 0 -1 
 -p 0.25 0 -1 -p 0.25 0 0 -p -0.25 0 0 -k 0 
--k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -name arrow;
+-k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -name "arrow";
 }
 
 
 
 
 proc pin(){
-    $c = `curve -d 1 -p 0 0.7074835877 0 -p -1.779797547e-017 0.7183189811 0.08015495567 -p -3.439014528e-017 0.7492709624 0.1548794455 -p -4.867644528e-017 0.7982872269 0.2192192208 -p -5.95602423e-017 0.862627002 0.268235485 -p -6.643296284e-017 0.9373514918 0.2991874667 -p -6.883890347e-017 1.017506448 0.31002286 -p -6.643296284e-017 1.097661403 0.2991874667 -p -5.95602423e-017 1.172385679 0.268235485 -p -4.867644528e-017 1.236725668 0.2192192208 -p -3.439014528e-017 1.285741718 0.1548794455 -p -1.779797547e-017 1.316694129 0.08015495567 -p 0 1.327526732 0 -p 1.779797547e-017 1.316694129 -0.08015495567 -p 3.439014528e-017 1.285741718 -0.1548794455 -p 4.867644528e-017 1.236725668 -0.2192192208 -p 5.95602423e-017 1.172385679 -0.268235485 -p 6.643296284e-017 1.097661403 -0.2991874667 -p 6.883890347e-017 1.017506448 -0.31002286 -p 6.643296284e-017 0.9373514918 -0.2991874667 -p 5.95602423e-017 0.862627002 -0.268235485 -p 4.867644528e-017 0.7982872269 -0.2192192208 -p 3.439014528e-017 0.7492709624 -0.1548794455 -p 1.779797547e-017 0.7183189811 -0.08015495567 -p 0 0.7074835877 0 -p 0 0.006634036807 0 -name pin`;
+    $c = `curve -d 1 -p 0 0.7074835877 0 -p -1.779797547e-017 0.7183189811 0.08015495567 -p -3.439014528e-017 0.7492709624 0.1548794455 -p -4.867644528e-017 0.7982872269 0.2192192208 -p -5.95602423e-017 0.862627002 0.268235485 -p -6.643296284e-017 0.9373514918 0.2991874667 -p -6.883890347e-017 1.017506448 0.31002286 -p -6.643296284e-017 1.097661403 0.2991874667 -p -5.95602423e-017 1.172385679 0.268235485 -p -4.867644528e-017 1.236725668 0.2192192208 -p -3.439014528e-017 1.285741718 0.1548794455 -p -1.779797547e-017 1.316694129 0.08015495567 -p 0 1.327526732 0 -p 1.779797547e-017 1.316694129 -0.08015495567 -p 3.439014528e-017 1.285741718 -0.1548794455 -p 4.867644528e-017 1.236725668 -0.2192192208 -p 5.95602423e-017 1.172385679 -0.268235485 -p 6.643296284e-017 1.097661403 -0.2991874667 -p 6.883890347e-017 1.017506448 -0.31002286 -p 6.643296284e-017 0.9373514918 -0.2991874667 -p 5.95602423e-017 0.862627002 -0.268235485 -p 4.867644528e-017 0.7982872269 -0.2192192208 -p 3.439014528e-017 0.7492709624 -0.1548794455 -p 1.779797547e-017 0.7183189811 -0.08015495567 -p 0 0.7074835877 0 -p 0 0.006634036807 0 -name "pin"`;
 		
 }
 
 proc orient(){
     
-    $c = `curve -d 3 -p -0.604001 0.0959835 -0.0987656 -p -0.500458 0.500783 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.336638 -p -0.327886 0.751175 -0.336638 -p 2.223925488e-016 1.001567 0 -p 2.223925488e-016 1.001567 0 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.0987656 -p -0.327886 0.751175 0.0987656 -p -0.500458 0.500783 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.500458 0.0959835 0.500783 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.336638 0.751175 -p -0.327886 0.336638 0.751175 -p 0 0 1.001567 -p 0 0 1.001567 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.500458 -0.0959835 0.500783 -p -0.604001 -0.0959835 0.0987656 -p -0.604001 -0.0959835 0.0987656 -p -0.500458 -0.500783 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.336638 -p -0.327886 -0.751175 0.336638 -p -2.223925488e-016 -1.001567 0 -p -2.223925488e-016 -1.001567 0 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.0987656 -p -0.327886 -0.751175 -0.0987656 -p -0.500458 -0.500783 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.500458 -0.0959835 -0.500783 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.336638 -0.751175 -p -0.327886 -0.336638 -0.751175 -p 0 0 -1.001567 -p 0 0 -1.001567 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.500458 0.0959835 -0.500783 -p -0.604001 0.0959835 -0.0987656 -name orient`;
+    $c = `curve -d 3 -p -0.604001 0.0959835 -0.0987656 -p -0.500458 0.500783 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.0987656 -p -0.327886 0.751175 -0.336638 -p -0.327886 0.751175 -0.336638 -p 2.223925488e-016 1.001567 0 -p 2.223925488e-016 1.001567 0 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.336638 -p -0.327886 0.751175 0.0987656 -p -0.327886 0.751175 0.0987656 -p -0.500458 0.500783 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.604001 0.0959835 0.0987656 -p -0.500458 0.0959835 0.500783 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.0959835 0.751175 -p -0.327886 0.336638 0.751175 -p -0.327886 0.336638 0.751175 -p 0 0 1.001567 -p 0 0 1.001567 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.336638 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.327886 -0.0959835 0.751175 -p -0.500458 -0.0959835 0.500783 -p -0.604001 -0.0959835 0.0987656 -p -0.604001 -0.0959835 0.0987656 -p -0.500458 -0.500783 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.0987656 -p -0.327886 -0.751175 0.336638 -p -0.327886 -0.751175 0.336638 -p -2.223925488e-016 -1.001567 0 -p -2.223925488e-016 -1.001567 0 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.336638 -p -0.327886 -0.751175 -0.0987656 -p -0.327886 -0.751175 -0.0987656 -p -0.500458 -0.500783 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.604001 -0.0959835 -0.0987656 -p -0.500458 -0.0959835 -0.500783 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.0959835 -0.751175 -p -0.327886 -0.336638 -0.751175 -p -0.327886 -0.336638 -0.751175 -p 0 0 -1.001567 -p 0 0 -1.001567 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.336638 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.327886 0.0959835 -0.751175 -p -0.500458 0.0959835 -0.500783 -p -0.604001 0.0959835 -0.0987656 -name "orient"`;
 		
 }
 
@@ -1930,481 +2367,12 @@ proc moveShape(){
 
 }
 
-//Append functions------------------------------------------------------------------------------------------------------------------------------------------------
+proc crown(){
+    curve  -p 10.23597986 0.5387466956 -5.064001608 -p 10.15148588 0.5387466956 -5.062031611 -p 9.56002042 -0.5387466956 -5.048241451 -p 9.475526441 -0.5387466956 -5.046271454 -p 8.58145858 -0.5387466956 -6.782167047 -p 7.226633651 -0.5387466956 -8.241302021 -p 5.569970572 -0.5387466956 -9.259395858 -p 5.575918388 -0.5387466956 -9.334794753 -p 5.617553638 0.5387466956 -9.862593802 -p 5.623501454 0.5387466956 -9.937992697 -p 5.001839687 0.5387466956 -10.29059582 -p 4.344093509 0.5387466956 -10.5859802 -p 3.656702513 0.5387466956 -10.81827359 -p 3.606075155 0.5387466956 -10.76522235 -p 3.251679087 -0.5387466956 -10.39385887 -p 3.201051728 -0.5387466956 -10.34080762 -p 2.190574766 -0.5387466956 -10.65877312 -p 1.115474937 -0.5387466956 -10.83086909 -p -7.092061795e-06 -0.5387466956 -10.83086909 -p -0.90576267 -0.5387466956 -10.83086909 -p -1.784795359 -0.5387466956 -10.71701313 -p -2.62448129 -0.5387466956 -10.5043222 -p -2.671915677 -0.5387466956 -10.55988243 -p -3.003960654 0.5387466956 -10.94880906 -p -3.05139504 0.5387466956 -11.00436929 -p -3.751523379 0.5387466956 -10.81058579 -p -4.424716067 0.5387466956 -10.55280353 -p -5.063966148 0.5387466956 -10.2359444 -p -5.062219942 0.5387466956 -10.1609001 -p -5.049996345 -0.5387466956 -9.63558328 -p -5.048250139 -0.5387466956 -9.560538985 -p -6.768344619 -0.5387466956 -8.633166803 -p -8.202614824 -0.5387466956 -7.245987887 -p -9.190595767 -0.5387466956 -5.564601881 -p -9.27364298 -0.5387466956 -5.571158032 -p -9.854980945 0.5387466956 -5.617051683 -p -9.938028157 0.5387466956 -5.623607835 -p -10.29056036 0.5387466956 -5.001875147 -p -10.58594474 0.5387466956 -4.344128969 -p -10.81823813 0.5387466956 -3.656808894 -p -10.75430462 0.5387466956 -3.595786253 -p -10.3067643 -0.5387466956 -3.168622271 -p -10.24283079 -0.5387466956 -3.10759963 -p -10.50899587 -0.5387466956 -2.176000579 -p -10.65458171 -0.5387466956 -1.193423788 -p -10.65458171 -0.5387466956 -0.1763653923 -p -10.65458171 -0.5387466956 0.7370779806 -p -10.53919387 -0.5387466956 1.623585703 -p -10.32297109 -0.5387466956 2.469654489 -p -10.3986773 -0.5387466956 2.534286166 -p -10.92862762 0.5387466956 2.986713719 -p -11.00433383 0.5387466956 3.051345396 -p -10.81062125 0.5387466956 3.751487919 -p -10.55276807 0.5387466956 4.424680607 -p -10.23597986 0.5387466956 5.063930688 -p -10.13068428 0.5387466956 5.061475283 -p -9.39360577 -0.5387466956 5.044287228 -p -9.288310194 -0.5387466956 5.041831823 -p -8.391901953 -0.5387466956 6.633886219 -p -7.100097084 -0.5387466956 7.973335559 -p -5.543446261 -0.5387466956 8.923629285 -p -5.552341193 -0.5387466956 9.036335204 -p -5.614606521 0.5387466956 9.825286778 -p -5.623501454 0.5387466956 9.937992697 -p -5.001839687 0.5387466956 10.29058164 -p -4.34416443 0.5387466956 10.5859802 -p -3.656844355 0.5387466956 10.81820267 -p -3.57692077 0.5387466956 10.73447778 -p -3.017448482 -0.5387466956 10.148396 -p -2.937524897 -0.5387466956 10.0646711 -p -2.004067725 -0.5387466956 10.33199928 -p -1.019349131 -0.5387466956 10.47813831 -p -7.092061795e-06 -0.5387466956 10.47813831 -p 0.8160055362 -0.5387466956 10.47813831 -p 1.609493776 -0.5387466956 10.38331744 -p 2.372925858 -0.5387466956 10.20961866 -p 2.448308993 -0.5387466956 10.29792341 -p 2.975997722 0.5387466956 10.91606455 -p 3.051380856 0.5387466956 11.00436929 -p 3.751523379 0.5387466956 10.81057161 -p 4.424716067 0.5387466956 10.55280353 -p 5.063895227 0.5387466956 10.2359444 -p 5.061247551 0.5387466956 10.12216838 -p 5.042713576 -0.5387466956 9.325725986 -p 5.0400659 -0.5387466956 9.211949965 -p 6.647495886 -0.5387466956 8.347200688 -p 8.005370402 -0.5387466956 7.080728664 -p 8.983918902 -0.5387466956 5.54819085 -p 9.089929982 -0.5387466956 5.556554671 -p 9.832017078 0.5387466956 5.615102172 -p 9.938028157 0.5387466956 5.623465994 -p 10.29054618 0.5387466956 5.001804226 -p 10.58601566 0.5387466956 4.344058049 -p 10.81823813 0.5387466956 3.656737974 -p 10.74537029 0.5387466956 3.587187607 -p 10.23528883 -0.5387466956 3.100328783 -p 10.16242099 -0.5387466956 3.030778417 -p 10.48156377 -0.5387466956 2.018500071 -p 10.65458171 -0.5387466956 0.9413860963 -p 10.65458171 -0.5387466956 -0.1763653923 -p 10.65458171 -0.5387466956 -0.9846902256 -p 10.56149131 -0.5387466956 -1.77090201 -p 10.39098396 -0.5387466956 -2.527766843 -p 10.45913326 -0.5387466956 -2.585943232 -p 10.93618453 0.5387466956 -2.993183191 -p 11.00433383 0.5387466956 -3.05135958 -p 10.81062125 0.5387466956 -3.75155884 -p 10.23597986 0.5387466956 -5.064001608 -d 3 -n "crown";
 
-
-
-
-proc leftAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_left"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_left");}
-        
-        }          
 }
 
+proc foot(){
+    curve  -p 0.4249371493 4.798237341e-17 0.05965626747 -p 0.02479363527 6.785732323e-17 -0.3369861891 -p -0.4476029329 4.798237341e-17 0.05965626747 -p -0.1652321107 1.966335462e-32 0.8432678924 -p -0.6161659743 -4.798237341e-17 1.635912638 -p -0.5208473196 -6.785732323e-17 2.405743088 -p 0.6068085407 -4.798237341e-17 1.761965361 -p 0.4664682483 -3.644630068e-32 1.286896949 -p 0.4249371493 4.798237341e-17 0.05965626747 -d 3  -n "foot";
 
-proc rightAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_right"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_right");}
-        
-        }          
 }
-
-
-proc upAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_top"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_top");}
-        
-        }          
-}
-
-
-proc bottomAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_bottom"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_bottom");}
-        
-        }          
-}
-
-proc middleAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_center"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_center");}
-        
-        }          
-}
-
-proc ikAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_IK"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_IK");}
-        
-        }          
-}
-
-proc fkAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_FK"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_FK");}
-        
-        }          
-}
-  
-proc lAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_L"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_L");}
-        
-        }          
-}
-
-proc rAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_R"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_R");}
-        
-        }          
-}
- 
-proc jointAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_joint"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_joint");}
-        
-        }          
-}
- 
-proc backAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_back"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_back");}
-        
-        }          
-}
- 
-proc frontAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_front"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_front");}
-        
-        }          
-}
-
-proc blueAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_blue"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_blue");}
-        
-        }          
-}
- 
-proc redAppend(){
-    
-    if (`radioButtonGrp -q -select nameRadio` == 1) {
-            $value = `textField -query -tx tfSuffix`;
-            rename ($value + "_red"); 
-            
-            }
-   
-    else if (`radioButtonGrp -q -select nameRadio` == 2) {
-        
-        string $selThings[] = `ls -selection -flatten`;
-        for($things in $selThings){
-        select $things;
-        rename ($things + "_red");}
-        
-        }          
-}
-
-
-
-//End-----------------------------------------------------
-
- 
-proc string stringReplace(string $str, string $search, string $replace)
-{
-    string $retstr = "";
-
-    	// Sanity check please!
-    if ($search == "")
-        return $str;
-    
-    if ($str == "")
-        return $str;
-        
-        
-    int $len = size($str);
-    int $lenS = size($search);
-    
-    int $i, $j;
-    int $match;
-    
-    for ($i=1; $i <= $len; ++$i)
-        {
-	$match = 0;
-
-	// Now get substring from where we are currently
-	// to the number of letters past of the length
-	// of the search string.  Basically the same
-	// length as the search string.  So if it is identical
-	// we know we have a match.
-	//
-	// If not, we don't.  We also make sure we aren't
-	// trying to look past the end of the string...
-	//
-	$j = $i + ($lenS - 1);
-
-	if ($j <= $len)
-	    {
-	    string $part = `substring $str $i $j`;
-	    if ($part == $search)
-	        $match = 1;
-	    }
-	
-	if ($match == 1)
-	    {
-	    $retstr += $replace; // we did it, so insert replace str
-	    $i = $j;	// skip forward
-	    }
-	else
-	    {
-	    string $char = `substring $str $i $i`;
-	    $retstr += $char;
-	    }
-	}
-
-    return $retstr;
-	
-}
-
-// --------------------------------------------------------------------------
-
-/*
- * getShortName() - Given a string, get last part after last | pipe.
- */
-proc string getShortName(string $obj)
-{
-    string $ret = "";
-    
-    if ($obj == "")
-        return $ret;
-        
-    string $parts[];
-    int $cnt = tokenize($obj, "|", $parts);
-    
-    if ($cnt <= 0)
-        $ret = $obj;
-    else
-        $ret = $parts[($cnt-1)];
-    
-    return $ret;
-}
-
-// --------------------------------------------------------------------------
-
-/*
- * chop() - Removes last char
- */
-proc string chop(string $str)
-{
-    string $ret = "";
-
-    int $cnt = size($str);
-    
-    if ($cnt <= 1)
-        return $ret;
-    
-    $ret = `substring $str 1 ($cnt-1)`;
-
-    return $ret;
-}
-
-// --------------------------------------------------------------------------
-
-/*
- * cR_doRename() - Does real work of renaming selected objects
- *
- *    $mode:  0=S&R 1=Pre 2=Suf 3=R&N
- */
-global proc cR_doRename(int $mode)
-{
-    string $objs[] = `ls -sl -long`;
-    int $objCnt = size($objs);
-    int $i;
-
-	// Get all UI data...
-	//
-    string $search = `textField -q -tx tfSuffix`;
-    string $replace = `textField -q -tx tfReplace`;
-    string $prefix = `textField -q -tx tfSuffix`;
-    string $suffix = `textField -q -tx tfSuffix`;
-    string $rename = `textField -q -tx tfSuffix`;
-    int $start = `intField -q -v ifNumber`;
-    int $padding = `intField -q -v ifPadding`;
-    
-    string $shortName;
-    string $newShortName;
-    string $newName;
-
-	// Now do it
-	//
-    for ($i=0; $i < $objCnt; ++$i)
-        {
-	$obj = $objs[$i];
-	
-	$shortName = getShortName($obj);
-		
-	switch ($mode)
-	    {
-	    case 0:
-	        if ($search == "")
-	            {
-	            warning -sl 0 ("Can't search and replace, search entry field is blank!");
-	            return;
-	            }
-	        $newShortName = stringReplace($shortName, $search, $replace);
-	        break;
-
-	    case 1:
-	        if ($prefix == "")
-	            {
-	            warning -sl 0 ("Can't add prefix, prefix entry field is blank!");
-	            return;
-	    	    }
-	        $newShortName = ($prefix + $shortName);
-	        break;
-
-	    case 2:
-	        if ($suffix == "")
-	            {
-	            warning -sl 0 ("Can't add suffix, suffix entry field is blank!");
-	            return;
-	    	    }
-	        $newShortName = ($shortName + $suffix);
-	        break;
-
-	    case 3:
-	        if ($rename == "")
-	            {
-	            warning -sl 0 ("Can't rename and number, rename entry field is blank!");
-	            return;
-	            }
-	    		// get index of string as user wants
-	    	int $n = $i + $start;
-	    		// pad of 0's
-	    	string $padStr = "";
-	    	
-	    		// Add padding as needed
-	    	for ($p=1; $p < $padding; ++$p)
-	    	    {
-		    if ($n < pow(10, $p) )
-		        $padStr += "0";
-		    }
-	    	
-	    	$newShortName = ($rename+$padStr+$n);
-	        break;
-
-	    } // end of switch
-		
-	
-	$newName = `rename $obj $newShortName`;
-	select -r $newName;
-	string $newLongNames[] = `ls -sl -long`;
-	string $newLongName = $newLongNames[0];
-	
-	    // Now update rest of stuff in list in case |long|names
-	    // required it
-	for ($j=0; $j < $objCnt; ++$j)
-	    {
-	    string $tmp = $objs[$j];
-
-	    $tmp += "|";	// add to end for easy replacing
-	    $tmp = `substitute ($obj+"|") $tmp ("|"+$newLongName+"|")`;
-	    $tmp = chop($tmp);
-	    
-	    $objs[$j] = $tmp;
-	    }
-	
-
-	}  // end of for all objs
-
-    select $objs;
-    
-}
-
-
-// ---------------------------------------------------------------------------
