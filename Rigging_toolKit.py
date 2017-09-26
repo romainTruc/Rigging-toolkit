@@ -1,7 +1,182 @@
 import maya.cmds as cmds
 
-if cmds.objExists("*_temp_curve"):
-	cmds.delete("*_temp_curve")
+#----------------------------------------------SHORTCUT FUNCTIONS START---------------------------------------------#
+
+
+def sel(thingToSelect):
+
+	cmds.select(thingToSelect, r=True)
+
+def selAdd(thingToSelect):
+
+	cmds.select(thingToSelect, add=True)
+
+
+def parent(firstItem, allOtherItems):
+
+	sel(firstItem)
+
+	selAdd(allOtherItems)
+
+	cmds.parent()
+
+	sel(allOtherItems)
+
+
+
+
+def mergeTheseCurves(firstCurve, allOthers):
+
+	shapeOfAll = cmds.listRelatives(allOthers, shapes=True)#put all shapes in array
+
+	sel(shapeOfAll)
+
+	selAdd(firstCurve)
+
+	cmds.parent(r=True, s=True)
+
+	sel(allOthers)
+
+	cmds.delete()
+
+
+
+def delIfExists(thingToDelete):
+
+	if cmds.objExists(thingToDelete):
+		cmds.delete(thingToDelete)
+
+
+
+def colorBtt(command, buttonColor):
+
+	cmds.button(c=command, bgc=buttonColor, label="", w=26, h=22)
+
+	
+def doRed(e):
+
+	print "red"
+
+	curSel = cmds.ls(sl=True) #put everything in array
+
+	sel(curSel)
+
+	print curSel
+
+	curSel.remove(ent)
+
+	print curSel
+	# cmds.setAttr(curSel + ".overrideEnabled" ,1)
+	# cmds.setAttr(curSel + ".overrideColor", 18 )
+
+
+
+def doRedPale(e):
+
+	print "redPale"
+
+def doOrange(e):
+
+	print "orange"
+
+
+def doYellow(e):
+
+	print "yellow"
+
+
+def doGreen(e):
+
+	print "green"
+
+
+def doCyan(e):
+
+	print "cyan"
+
+
+def doBlue(e):
+
+	print "blue"
+
+
+def doPink(e):
+
+	print "pink"
+
+
+def doPurple(e):
+
+	print "purple"
+
+
+
+
+def scaleToX(objectToScale, value):
+
+	cmds.setAttr(objectToScale + ".scaleX", value)
+
+def scaleToY(objectToScale, value):
+
+	cmds.setAttr(objectToScale + ".scaleY", value)
+
+def scaleToZ(objectToScale, value):
+
+	cmds.setAttr(objectToScale + ".scaleZ", value)
+
+def scaleAll(objectToScale, value):
+
+	cmds.setAttr(objectToScale + ".scaleX", value)
+	cmds.setAttr(objectToScale + ".scaleY", value)
+	cmds.setAttr(objectToScale + ".scaleZ", value)
+
+def lockAllButTx(thingToLock):
+
+	cmds.setAttr(thingToLock + ".ty", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".tz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".rx", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".ry", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".rz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sx", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sy", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".v", lock=True, channelBox=False, keyable=False)
+
+
+
+
+def lockEverything(thingToLock):
+
+	cmds.setAttr(thingToLock + ".tx", lock=True) 
+	cmds.setAttr(thingToLock + ".ty", lock=True)
+	cmds.setAttr(thingToLock + ".tz", lock=True)
+	cmds.setAttr(thingToLock + ".rx", lock=True)
+	cmds.setAttr(thingToLock + ".ry", lock=True)
+	cmds.setAttr(thingToLock + ".rz", lock=True)
+	cmds.setAttr(thingToLock + ".sx", lock=True)
+	cmds.setAttr(thingToLock + ".sy", lock=True)
+	cmds.setAttr(thingToLock + ".sz", lock=True)
+
+
+def UnlockEverything(thingToLock):
+
+	cmds.setAttr(thingToLock + ".tx", lock=False) 
+	cmds.setAttr(thingToLock + ".ty", lock=False)
+	cmds.setAttr(thingToLock + ".tz", lock=False)
+	cmds.setAttr(thingToLock + ".rx", lock=False)
+	cmds.setAttr(thingToLock + ".ry", lock=False)
+	cmds.setAttr(thingToLock + ".rz", lock=False)
+	cmds.setAttr(thingToLock + ".sx", lock=False)
+	cmds.setAttr(thingToLock + ".sy", lock=False)
+	cmds.setAttr(thingToLock + ".sz", lock=False)
+
+
+
+
+#----------------------------------------------SHORTCUT FUNCTIONS END---------------------------------------------#
+
+
+delIfExists("*_temp_curve")
 
 tmpCrvs = ""
 
@@ -14,16 +189,71 @@ cmds.circle(n="Circle_shape_temp_curve")
 cmds.setAttr("Circle_shape_temp_curve" + '.overrideEnabled', 1)
 cmds.setAttr ("Circle_shape_temp_curve" + ".overrideColor", 14)
 cmds.setAttr("Circle_shape_temp_curve" + ".ty", 80000)
-cmds.setAttr("Circle_shape_temp_curve" + ".tx", lock=True) 
-cmds.setAttr("Circle_shape_temp_curve" + ".ty", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".tz", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".rx", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".ry", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".rz", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".sx", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".sy", lock=True)
-cmds.setAttr("Circle_shape_temp_curve" + ".sz", lock=True)
 
+lockEverything("Circle_shape_temp_curve")
+
+
+
+
+
+
+def changeMinValue(*args):
+
+	global minValueToInject
+
+	intFieldMin = cmds.intField(minCtrlValue, query=True, value=True)#get user input
+
+	intFieldMax = cmds.intSliderGrp(maxCtrlValue, query=True, value=True)#get user input
+
+	checkBoxValue = cmds.checkBox(sliderCheckBox, query=True, value=True)#get user input
+
+	if(checkBoxValue==True):
+
+		minValueToInject = 0
+
+		intFieldMin = cmds.intField(minCtrlValue, edit=True, value=minValueToInject)#get user input
+
+	elif(checkBoxValue==False):
+
+		minValueToInject = ( -(intFieldMax))
+
+		intFieldMin = cmds.intField(minCtrlValue, edit=True, value=minValueToInject)#get user input
+
+
+	
+
+
+
+
+
+
+def lockAndScaleSlider(thingToLock):
+
+	print minValueToInject
+
+	intFieldMin = cmds.intField(minCtrlValue, query=True, value=True)#get user input
+	
+	intFieldMax = cmds.intSliderGrp(maxCtrlValue, query=True, value=True)#get user input
+
+	floatFieldMax = float(intFieldMax)
+
+	scaleRatioMax = floatFieldMax / (floatFieldMax*floatFieldMax)
+
+	sliderBox = cmds.curve(n="sliderTemp", p=[[intFieldMax, 0, 0], [intFieldMax, 0.1, 0], [minValueToInject, 0.1, -0], [minValueToInject, 0, -0], [intFieldMax, 0, 0]],d=1)
+
+	cmds.transformLimits(thingToLock, tx=[minValueToInject, intFieldMax], etx=[1, 1])
+
+	parent("tempMainCurve", "sliderTemp")
+
+	scaleToX(sliderBox, scaleRatioMax)
+
+	scaleToX("tempMainCurve", intFieldMax)
+
+	lockAllButTx('tempMainCurve')
+
+	cmds.rename("sliderTemp", "Slider")
+
+	cmds.rename("tempMainCurve", "Controler")
 
 
 
@@ -86,179 +316,47 @@ def setNurbsTxt(*args):#romain truchard 2017
   cmds.FreezeTransformations(finalText)
 
 
+
 #------------------------------------------------------------------------------------------------------
 
 #ALL CURVES--------------------------------------------------------------------------------------------------
-
-def mergeTheCurves():
-
-	name = cmds.ls(sl=True)
-
-	print name[0]
-
-	cmds.select(r=True, hi=True)#select everything : transform shpes etc
-
-	curSel = cmds.ls(sl=True)
-
-	shapes = cmds.ls(curSel, shapes=True)#put all shapes in array
-
-	transforms = cmds.ls(curSel, transforms=True)#put all transforms in array
-
-	tempGrp = cmds.group(em=True, n="tempGrp")#create empty group to put all shapes
-
-	cmds.select(transforms)#select all transforms
-
-	cmds.FreezeTransformations(transforms)#freeze transformations
-
-	cmds.select(shapes)
-
-	cmds.select(tempGrp, add=True)#add empty group to selection
-
-	cmds.parent(r=True, s=True)#parent -r -s (merge curves in empty group)
-
-	cmds.select(transforms)#select remaining transforms
-
-	cmds.delete()#delete them
-
-	cmds.select(tempGrp, r=True)
-
-	cmds.FreezeTransformations(tempGrp)#freeze transformations
-
-	cmds.rename(tempGrp, name[0])
-
-
 
 
 #-------------CURVES------------------CURVES---------------CURVES-------------CRUVES--------------CURVES------------CURVES
 
 
-# def ctrl_Slide():
-
-# 	cmds.curve(n="Controler", p=[[0, -1.110223025e-16, 1.204591982e-15], [0.025, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.1, 1.182387521e-15], [-0.025, 0.1, 1.182387521e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15]],d=1) 
-
-# 	cmds.curve(n="tempCrv01", p=[[-0.02844540985, 0.1842523583, 1.131662451e-15], [0.02844540985, 0.1273615386, 1.14429475e-15], [0, 0.1558069485, 1.1379786e-15], [0.02844540985, 0.1842523583, 1.131662451e-15], [0, 0.1558069485, 1.1379786e-15], [-0.02844540985, 0.1273615386, 1.14429475e-15]],d=1) 
-
-# 	global sliderControler
-
-# 	sliderControler = cmds.sets( "Controler", "tempCrv01", n="selContr" )
-
-# 	cmds.select( "selContr" )
-
-# 	cmds.rename("tempCrv01", "Controler")
-
-# 	ctrlSlide = mergeTheCurves()
-
-# 	#cmds.select(ctrlSlide, r=True)
-
-
-
-
-# def Joystick_shape():
-
-# 	crv1 = cmds.curve(n="Joystick_shape", p=[[-1, 0, -1], [1, 0, -1], [1, 0, 1], [0, 0, 1], [-1, 0, 1], [-1, 0, -1], [-1, 0, 0], [-0.8999999762, 0, 0], [-1, 0, 0], [-1, 0, 1], [0, 0, 1], [0, -1.998401391e-16, 0.8999999762], [0, 0, 1], [1, 0, 1], [1, 0, 0], [0.8999999762, 0, 0], [1, 0, 0], [1, 0, -1], [0, 0, -1], [0, 1.998401391e-16, -0.8999999762], [0, 0, -1], [-1, 0, -1], [-1, 0, -1]],d=1) 
-# 	crv2 = cmds.curve(n="cvAdd1", p=[[0, 6.661338148e-17, -0.3], [0, 5.173639295e-17, -0.233], [0, 6.661338148e-17, -0.3]],d=1) 
-# 	crv3 = cmds.curve(n="cvAdd2", p=[[0.3, 0, 0], [0.233, 0, 0], [0.3, 0, 0]],d=1) 
-# 	crv4 = cmds.curve(n="cvAdd3", p=[[0, -6.661338148e-17, 0.3], [0, -5.173639295e-17, 0.233], [0, -6.661338148e-17, 0.3]],d=1) 
-# 	crv5 = cmds.curve(n="cvAdd4", p=[[-0.3, 0, 0], [-0.233, 0, 0], [-0.3, 0, 0]],d=1) 
-
-# 	cmds.sets( crv1, crv2, crv3, crv4, crv5, n='selectSet' )
-
-# 	cmds.select( 'selectSet' )
-
-# 	joyStickProcess = mergeTheCurves()
-
-# 	#cmds.rename( joyStickProcess, "Joystick_shape")
-
-
-
-
-# def Slider_One_shape():
-
-# 	crv1 = cmds.curve(n="Slider_One_shape", p=[[0.5, 0, 0], [0.5, 0.0498903724, -1.107788803e-17], [0.5, 0, 0], [0.6, 0, 0], [0.6, 0.0498903724, -1.107788803e-17], [0.6, 0, 0], [0.7, 0, 0], [0.7, 0.0498903724, -1.107788803e-17], [0.7, 0, 0], [0.8, 0, 0], [0.8, 0.0498903724, -1.107788803e-17], [0.8, 0, 0], [0.9, 0, 0], [0.9, 0.0498903724, -1.107788803e-17], [0.9, 0, 0], [1, 0, 0], [1, 0.0997807448, -2.215577606e-17], [0.5, 0.0997807448, -2.215577606e-17], [0, 0.0997807448, -2.215577606e-17], [0, 0, 0], [0.1, 0, 0], [0.1, 0.0498903724, -1.107788803e-17], [0.1, 0, 0], [0.2, 0, 0], [0.2, 0.0498903724, -1.107788803e-17], [0.2, 0, 0], [0.3, 0, 0], [0.3, 0.0498903724, -1.107788803e-17], [0.3, 0, 0], [0.4, 0, 0], [0.4, 0.0498903724, -1.107788803e-17], [0.4, 0, 0], [0.5, 0, 0], [0.5, 0, 0], [0.5, 0, 0], [0.5, 0, 0]],d=1) 
-
-	#ctrl_Slide()
-
-	#cmds.select(sliderControler, r=True)
-
-	#cmds.select(crv1, add=True)
-
-	#RESET SIZE
-
-	# cmds.setAttr(crv1 + '.scaleX', 2)
-	# cmds.setAttr(crv1 + '.scaleY', 2)
-	# cmds.setAttr(crv1 + '.scaleZ', 2)
-
-	# boundingBox = cmds.xform(crv1, query=True, bb=True)
-
-	# halfOfXboundingBox = boundingBox[3] / 2
-
-	# cmds.xform(crv1, ws=True, piv=[halfOfXboundingBox, 0, 0])
-
-	# worldPosition = cmds.xform(crv1, q=True, piv=True, ws=True)
-
-	# cmds.xform(crv1, translation=(-worldPosition[0],-worldPosition[1],-worldPosition[2]))
-
-	# cmds.FreezeTransformations(crv1)
-
-
-
-
-
-
-	#crv2 = cmds.curve(n="Controler", p=[[0, -1.110223025e-16, 1.204591982e-15], [0.025, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.1, 1.182387521e-15], [-0.025, 0.1, 1.182387521e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15]],d=1) 
-
-	#crv3 = cmds.curve(n="tempCrv01", p=[[-0.02844540985, 0.1842523583, 1.131662451e-15], [0.02844540985, 0.1273615386, 1.14429475e-15], [0, 0.1558069485, 1.1379786e-15], [0.02844540985, 0.1842523583, 1.131662451e-15], [0, 0.1558069485, 1.1379786e-15], [-0.02844540985, 0.1273615386, 1.14429475e-15]],d=1) 
+def ctrl_Slide(*args):
 
 	
 
-	# cmds.transformLimits("Controler", tx=[0, 1], etx=[1, 1])
-	# cmds.setAttr("Controler.ty", lock=True)
-	# cmds.setAttr("Controler.tz", lock=True)
-	# cmds.setAttr("Controler.rx", lock=True)
-	# cmds.setAttr("Controler.ry", lock=True)
-	# cmds.setAttr("Controler.rz", lock=True)
-	# cmds.setAttr("Controler.sx", lock=True)
-	# cmds.setAttr("Controler.sy", lock=True)
-	# cmds.setAttr("Controler.sz", lock=True)
+	cmds.curve(n="tempMainCurve", p=[[0, -1.110223025e-16, 1.204591982e-15], [0.025, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.1, 1.182387521e-15], [0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.2033434935, 1.159440656e-15], [-0.05, 0.1, 1.182387521e-15], [-0.025, 0.1, 1.182387521e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15], [0, -1.110223025e-16, 1.204591982e-15]],d=1) 
 
-	# cmds.select("Controler", r=True)
-	# cmds.select(crv1, add=True)
+	cmds.curve(n="tempSecondaryCurve1", p=[[-0.02844540985, 0.1842523583, 1.131662451e-15], [0.02844540985, 0.1273615386, 1.14429475e-15], [0, 0.1558069485, 1.1379786e-15], [0.02844540985, 0.1842523583, 1.131662451e-15], [0, 0.1558069485, 1.1379786e-15], [-0.02844540985, 0.1273615386, 1.14429475e-15]],d=1) 
 
-	# cmds.parent()
+	mergeTheseCurves("tempMainCurve", "tempSecondaryCurve*")
+	
+	cmds.select('tempMainCurve', r=True)
 
-	# cmds.setAttr("Slider_shape1.sx", 2 )
-	# cmds.setAttr("Slider_shape1.sy", 2 )
-	# cmds.setAttr("Slider_shape1.tx", -1 )
-
-	# cmds.select("Slider_shape1", r=True)
+	lockAndScaleSlider('tempMainCurve')
 
 
 
-# def Slider_Two_shape():
+def ctrl_Joy(e):
 
-# 	crv1 = cmds.curve(n="Slider_Two_shape", p=[[0, 0, 0], [0, 0.09978074479, -2.215577606e-17], [0, 0, 0], [0.2, 0, 0], [0.2, 0.09978074479, -2.215577606e-17], [0.2, 0, 0], [0.4, 0, 0], [0.4, 0.09978074479, -2.215577606e-17], [0.4, 0, 0], [0.6, 0, 0], [0.6, 0.09978074479, -2.215577606e-17], [0.6, 0, 0], [0.8, 0, 0], [0.8, 0.09978074479, -2.215577606e-17], [0.8, 0, 0], [1, 0, 0], [1, 0.1995614896, -4.431155211e-17], [0, 0.1995614896, -4.431155211e-17], [-1, 0.1995614896, -4.431155211e-17], [-1, 0, 0], [-0.8, 0, 0], [-0.8, 0.09978074479, -2.215577606e-17], [-0.8, 0, 0], [-0.6, 0, 0], [-0.6, 0.09978074479, -2.215577606e-17], [-0.6, 0, 0], [-0.4, 0, 0], [-0.4, 0.09978074479, -2.215577606e-17], [-0.4, 0, 0], [-0.2, 0, 0], [-0.2, 0.09978074479, -2.215577606e-17], [-0.2, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],d=1) 
+	print "OK"
+	
+	crv1 = cmds.curve(n="Joystick", p=[[-1, 1, -2.220446049e-16], [1, 1, -2.220446049e-16], [1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [-1, -1, 2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 0, 0], [-0.8999999762, 0, 0], [-1, 0, 0], [-1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [0, -0.8999999762, 4.786660061e-26], [0, -1, 2.220446049e-16], [1, -1, 2.220446049e-16], [1, 0, 0], [0.8999999762, 0, 0], [1, 0, 0], [1, 1, -2.220446049e-16], [0, 1, -2.220446049e-16], [0, 0.8999999762, -4.786660061e-26], [0, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16]],d=1) 
+	cmds.curve(n="tempCrv1", p=[[0.1006069316, 0, 0], [0.1670520627, 0, 0], [0.2334971938, 0, 0], [0.2999423249, 0, 0]],d=1) 
+	cmds.curve(n="tempCrv2", p=[[-4.467845276e-17, 0.1006069316, 0], [-7.418601853e-17, 0.1670520627, 0], [-1.036935843e-16, 0.2334971938, 0], [-1.332011501e-16, 0.2999423249, 0]],d=1) 
+	cmds.curve(n="tempCrv3", p=[[-0.1006069316, -8.935690552e-17, 0], [-0.1670520627, -1.483720371e-16, 0], [-0.2334971938, -2.073871686e-16, 0], [-0.2999423249, -2.664023001e-16, 0]],d=1) 
+	cmds.curve(n="tempCrv4", p=[[6.701767914e-17, -0.1006069316, 0], [1.112790278e-16, -0.1670520627, 0], [1.555403764e-16, -0.2334971938, 0], [1.998017251e-16, -0.2999423249, 0]],d=1) 
 
-	#crv2 = cmds.curve(n="Controler", p=[[0, -2.220446049e-16, 2.409183963e-15], [0.05, 0.2, 2.364775042e-15], [0.1, 0.2, 2.364775042e-15], [0.1, 0.2, 2.364775042e-15], [0.1, 0.2, 2.364775042e-15], [0.1, 0.406686987, 2.318881312e-15], [-0.1, 0.406686987, 2.318881312e-15], [-0.1, 0.2, 2.364775042e-15], [-0.05, 0.2, 2.364775042e-15], [0, -2.220446049e-16, 2.409183963e-15], [0, -2.220446049e-16, 2.409183963e-15], [0, -2.220446049e-16, 2.409183963e-15]],d=1) 
+	mergeTheseCurves(crv1, "tempCrv*")
 
-	#crv3 = cmds.curve(n="tempCrv01", p=[[-0.05689081971, 0.3685047166, 2.263324901e-15], [0.05689081971, 0.2547230772, 2.2885895e-15], [0, 0.3116138969, 2.2759572e-15], [0.05689081971, 0.3685047166, 2.263324901e-15], [0, 0.3116138969, 2.2759572e-15], [-0.05689081971, 0.2547230772, 2.2885895e-15]],d=1) 
+	crv3 = cmds.curve(p=[[-0.04098660341, 0.04098660341, 0], [0.04098660341, -0.04098660341, 0], [0, 0, 0], [0.04098660341, 0.04098660341, 0], [-0.04098660341, -0.04098660341, 0]],d=1) 
+	crv4 = cmds.circle(r=.1)
+	mergeTheseCurves(crv3, crv4)
 
-
-	# cmds.transformLimits("Controler", tx=[-1, 1], etx=[1, 1])
-	# cmds.setAttr("Controler.ty", lock=True)
-	# cmds.setAttr("Controler.tz", lock=True)
-	# cmds.setAttr("Controler.rx", lock=True)
-	# cmds.setAttr("Controler.ry", lock=True)
-	# cmds.setAttr("Controler.rz", lock=True)
-	# cmds.setAttr("Controler.sx", lock=True)
-	# cmds.setAttr("Controler.sy", lock=True)
-	# cmds.setAttr("Controler.sz", lock=True)
-
-	# cmds.select("Controler", r=True)
-	# cmds.select(crv1, add=True)
-
-	# cmds.parent()
-
-	# cmds.select("Slider_shape2", r=True)
 
 
 def Square_shape():
@@ -312,12 +410,7 @@ def Move_shape():
 	crv1 = cmds.curve(n="Move_shape", p=[[4.8046875, 2.602085214e-18, -0.01171875], [3.671875, 2.168404345e-16, -0.9765625], [3.671875, 1.127570259e-16, -0.5078125], [3.359375, 1.127570259e-16, -0.5078125], [3.024414062, 3.434345907e-16, -1.546691895], [2.393554688, 5.348369317e-16, -2.408691406], [1.526855469, 6.737096775e-16, -3.034118652], [0.484375, 7.467984564e-16, -3.36328125], [0.484375, 8.153200337e-16, -3.671875], [0.94921875, 8.153200337e-16, -3.671875], [-0.015625, 1.066854938e-15, -4.8046875], [-0.9765625, 8.153200337e-16, -3.671875], [-0.5078125, 8.153200337e-16, -3.671875], [-0.5078125, 7.459310947e-16, -3.359375], [-1.541687012, 6.72002059e-16, -3.026428223], [-2.400878906, 5.331022082e-16, -2.400878906], [-3.026428223, 3.423232834e-16, -1.541687012], [-3.359375, 1.127570259e-16, -0.5078125], [-3.671875, 1.127570259e-16, -0.5078125], [-3.671875, 2.168404345e-16, -0.9765625], [-4.8046875, 2.602085214e-18, -0.01171875], [-3.671875, -2.116362641e-16, 0.953125], [-3.671875, -1.084202172e-16, 0.48828125], [-3.36328125, -1.084202172e-16, 0.48828125], [-3.032165527, -3.409951358e-16, 1.535705566], [-2.401855469, -5.339695699e-16, 2.404785156], [-1.533508301, -6.737638876e-16, 3.034362793], [-0.48828125, -7.467984564e-16, 3.36328125], [-0.48828125, -8.153200337e-16, 3.671875], [-0.953125, -8.153200337e-16, 3.671875], [0.01171875, -1.066854938e-15, 4.8046875], [0.9765625, -8.153200337e-16, 3.671875], [0.5078125, -8.153200337e-16, 3.671875], [0.5078125, -7.459310947e-16, 3.359375], [1.546691895, -6.715548256e-16, 3.024414062], [2.408691406, -5.31475905e-16, 2.393554688], [3.034118652, -3.390300193e-16, 1.526855469], [3.36328125, -1.075528555e-16, 0.484375], [3.671875, -1.075528555e-16, 0.484375], [3.671875, -2.107689023e-16, 0.94921875], [4.8046875, 2.602085214e-18, -0.01171875]],d=1) 
 	crv2 = cmds.circle(n="Move_shape", nr=(0, 1, 0), r=3)
 
-	cmds.select(crv1, r=True)
-	cmds.select(crv2, add=True)
-
-	mergeTheCurves()
-
-
+	mergeTheseCurves(crv1, crv2)
 
 
 def Pin_shape():
@@ -389,42 +482,31 @@ def processCurve(*args):
 
 				cmds.setAttr("helpingJoint.ry", -90 )
 
-			cmds.select("cameraForShapes1", r=True)
-			cmds.select("helpingJoint", add=True)
+			sel("cameraForShapes1")
+
+			selAdd("helpingJoint")
+
 			cmds.MatchRotation()
+
 			cmds.delete('helpingJoint')
 
 			distance = 80000
 
-			cmds.select(crvShape, r=True)
+			sel(crvShape)
 
 			cmds.setAttr(crvShape + '.translateY', distance)
 
 			
 			cmds.setAttr(crvShape + '.overrideEnabled', 1)
+			
 			cmds.setAttr (crvShape + ".overrideColor", 14)
-			cmds.setAttr(crvShape + ".tx", lock=True) 
-			cmds.setAttr(crvShape + ".ty", lock=True)
-			cmds.setAttr(crvShape + ".tz", lock=True)
-			cmds.setAttr(crvShape + ".rx", lock=True)
-			cmds.setAttr(crvShape + ".ry", lock=True)
-			cmds.setAttr(crvShape + ".rz", lock=True)
-			cmds.setAttr(crvShape + ".sx", lock=True)
-			cmds.setAttr(crvShape + ".sy", lock=True)
-			cmds.setAttr(crvShape + ".sz", lock=True)
+
+			lockEverything(crvShape)
 			
 
 			fitCamera()
 
-			cmds.setAttr("cameraForShapes1" + ".tx", lock=True) 
-			cmds.setAttr("cameraForShapes1" + ".ty", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".tz", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".rx", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".ry", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".rz", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".sx", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".sy", lock=True)
-			cmds.setAttr("cameraForShapes1" + ".sz", lock=True)
+			lockEverything("cameraForShapes1")
 
 			#cmds.select(crvShape, r=True)
 
@@ -462,22 +544,14 @@ def drawTheCurves():
 
 def changeImage(*args):
 
-	if cmds.objExists("Circle_shape_temp_curve"):
-		cmds.delete("Circle_shape_temp_curve")
+
+	delIfExists("Circle_shape_temp_curve")
 
 	#cmds.SelectTool()
-	cmds.setAttr("cameraForShapes1" + ".tx", lock=False) 
-	cmds.setAttr("cameraForShapes1" + ".ty", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".tz", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".rx", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".ry", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".rz", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".sx", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".sy", lock=False)
-	cmds.setAttr("cameraForShapes1" + ".sz", lock=False)
 
-	if cmds.objExists(tmpCrvs):
-		cmds.delete(tmpCrvs)
+	UnlockEverything('cameraForShapes1')
+
+	delIfExists(tmpCrvs)
 
 	drawTheCurves()
 
@@ -486,10 +560,6 @@ def changeImage(*args):
 	# test = cmds.window( q=True, fw=True )
 
 	# print test
-
-	
-
-
 
 	#cmds.doHideInOutliner(tmpCrvs)
 
@@ -506,6 +576,29 @@ def scollListFunction(*args):
 
 	#cmds.select(tmpCrvs)
 
+grey = [0.227, 0.227, 0.227]
+
+blueGreen = [0.071, 1, 0.776]
+
+
+
+red = [1, 0.224, 0.224]
+
+redPale = [1, 0.399, 0.321]
+
+orange = [1, 0.479, 0.173]
+
+yellow = [1, 1, 0.390]
+
+green = [0.527, 1, 0.276]
+
+cyan = [0.321, 1, 0.869]
+
+blue = [0.256, 0.628, 1]
+
+pink = [1, 0.442, 0.706]
+
+purple = [0.466, 0.200, 0.892]
 
 
 
@@ -523,7 +616,7 @@ window = "Rigging_ToolKit"
 if cmds.window(window, exists=True):
     cmds.deleteUI(window)
 
-cmds.window(window, title=window, s=True)
+cmds.window(window, title=window, s=True, w=285)
 
 tabWindow = cmds.tabLayout(w=285, h=450)
 
@@ -545,9 +638,20 @@ def rowOf2():
 def rowOf3():
 	cmds.rowLayout(nc=3)
 
-green = [0.071, 1, 0.776]
+def rowOf4():
+	cmds.rowLayout(nc=4)
 
-grey = [0.227, 0.227, 0.227]
+def rowOf5():
+	cmds.rowLayout(nc=5)
+
+def rowOf10():
+	cmds.rowLayout(nc=10)
+
+
+
+
+
+
 
 
 # --------------------------------------------------------------------------------
@@ -558,7 +662,7 @@ tab1 = cmds.columnLayout()
 
 separator()#------------------------------------------------------------------------------------
 
-cmds.text(l="✎  NURBS TEXT CREATOR", h=15, w=275, bgc=grey)
+cmds.text(l="NURBS TEXT CREATOR", h=15, w=275, bgc=grey)
 
 space()
 
@@ -566,7 +670,9 @@ rowOf2()
 
 nurbsTextField = cmds.textField(ec=setNurbsTxt, w=248)
 
-cmds.button(c=setNurbsTxt,l="▶", w=24, h=20, bgc=green)
+#cmds.button(c=setNurbsTxt,l="GO", font="boldLabelFont", w=24, h=20, bgc=blueGreen)
+
+cmds.iconTextButton( c=setNurbsTxt, style='iconOnly', image1='arrowRight.png',w=24, h=20, bgc=blueGreen)
 
 close()#closeRowof2
 
@@ -579,7 +685,7 @@ for i in fonts:
 
 separator()#------------------------------------------------------------------------------------
 
-cmds.text(l="★  NURBS SHAPES", h=15, w=275, bgc=grey)
+cmds.text(l="NURBS SHAPES", h=15, w=275, bgc=grey)
 
 space()
 
@@ -623,9 +729,9 @@ listScroll = cmds.textScrollList(
 
 close()#close formLayout2
 
-if cmds.objExists('cameraForShapes1'):
 
-	cmds.delete('cameraForShapes1')
+delIfExists('cameraForShapes*')
+
 
 cameraShapes = cmds.camera(position=[0, 80000, 0],rotation=[0, 0, 0], n="cameraForShapes") 
 
@@ -639,17 +745,54 @@ close()#closeRowof2
 
 
 
-rowOf3()
+rowOf2()
 
-cmds.button(l="Joystick  ✣", w=91.5, h=20)
-cmds.button(l="Slider  →", w=91.5, h=20)
-cmds.button(l="Slider ↔", w=91.5, h=20)
+cmds.button(c=ctrl_Joy, l="Joystick", w=137.5, h=20)
+cmds.button(c=ctrl_Slide,l="Slider", w=137.5, h=20)
 
-close()#closerowOf3
+
+
+
+close()#closerowOf2
+
+
+rowOf4()
+
+cmds.text(l="Min ")
+
+minCtrlValue = cmds.intField(en=False,minValue=-100, maxValue=0, h=20, value=0, width=44)
+
+sliderCheckBox = cmds.checkBox( label=' Is Zero  |', value=True, w=70, ofc=changeMinValue, onc=changeMinValue)
+
+maxCtrlValue = cmds.intSliderGrp(label="Max", field=True,cw3=[25,40,60], min=1, max=100, h=20, value=1, cc=changeMinValue)
+
+close()#closerowOf4
 
 separator()#------------------------------------------------------------------------------------
 
-cmds.text(l="✂  GET CURVE CODE", h=15, w=275, bgc=grey)
+cmds.text(l="COLOR PICKER", h=15, w=275, bgc=grey)
+
+space()
+
+rowOf10()
+
+
+buttons= [
+colorBtt(doRed,red),
+colorBtt(doRedPale,redPale),
+colorBtt(doOrange, orange),
+colorBtt(doYellow, yellow),
+colorBtt(doGreen, green),
+colorBtt(doCyan, cyan),
+colorBtt(doBlue, blue),
+colorBtt(doPink, pink),
+colorBtt(doPurple, purple)
+
+]
+
+close()#closeRowOf10
+
+
 
 close()#close tab1
 
@@ -658,8 +801,9 @@ close()#close tab1
 #---------------------------------------------------------------------------------
 
 tab2 = cmds.columnLayout()
-cmds.button()
-cmds.textField()
+
+
+
 
 close()
 
@@ -669,8 +813,8 @@ close()
 
 
 tab3 = cmds.columnLayout()
-cmds.button()
-cmds.textField()
+
+
 
 close()
 
@@ -684,9 +828,10 @@ cmds.showWindow(window)
 
 #Show default circle part2
 
-cmds.select("Circle_shape_temp_curve", r=True)
+sel("Circle_shape_temp_curve")
 
 cmds.viewFit( "cameraForShapes1",  f=0.75)
 
 cmds.select(clear=True)
 
+lockEverything("cameraForShapes1")
