@@ -2,6 +2,10 @@ import maya.cmds as cmds
 
 #----------------------------------------------SHORTCUT FUNCTIONS START---------------------------------------------#
 
+currentSelection = cmds.ls(sl=1)
+
+
+
 
 def sel(thingToSelect):
 
@@ -12,17 +16,27 @@ def selAdd(thingToSelect):
 	cmds.select(thingToSelect, add=True)
 
 
-def parent(firstItem, allOtherItems):
+def selShape(thingSelected):
 
-	sel(firstItem)
+	shapeOfSelection = cmds.listRelatives(thingSelected, children=1, type ='shape')
 
-	selAdd(allOtherItems)
+	cmds.select(shapeOfSelect, r=True)
+
+
+def parent(children, parent):
+
+	sel(children)
+
+	selAdd(parent)
 
 	cmds.parent()
 
-	sel(allOtherItems)
+	sel(parent)
 
 
+def freeze(*args):
+
+	cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
 
 
 def mergeTheseCurves(firstCurve, allOthers):
@@ -143,6 +157,19 @@ def lockAllButTx(thingToLock):
 	cmds.setAttr(thingToLock + ".v", lock=True, channelBox=False, keyable=False)
 
 
+def lockAllButTxAndTy(thingToLock):
+
+
+	cmds.setAttr(thingToLock + ".tz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".rx", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".ry", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".rz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sx", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sy", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".sz", lock=True, channelBox=False, keyable=False)
+	cmds.setAttr(thingToLock + ".v", lock=True, channelBox=False, keyable=False)
+
+
 
 
 def lockEverything(thingToLock):
@@ -201,11 +228,13 @@ def changeMinValue(*args):
 
 	global minValueToInject
 
-	intFieldMin = cmds.intField(minCtrlValue, query=True, value=True)#get user input
 
-	intFieldMax = cmds.intSliderGrp(maxCtrlValue, query=True, value=True)#get user input
 
-	checkBoxValue = cmds.checkBox(sliderCheckBox, query=True, value=True)#get user input
+	intFieldMin = cmds.intField(minCtrlValue, query=True, value=True)#get user inputMin
+
+	intFieldMax = cmds.intSliderGrp(maxCtrlValue, query=True, value=True)#get user inputMax
+
+	checkBoxValue = cmds.checkBox(sliderCheckBox, query=True, value=True)#get user inputCheckBox
 
 	if(checkBoxValue==True):
 
@@ -257,6 +286,56 @@ def lockAndScaleSlider(thingToLock):
 
 
 
+
+def lockAndScaleJoyStick(thingToLock):
+
+	print minValueToInject
+
+	intFieldMin = cmds.intField(minCtrlValue, query=True, value=True)#get user input
+	
+	intFieldMax = cmds.intSliderGrp(maxCtrlValue, query=True, value=True)#get user input
+
+	cmds.transformLimits(thingToLock, tx=[( -(intFieldMax)), intFieldMax], etx=[1, 1])
+
+	cmds.transformLimits(thingToLock, ty=[( -(intFieldMax)), intFieldMax], ety=[1, 1])
+
+
+	# parent("joyStickCtrlTmp", "JoystickBoxTmp")
+
+	scaleToX("JoystickBoxTmp", intFieldMax)
+	scaleToY("JoystickBoxTmp", intFieldMax)
+
+	scaleToX("joyStickCtrlTmp", intFieldMax)
+	scaleToY("joyStickCtrlTmp", intFieldMax)
+
+	sel("joyStickCtrlTmp")
+	selAdd("JoystickBoxTmp")
+
+	freeze()
+
+	parent("joyStickCtrlTmp", "JoystickBoxTmp")
+
+	floatFieldMax = float(intFieldMax)
+
+	scaleRatioMax = floatFieldMax / (floatFieldMax*floatFieldMax)
+
+	scaleAll("JoystickBoxTmp", scaleRatioMax)
+
+	#freeze()
+	lockAllButTxAndTy("joyStickCtrlTmp")
+
+	cmds.rename("joyStickCtrlTmp", "Controler")
+
+	cmds.rename("JoystickBoxTmp", "Joystick")
+
+
+
+
+
+
+
+
+
 #Show default circle part1 END
 
 
@@ -287,7 +366,7 @@ def setNurbsTxt(*args):#romain truchard 2017
 
   cmds.select(transforms)#select all transforms
 
-  cmds.FreezeTransformations(transforms)#freeze transformations
+  cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
 
   cmds.select(shapes)#select all shapes
 
@@ -335,7 +414,7 @@ def ctrl_Slide(*args):
 
 	mergeTheseCurves("tempMainCurve", "tempSecondaryCurve*")
 	
-	cmds.select('tempMainCurve', r=True)
+	sel('tempMainCurve')
 
 	lockAndScaleSlider('tempMainCurve')
 
@@ -345,7 +424,7 @@ def ctrl_Joy(e):
 
 	print "OK"
 	
-	crv1 = cmds.curve(n="Joystick", p=[[-1, 1, -2.220446049e-16], [1, 1, -2.220446049e-16], [1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [-1, -1, 2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 0, 0], [-0.8999999762, 0, 0], [-1, 0, 0], [-1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [0, -0.8999999762, 4.786660061e-26], [0, -1, 2.220446049e-16], [1, -1, 2.220446049e-16], [1, 0, 0], [0.8999999762, 0, 0], [1, 0, 0], [1, 1, -2.220446049e-16], [0, 1, -2.220446049e-16], [0, 0.8999999762, -4.786660061e-26], [0, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16]],d=1) 
+	crv1 = cmds.curve(n="JoystickBoxTmp", p=[[-1, 1, -2.220446049e-16], [1, 1, -2.220446049e-16], [1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [-1, -1, 2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 0, 0], [-0.8999999762, 0, 0], [-1, 0, 0], [-1, -1, 2.220446049e-16], [0, -1, 2.220446049e-16], [0, -0.8999999762, 4.786660061e-26], [0, -1, 2.220446049e-16], [1, -1, 2.220446049e-16], [1, 0, 0], [0.8999999762, 0, 0], [1, 0, 0], [1, 1, -2.220446049e-16], [0, 1, -2.220446049e-16], [0, 0.8999999762, -4.786660061e-26], [0, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16], [-1, 1, -2.220446049e-16]],d=1) 
 	cmds.curve(n="tempCrv1", p=[[0.1006069316, 0, 0], [0.1670520627, 0, 0], [0.2334971938, 0, 0], [0.2999423249, 0, 0]],d=1) 
 	cmds.curve(n="tempCrv2", p=[[-4.467845276e-17, 0.1006069316, 0], [-7.418601853e-17, 0.1670520627, 0], [-1.036935843e-16, 0.2334971938, 0], [-1.332011501e-16, 0.2999423249, 0]],d=1) 
 	cmds.curve(n="tempCrv3", p=[[-0.1006069316, -8.935690552e-17, 0], [-0.1670520627, -1.483720371e-16, 0], [-0.2334971938, -2.073871686e-16, 0], [-0.2999423249, -2.664023001e-16, 0]],d=1) 
@@ -353,9 +432,12 @@ def ctrl_Joy(e):
 
 	mergeTheseCurves(crv1, "tempCrv*")
 
-	crv3 = cmds.curve(p=[[-0.04098660341, 0.04098660341, 0], [0.04098660341, -0.04098660341, 0], [0, 0, 0], [0.04098660341, 0.04098660341, 0], [-0.04098660341, -0.04098660341, 0]],d=1) 
+	crv3 = cmds.curve(n="joyStickCtrlTmp",p=[[-0.04098660341, 0.04098660341, 0], [0.04098660341, -0.04098660341, 0], [0, 0, 0], [0.04098660341, 0.04098660341, 0], [-0.04098660341, -0.04098660341, 0]],d=1) 
 	crv4 = cmds.circle(r=.1)
 	mergeTheseCurves(crv3, crv4)
+
+	lockAndScaleJoyStick("joyStickCtrlTmp")
+
 
 
 
@@ -764,7 +846,7 @@ minCtrlValue = cmds.intField(en=False,minValue=-100, maxValue=0, h=20, value=0, 
 
 sliderCheckBox = cmds.checkBox( label=' Is Zero  |', value=True, w=70, ofc=changeMinValue, onc=changeMinValue)
 
-maxCtrlValue = cmds.intSliderGrp(label="Max", field=True,cw3=[25,40,60], min=1, max=100, h=20, value=1, cc=changeMinValue)
+maxCtrlValue = cmds.intSliderGrp(label="Max", field=True,cw3=[25,40,60], min=1, max=100, h=20, value=1,fmn=1, cc=changeMinValue)
 
 close()#closerowOf4
 
@@ -835,3 +917,5 @@ cmds.viewFit( "cameraForShapes1",  f=0.75)
 cmds.select(clear=True)
 
 lockEverything("cameraForShapes1")
+
+changeMinValue()
